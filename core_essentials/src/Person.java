@@ -9,4 +9,10 @@ public class Person extends BasePerson {
 
     }
 
+    public void callTest() {
+        test(); // call the closest, else: look in parent
+        this.test(); // call the method in the same class
+        super.test(); // call the first parent method
+    }
+
 }
