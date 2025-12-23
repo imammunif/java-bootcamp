@@ -15,7 +15,8 @@ public class SendView {
     }
 
     void show() {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner1 = new Scanner(System.in);
+        Scanner scanner2 = new Scanner(System.in);
         System.out.println("=== Send ====");
 
         String[] categories = sendService.getCategories();
@@ -24,19 +25,18 @@ public class SendView {
             System.out.println((i+1) + ". " + categories[i]);
         }
         System.out.print("Category : ");
-        int ixCategory = scanner.nextInt()-1;
+        int ixCategory = scanner1.nextInt()-1;
         String category = categories[ixCategory];
         System.out.println("category selected (" + category + ")");
 
         System.out.print("Weight : ");
-        double weight = scanner.nextDouble();
+        double weight = scanner1.nextDouble();
 
         System.out.print("From : ");
-        scanner.nextLine();
-        String from = scanner.nextLine();
+        String from = scanner2.nextLine();
 
         System.out.print("To : ");
-        String to = scanner.nextLine();
+        String to = scanner2.nextLine();
 
         Driver driver = sendService.findDriver();
         double price = sendService.calculatePrice(from, to, category, weight);

@@ -10,7 +10,6 @@ import com.dansmulti.ojolone.view.FoodView;
 import com.dansmulti.ojolone.view.MainView;
 import com.dansmulti.ojolone.view.RideView;
 import com.dansmulti.ojolone.view.SendView;
-import com.sun.tools.javac.Main;
 
 public class App {
     public static void main(String[] args) {
