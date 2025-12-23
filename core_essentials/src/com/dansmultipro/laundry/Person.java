@@ -1,7 +1,7 @@
 package com.dansmultipro.laundry;
 
 public class Person extends BasePerson
-        implements Activity {
+        implements Activity, BaseActivity {
 
     @Override
     public void test2() {
