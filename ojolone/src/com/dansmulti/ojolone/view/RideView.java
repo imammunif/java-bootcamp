@@ -9,7 +9,6 @@ public class RideView {
 
     private final RideService rideService;
 
-    // constructor
     public RideView(RideService rideService) {
         this.rideService = rideService;
     }
