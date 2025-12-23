@@ -10,4 +10,6 @@ public abstract class BasePerson {
 
     }
 
+    public abstract void test2();
+
 }
