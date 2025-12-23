@@ -1,6 +1,6 @@
 package com.dansmultipro.laundry;
 
-public class BasePerson {
+public abstract class BasePerson {
 
     public BasePerson() {
         System.out.println("constructor: exec 1st");

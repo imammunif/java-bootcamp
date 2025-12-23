@@ -1,3 +1,4 @@
+import com.dansmultipro.laundry.BasePerson;
 import com.dansmultipro.laundry.Person;
 
 public class App {
@@ -7,5 +8,6 @@ public class App {
         Person person1 = new Person();
         person1.test();
 
+        BasePerson basePerson = new BasePerson(); //error
     }
 }
