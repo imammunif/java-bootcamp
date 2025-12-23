@@ -6,10 +6,12 @@ public class MainView {
 
     private final RideView rideView;
     private final SendView sendView;
+    private final FoodView foodView;
 
-    public MainView(RideView rideView, SendView sendView) {
+    public MainView(RideView rideView, SendView sendView, FoodView foodView) {
         this.rideView = rideView;
         this.sendView = sendView;
+        this.foodView = foodView;
     }
 
     public void show() {
@@ -26,7 +28,7 @@ public class MainView {
         } else if (chosen == 2) {
             sendView.show();
         } else if (chosen == 3) {
-
+            foodView.show();
         }
 
         show();
