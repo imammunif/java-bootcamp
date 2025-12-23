@@ -8,8 +8,6 @@ import java.util.Scanner;
 
 public class SendView {
 
-    private final String[] categories = {"kurir", "cargo", "logistic", "ekspedisi"};
-
     private final SendService sendService;
 
     public SendView(SendService sendService) {
@@ -20,13 +18,15 @@ public class SendView {
         Scanner scanner = new Scanner(System.in);
         System.out.println("=== Send ====");
 
+        String[] categories = sendService.getCategories();
         System.out.println("Available category");
         for (int i = 0; i < categories.length; i++) {
             System.out.println((i+1) + ". " + categories[i]);
         }
         System.out.print("Category : ");
-        int ixCategory = scanner.nextInt()+1;
+        int ixCategory = scanner.nextInt()-1;
         String category = categories[ixCategory];
+        System.out.println("category selected (" + category + ")");
 
         System.out.print("Weight : ");
         double weight = scanner.nextDouble();

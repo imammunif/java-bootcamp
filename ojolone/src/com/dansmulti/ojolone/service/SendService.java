@@ -10,4 +10,5 @@ public interface SendService {
 
     double calculatePrice(String from, String to, String category, double weight);
 
+    String[] getCategories();
 }

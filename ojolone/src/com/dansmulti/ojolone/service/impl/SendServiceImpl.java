@@ -13,14 +13,19 @@ public class SendServiceImpl implements SendService {
     @Override
     public double calculatePrice(String from, String to, String category, double weight) {
 
-        //  System.out.println(category.length() * weight);
-        //  System.out.println(from.length() * to.length() + 1000);
+          System.out.println("(ctg length " + category.length() + " * weight "+ weight + ") = " + category.length() * weight);
+//          System.out.println(from.length() * to.length() + 1000);
 
         double totalPrice = (
                 (category.length() * weight) +
                 (from.length() * to.length() + 1000)
         );
         return totalPrice;
+    }
+
+    @Override
+    public String[] getCategories() {
+        return new String[]{"kurir", "cargo", "logistic", "ekspedisi"};
     }
 
 }
