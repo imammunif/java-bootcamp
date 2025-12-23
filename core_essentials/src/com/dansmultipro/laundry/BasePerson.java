@@ -1,3 +1,5 @@
+package com.dansmultipro.laundry;
+
 public class BasePerson {
 
     public BasePerson() {
