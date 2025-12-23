@@ -5,9 +5,11 @@ import java.util.Scanner;
 public class MainView {
 
     private final RideView rideView;
+    private final SendView sendView;
 
-    public MainView(RideView rideView) {
+    public MainView(RideView rideView, SendView sendView) {
         this.rideView = rideView;
+        this.sendView = sendView;
     }
 
     public void show() {
@@ -22,7 +24,7 @@ public class MainView {
         if (chosen == 1) {
             rideView.show();
         } else if (chosen == 2) {
-
+            sendView.show();
         } else if (chosen == 3) {
 
         }
