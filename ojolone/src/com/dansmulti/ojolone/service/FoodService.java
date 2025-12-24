@@ -3,6 +3,8 @@ package com.dansmulti.ojolone.service;
 import com.dansmulti.ojolone.model.Driver;
 import com.dansmulti.ojolone.model.Restaurant;
 
+import java.util.List;
+
 public interface FoodService {
 
     // Abstract methods
@@ -11,5 +13,5 @@ public interface FoodService {
 
     double calculateBill(String from, String to, int qty, double price);
 
-    Restaurant[] getRestaurants();
+    List<Restaurant> getRestaurants();
 }

@@ -1,11 +1,13 @@
 package com.dansmulti.ojolone.model;
 
+import java.util.List;
+
 public class Restaurant {
     private String name;
     private String address;
-    private Menu[] menu;
+    private List<Menu> menu;
 
-    public Restaurant(String name, String address, Menu[] menu) {
+    public Restaurant(String name, String address, List<Menu> menu) {
         this.name = name;
         this.address = address;
         this.menu = menu;
@@ -19,7 +21,7 @@ public class Restaurant {
         return address;
     }
 
-    public Menu[] getMenus() {
+    public List<Menu> getMenus() {
         return menu;
     }
 }
