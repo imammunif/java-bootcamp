@@ -9,7 +9,7 @@ public interface FoodService {
     // soon will be override by the Implementation class
     Driver findDriver();
 
-    double calculatePrice(String from, String to, int qty, double price);
+    double calculateBill(String from, String to, int qty, double price);
 
     Restaurant[] getRestaurants();
 }

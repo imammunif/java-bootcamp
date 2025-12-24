@@ -1,6 +1,7 @@
 package com.dansmulti.ojolone.view;
 
 import com.dansmulti.ojolone.model.Driver;
+import com.dansmulti.ojolone.model.Menu;
 import com.dansmulti.ojolone.model.Restaurant;
 import com.dansmulti.ojolone.service.FoodService;
 
@@ -15,7 +16,8 @@ public class FoodView {
     }
 
     void show() {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scannerStr = new Scanner(System.in);
+        Scanner scannerDbl = new Scanner(System.in);
         System.out.println("=== Food ====");
 
         Restaurant[] restaurants = foodService.getRestaurants();
@@ -26,46 +28,35 @@ public class FoodView {
         }
 
         System.out.print("Select a restaurant : ");
-        int idxRestaurant = scanner.nextInt()-1;
-        Restaurant restaurant = restaurants[idxRestaurant];
-        System.out.println("Menu in " + restaurant.getName() + ":");
-        showMenu();
+        int idxRestaurant = scannerDbl.nextInt()-1;
 
-    }
+        String restaurantName = restaurants[idxRestaurant].getName();
+        String restaurantAddress = restaurants[idxRestaurant].getAddress();
 
-    void showMenu() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("=== Menu ====");
-//
-//        String[] categories = sendService.getCategories();
-//        System.out.println("Available category");
-//        for (int i = 0; i < categories.length; i++) {
-//            System.out.println((i+1) + ". " + categories[i]);
-//        }
-//        System.out.print("Category : ");
-//        int ixCategory = scanner.nextInt()-1;
-//        String category = categories[ixCategory];
-//        System.out.println("category selected (" + category + ")");
-//
-//        System.out.print("Weight : ");
-//        double weight = scanner.nextDouble();
-//
-//        System.out.print("From : ");
-//        scanner.nextLine();
-//        String from = scanner.nextLine();
-//
-//        System.out.print("To : ");
-//        String to = scanner.nextLine();
-//
-//        Driver driver = sendService.findDriver();
-//        double price = sendService.calculatePrice(from, to, category, weight);
-//
-//        System.out.println("=== Detail ====");
-//        System.out.println("From : " + from);
-//        System.out.println("To : " + to);
-//        System.out.println("Driver Name : " + driver.getName());
-//        System.out.println("Driver Plat No : " + driver.getPlatNo());
-//        System.out.println("Total Price : " + price);
-//        System.out.println("=== Thanks ===");
+        System.out.println("=== Menu in " + restaurants[idxRestaurant].getName() + " ===");
+        Menu[] restaurantMenu = restaurants[idxRestaurant].getMenus();
+        for (int i = 0; i < restaurantMenu.length; i++) {
+            System.out.println((i + 1) + ". " + restaurantMenu[i].getName() + " (Rp. " + restaurantMenu[i].getPrice() + ")");
+        }
+        System.out.print("Select a menu : ");
+        int idxMenu = scannerDbl.nextInt()-1;
+        System.out.print("Input quantity : ");
+        int qty = scannerDbl.nextInt();
+        double price = restaurantMenu[idxMenu].getPrice();
+
+        System.out.print("To : ");
+        String to = scannerStr.nextLine();
+
+        Driver driver = foodService.findDriver();
+        double bill = foodService.calculateBill(restaurantAddress, to, qty, price);
+
+        System.out.println("=== Detail ====");
+        System.out.println("Food : " + restaurantMenu[idxMenu].getName() + " (" +qty + " x @" + restaurantMenu[idxMenu].getPrice() + ")");
+        System.out.println("From : " + restaurantName + " (" + restaurantAddress + ")");
+        System.out.println("To : " + to);
+        System.out.println("Driver Name : " + driver.getName());
+        System.out.println("Driver Plat No : " + driver.getPlatNo());
+        System.out.println("Total Price : " + bill);
+        System.out.println("=== Thanks ===");
     }
 }
