@@ -3,7 +3,7 @@ package com.dansmulti.ojolone.view;
 import com.dansmulti.ojolone.model.Driver;
 import com.dansmulti.ojolone.service.SendService;
 
-import java.awt.*;
+import java.util.List;
 import java.util.Scanner;
 
 public class SendView {
@@ -19,14 +19,14 @@ public class SendView {
         Scanner scanner2 = new Scanner(System.in);
         System.out.println("=== Send ====");
 
-        String[] categories = sendService.getCategories();
+        List<String> categories = sendService.getCategories();
         System.out.println("Available category");
-        for (int i = 0; i < categories.length; i++) {
-            System.out.println((i+1) + ". " + categories[i]);
+        for (int i = 0; i < categories.size(); i++) {
+            System.out.println((i + 1) + ". " + categories.get(i));
         }
         System.out.print("Category : ");
-        int ixCategory = scanner1.nextInt()-1;
-        String category = categories[ixCategory];
+        int ixCategory = scanner1.nextInt() - 1;
+        String category = categories.get(ixCategory);
         System.out.println("category selected (" + category + ")");
 
         System.out.print("Weight : ");

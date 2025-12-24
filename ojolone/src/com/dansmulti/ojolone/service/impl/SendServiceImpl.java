@@ -3,6 +3,9 @@ package com.dansmulti.ojolone.service.impl;
 import com.dansmulti.ojolone.model.Driver;
 import com.dansmulti.ojolone.service.SendService;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SendServiceImpl implements SendService {
 
     @Override
@@ -18,8 +21,8 @@ public class SendServiceImpl implements SendService {
     }
 
     @Override
-    public String[] getCategories() {
-        return new String[]{"kurir", "cargo", "logistic", "ekspedisi"};
+    public List<String> getCategories() {
+        return Arrays.asList("kurir", "cargo", "logistic", "ekspedisi");
     }
 
 }
