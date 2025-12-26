@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class ScannerUtil {
 
-    public static int scanOptionNumber(String message, int limit) {
+    public static int scanLimitedOption(String message, int limit) {
         System.out.print(message);
         Scanner scanner = new Scanner(System.in);
         try {
@@ -15,12 +15,18 @@ public class ScannerUtil {
                 return option;
             } else {
                 System.out.println("Invalid range");
-                return scanOptionNumber(message, limit);
+                return scanLimitedOption(message, limit);
             }
         } catch (InputMismatchException ime) {
             System.out.println("Invalid input");
-            return scanOptionNumber(message, limit);
+            return scanLimitedOption(message, limit);
         }
+    }
+
+    public static int scanInt(String message) {
+        System.out.print(message);
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
     }
 
     public static double scanDouble(String message) {

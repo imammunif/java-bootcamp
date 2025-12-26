@@ -15,12 +15,12 @@ public class MainView {
     }
 
     public void show() {
-        System.out.println("=== Ojol Pro ====");
+        System.out.println("==== Ojol Pro ====");
         System.out.println("1. Ride");
         System.out.println("2. Send");
         System.out.println("3. Food");
 
-        int chosen = ScannerUtil.scanOptionNumber("Select [1-3] : ", 3);
+        int chosen = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
         if (chosen == 1) {
             rideView.show();
         } else if (chosen == 2) {

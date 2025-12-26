@@ -4,9 +4,9 @@ import com.dansmulti.ojoltwo.model.Driver;
 import com.dansmulti.ojoltwo.model.Menu;
 import com.dansmulti.ojoltwo.model.Restaurant;
 import com.dansmulti.ojoltwo.service.FoodService;
+import com.dansmulti.ojoltwo.util.ScannerUtil;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class FoodView {
 
@@ -17,47 +17,41 @@ public class FoodView {
     }
 
     void show() {
-        Scanner scannerStr = new Scanner(System.in);
-        Scanner scannerDbl = new Scanner(System.in);
-        System.out.println("=== Food ====");
-
-        List<Restaurant> restaurants = foodService.getRestaurants();
-
+        System.out.println("===== Food =====");
         System.out.println("Available restaurant");
+        List<Restaurant> restaurants = foodService.getRestaurants();
         for (int i = 0; i < restaurants.size(); i++) {
             System.out.println((i + 1) + ". " + restaurants.get(i).getName() + " (" + restaurants.get(i).getAddress() + ")");
         }
-
-        System.out.print("Select a restaurant : ");
-        int idxRestaurant = scannerDbl.nextInt() - 1;
-
-        String restaurantName = restaurants.get(idxRestaurant).getName();
-        String restaurantAddress = restaurants.get(idxRestaurant).getAddress();
-
-        System.out.println("=== Menu in " + restaurants.get(idxRestaurant).getName() + " ===");
-        List<Menu> restaurantMenu = restaurants.get(idxRestaurant).getMenus();
+        int indexResto = ScannerUtil.scanLimitedOption("Select a restaurant : ", restaurants.size()) - 1;
+        String restoName = restaurants.get(indexResto).getName();
+        String restoAddress = restaurants.get(indexResto).getAddress();
+        System.out.println("=== Menu in " + restoName + " ===");
+        List<Menu> restaurantMenu = restaurants.get(indexResto).getMenus();
         for (int i = 0; i < restaurantMenu.size(); i++) {
             System.out.println((i + 1) + ". " + restaurantMenu.get(i).getName() + " (Rp. " + restaurantMenu.get(i).getPrice() + ")");
         }
-        System.out.print("Select a menu : ");
-        int idxMenu = scannerDbl.nextInt() - 1;
-        System.out.print("Input quantity : ");
-        int qty = scannerDbl.nextInt();
-        double price = restaurantMenu.get(idxMenu).getPrice();
-
-        System.out.print("To : ");
-        String to = scannerStr.nextLine();
-
+        int indexMenu = ScannerUtil.scanLimitedOption("Select a menu : ", restaurantMenu.size()) - 1;
+        int menuQty = ScannerUtil.scanInt("Input quantity : ");
+        String menuName = restaurantMenu.get(indexMenu).getName();
+        double menuPrice = restaurantMenu.get(indexMenu).getPrice();
+        String to = ScannerUtil.scanText("To : ");
         Driver driver = foodService.findDriver();
-        double bill = foodService.calculateBill(restaurantAddress, to, qty, price);
+        double totalBill = foodService.calculateBill(restoAddress, to, menuQty, menuPrice);
 
-        System.out.println("=== Detail ====");
-        System.out.println("Food : " + restaurantMenu.get(idxMenu).getName() + " (" + qty + " x @" + restaurantMenu.get(idxMenu).getPrice() + ")");
-        System.out.println("From : " + restaurantName + " (" + restaurantAddress + ")");
+        showReceipt(restoName, restoAddress, menuName, menuPrice, menuQty, driver.getName(), driver.getPlatNo(), to, totalBill);
+    }
+
+    void showReceipt(
+            String restoName, String restoAddress, String menuName, Double menuPrice, int menuQty,
+            String driverName, String driverLicense, String to, double totalBill) {
+        System.out.println("===== Detail =====");
+        System.out.println("Food : " + menuName + " (" + menuQty + " x @" + menuPrice + ")");
+        System.out.println("From : " + restoName + " (" + restoAddress + ")");
         System.out.println("To : " + to);
-        System.out.println("Driver Name : " + driver.getName());
-        System.out.println("Driver Plat No : " + driver.getPlatNo());
-        System.out.println("Total Price : " + bill);
-        System.out.println("=== Thanks ===");
+        System.out.println("Driver Name : " + driverName);
+        System.out.println("Driver Plat No : " + driverLicense);
+        System.out.println("Total Price : " + totalBill);
+        System.out.println("===== Thanks =====");
     }
 }
