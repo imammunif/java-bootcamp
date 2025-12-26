@@ -2,9 +2,9 @@ package com.dansmulti.ojoltwo.view;
 
 import com.dansmulti.ojoltwo.model.Driver;
 import com.dansmulti.ojoltwo.service.SendService;
+import com.dansmulti.ojoltwo.util.ScannerUtil;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class SendView {
 
@@ -15,31 +15,22 @@ public class SendView {
     }
 
     void show() {
-        Scanner scanner1 = new Scanner(System.in);
-        Scanner scanner2 = new Scanner(System.in);
         System.out.println("=== Send ====");
-
         List<String> categories = sendService.getCategories();
         System.out.println("Available category");
         for (int i = 0; i < categories.size(); i++) {
             System.out.println((i + 1) + ". " + categories.get(i));
         }
-        System.out.print("Category : ");
-        int ixCategory = scanner1.nextInt() - 1;
-        String category = categories.get(ixCategory);
-        System.out.println("category selected (" + category + ")");
+        int input = ScannerUtil.scanOptionNumber("Select category : ", categories.size());
+        int indexCategory = input - 1;
+        System.out.println("category selected (" + categories.get(indexCategory) + ")");
 
-        System.out.print("Weight : ");
-        double weight = scanner1.nextDouble();
-
-        System.out.print("From : ");
-        String from = scanner2.nextLine();
-
-        System.out.print("To : ");
-        String to = scanner2.nextLine();
+        double weight = ScannerUtil.scanDouble("Weight : ");
+        String from = ScannerUtil.scanText("From : ");
+        String to = ScannerUtil.scanText("To : ");
 
         Driver driver = sendService.findDriver();
-        double price = sendService.calculatePrice(from, to, category, weight);
+        double price = sendService.calculatePrice(from, to, categories.get(indexCategory), weight);
 
         System.out.println("=== Detail ====");
         System.out.println("From : " + from);

@@ -2,8 +2,7 @@ package com.dansmulti.ojoltwo.view;
 
 import com.dansmulti.ojoltwo.model.Driver;
 import com.dansmulti.ojoltwo.service.RideService;
-
-import java.util.Scanner;
+import com.dansmulti.ojoltwo.util.ScannerUtil;
 
 public class RideView {
 
@@ -14,15 +13,9 @@ public class RideView {
     }
 
     void show() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("=== Ride ====");
-
-        System.out.print("From : ");
-        String from = scanner.nextLine();
-
-        System.out.print("To : ");
-        String to = scanner.nextLine();
-
+        String from = ScannerUtil.scanText("From : ");
+        String to = ScannerUtil.scanText("To : ");
         Driver driver = rideService.findDriver();
         int price = rideService.calculatePrice(from, to);
 

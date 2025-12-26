@@ -1,6 +1,6 @@
 package com.dansmulti.ojoltwo.view;
 
-import java.util.Scanner;
+import com.dansmulti.ojoltwo.util.ScannerUtil;
 
 public class MainView {
 
@@ -19,10 +19,8 @@ public class MainView {
         System.out.println("1. Ride");
         System.out.println("2. Send");
         System.out.println("3. Food");
-        System.out.print("Pilih [1-3] : ");
 
-        Scanner scanner = new Scanner(System.in);
-        int chosen = scanner.nextInt();
+        int chosen = ScannerUtil.scanOptionNumber("Select [1-3] : ", 3);
         if (chosen == 1) {
             rideView.show();
         } else if (chosen == 2) {
@@ -30,7 +28,6 @@ public class MainView {
         } else if (chosen == 3) {
             foodView.show();
         }
-
         show();
     }
 }
