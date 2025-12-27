@@ -1,0 +1,34 @@
+package com.dansmulti.ojoltwo.model;
+
+public class CartItem {
+    private Menu menu;
+    private int quantity;
+    private double subtotal;
+
+    public CartItem(Menu menu, int quantity, double subtotal) {
+        this.menu = menu;
+        this.quantity = quantity;
+        this.subtotal = subtotal;
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int additionQty) {
+        this.quantity += additionQty;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal() {
+        this.subtotal = this.quantity * menu.getPrice();
+    }
+
+}

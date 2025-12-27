@@ -16,9 +16,8 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public double calculateBill(String from, String to, int qty, double price) {
-
-        return ((qty * price) + (from.length() * to.length() + 20000));
+    public double calculateBill(String from, String to, double grandTotalCart) {
+        return (grandTotalCart + (from.length() * to.length() * 200));
     }
 
     @Override
