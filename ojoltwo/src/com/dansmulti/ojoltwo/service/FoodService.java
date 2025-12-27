@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface FoodService {
 
-    // Abstract methods
-    // soon will be override by the Implementation class
     Driver findDriver();
 
     double calculateBill(String from, String to, double grandTotalCart);
