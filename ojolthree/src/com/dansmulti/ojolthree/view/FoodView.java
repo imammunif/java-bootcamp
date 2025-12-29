@@ -10,8 +10,8 @@ import java.util.List;
 public class FoodView {
 
     private final FoodService foodService;
-    private List<CartItem> cartItems;
-    private Cart cart;
+    private List<CartItem> cartItems = new ArrayList<>();
+    private Cart cart = new Cart(cartItems);
     private Restaurant restaurant;
 
     public FoodView(FoodService foodService) {
@@ -19,13 +19,38 @@ public class FoodView {
     }
 
     void show() {
-        cartItems = new ArrayList<>();
-        cart = new Cart(cartItems);
+        System.out.println("\n==== Food ====");
+        System.out.println("1. Add menu");
+        System.out.println("2. Check my cart");
+        System.out.println("3. Exit");
 
-        showRestaurants();
+        int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
+        if (options == 1) {
+            addItemOption();
+        } else if (options == 2) {
+            showCartOption();
+        } else if (options == 3) {
+            return;
+        }
+        show();
+
+        //  showReceipt();
+    }
+
+    private void addItemOption() {
+        if (cart.getItems().isEmpty()) {
+            showRestaurants();
+            showRestaurantMenu();
+            return;
+        }
         showRestaurantMenu();
+    }
+
+    private void showCartOption() {
+        if (cart.getItems().isEmpty()) {
+            return;
+        }
         showCart();
-        showReceipt();
     }
 
     private void showRestaurants() {
