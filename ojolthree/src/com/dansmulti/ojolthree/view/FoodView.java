@@ -13,7 +13,6 @@ public class FoodView {
     private List<CartItem> cartItems;
     private Cart cart;
     private Restaurant restaurant;
-    private Driver driver;
 
     public FoodView(FoodService foodService) {
         this.foodService = foodService;
@@ -26,10 +25,7 @@ public class FoodView {
         showRestaurants();
         showRestaurantMenu();
         showCart();
-        String to = ScannerUtil.scanText("To : ");
-        driver = foodService.findDriver();
-        double totalBill = foodService.calculateBill(cart, restaurant.getAddress(), to);
-        showReceipt(driver.getName(), driver.getPlatNo(), to, totalBill);
+        showReceipt();
     }
 
     private void showRestaurants() {
@@ -39,8 +35,7 @@ public class FoodView {
         for (int i = 0; i < restaurants.size(); i++) {
             System.out.println((i + 1) + ". " + restaurants.get(i).getName() + " (" + restaurants.get(i).getAddress() + ")");
         }
-        int indexResto = ScannerUtil.scanLimitedOption("\nSelect a restaurant : ", restaurants.size()) - 1;
-        restaurant = restaurants.get(indexResto);
+        restaurant = restaurants.get(ScannerUtil.scanLimitedOption("\nSelect a restaurant : ", restaurants.size()) - 1);
     }
 
 
@@ -50,10 +45,10 @@ public class FoodView {
         for (int i = 0; i < restaurantMenu.size(); i++) {
             System.out.println((i + 1) + ". " + restaurantMenu.get(i).getName() + " (Rp. " + restaurantMenu.get(i).getPrice() + ")");
         }
-        int indexMenu = ScannerUtil.scanLimitedOption("\nSelect a menu : ", restaurantMenu.size()) - 1;
-        Menu menu = restaurantMenu.get(indexMenu);
+        Menu menu = restaurantMenu.get(ScannerUtil.scanLimitedOption("\nSelect a menu : ", restaurantMenu.size()) - 1);
         int menuQty = ScannerUtil.scanInt("Input quantity : ");
-        CartItem newItem = new CartItem(menu, menuQty, restaurantMenu.get(indexMenu).getPrice() * menuQty);
+        CartItem newItem = new CartItem(menu, menuQty, menu.getPrice() * menuQty);
+
         foodService.setCartItems(cart, newItem, menu, menuQty);
         foodService.setCartRestaurant(cart, restaurant);
         String addMore = ScannerUtil.scanText("\nDo you want to add more? [Y/N] : ");
@@ -69,7 +64,10 @@ public class FoodView {
         }
     }
 
-    private void showReceipt(String driverName, String driverLicense, String to, double totalBill) {
+    private void showReceipt() {
+        String to = ScannerUtil.scanText("To : ");
+        Driver driver = foodService.findDriver();
+
         System.out.println("\n======= Detail =======");
         System.out.println("Food : ");
         for (CartItem cartItem : cartItems) {
@@ -78,9 +76,9 @@ public class FoodView {
         System.out.println("Food Total Price : " + foodService.getCartGrandtotal(cart));
         System.out.println("From : " + restaurant.getName() + " (" + restaurant.getAddress() + ")");
         System.out.println("To : " + to);
-        System.out.println("Driver Name : " + driverName);
-        System.out.println("Driver Plat No : " + driverLicense);
-        System.out.println("Total Price : " + totalBill);
+        System.out.println("Driver Name : " + driver.getName());
+        System.out.println("Driver Plat No : " + driver.getPlatNo());
+        System.out.println("Total Price : " + foodService.calculateBill(cart, restaurant.getAddress(), to));
         System.out.println("======= Thanks =======\n");
     }
 }
