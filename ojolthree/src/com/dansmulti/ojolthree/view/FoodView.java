@@ -12,6 +12,8 @@ public class FoodView {
     private final FoodService foodService;
     private List<CartItem> cartItems;
     private Cart cart;
+    private Restaurant restaurant;
+    private Driver driver;
 
     public FoodView(FoodService foodService) {
         this.foodService = foodService;
@@ -20,32 +22,30 @@ public class FoodView {
     void show() {
         cartItems = new ArrayList<>();
         cart = new Cart(cartItems);
-        List<Restaurant> restaurants = foodService.getRestaurants();
-        showRestaurants(restaurants);
-        int indexResto = ScannerUtil.scanLimitedOption("\nSelect a restaurant : ", restaurants.size()) - 1;
-        Restaurant restaurant = restaurants.get(indexResto);
-        List<Menu> restaurantMenu = restaurants.get(indexResto).getMenus();
-        String restoName = restaurants.get(indexResto).getName();
-        String restoAddress = restaurants.get(indexResto).getAddress();
 
-        showRestaurantMenu(restaurant, restaurantMenu);
-        showCart(restoName);
+        showRestaurants();
+        showRestaurantMenu();
+        showCart();
         String to = ScannerUtil.scanText("To : ");
-        Driver driver = foodService.findDriver();
-        double totalBill = foodService.calculateBill(cart, restoAddress, to);
-        showReceipt(restoName, restoAddress, driver.getName(), driver.getPlatNo(), to, totalBill);
+        driver = foodService.findDriver();
+        double totalBill = foodService.calculateBill(cart, restaurant.getAddress(), to);
+        showReceipt(driver.getName(), driver.getPlatNo(), to, totalBill);
     }
 
-    private void showRestaurants(List<Restaurant> restaurants) {
+    private void showRestaurants() {
+        List<Restaurant> restaurants = foodService.getRestaurants();
         System.out.println("===== Food =====");
         System.out.println("Available restaurant");
         for (int i = 0; i < restaurants.size(); i++) {
             System.out.println((i + 1) + ". " + restaurants.get(i).getName() + " (" + restaurants.get(i).getAddress() + ")");
         }
+        int indexResto = ScannerUtil.scanLimitedOption("\nSelect a restaurant : ", restaurants.size()) - 1;
+        restaurant = restaurants.get(indexResto);
     }
 
 
-    private void showRestaurantMenu(Restaurant restaurant, List<Menu> restaurantMenu) {
+    private void showRestaurantMenu() {
+        List<Menu> restaurantMenu = restaurant.getMenus();
         System.out.println("\n===== Menu in " + restaurant.getName() + " =====");
         for (int i = 0; i < restaurantMenu.size(); i++) {
             System.out.println((i + 1) + ". " + restaurantMenu.get(i).getName() + " (Rp. " + restaurantMenu.get(i).getPrice() + ")");
@@ -58,25 +58,25 @@ public class FoodView {
         foodService.setCartRestaurant(cart, restaurant);
         String addMore = ScannerUtil.scanText("\nDo you want to add more? [Y/N] : ");
         if ("y".equalsIgnoreCase(addMore)) {
-            showRestaurantMenu(restaurant, restaurantMenu);
+            showRestaurantMenu();
         }
     }
 
-    private void showCart(String restoName) {
-        System.out.println("\n===== Your cart from : " + restoName + " =====");
+    private void showCart() {
+        System.out.println("\n===== Your cart from : " + restaurant.getName() + " =====");
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
         }
     }
 
-    private void showReceipt(String restoName, String restoAddress, String driverName, String driverLicense, String to, double totalBill) {
+    private void showReceipt(String driverName, String driverLicense, String to, double totalBill) {
         System.out.println("\n======= Detail =======");
         System.out.println("Food : ");
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
         }
         System.out.println("Food Total Price : " + foodService.getCartGrandtotal(cart));
-        System.out.println("From : " + restoName + " (" + restoAddress + ")");
+        System.out.println("From : " + restaurant.getName() + " (" + restaurant.getAddress() + ")");
         System.out.println("To : " + to);
         System.out.println("Driver Name : " + driverName);
         System.out.println("Driver Plat No : " + driverLicense);
