@@ -20,9 +20,9 @@ public class FoodView {
 
     void show() {
         System.out.println("\n==== Food ====");
-        System.out.println("1. Add menu");
-        System.out.println("2. Check my cart");
-        System.out.println("3. Exit");
+        System.out.println("1. See menu");
+        System.out.println("2. My cart");
+        System.out.println("3. Back");
 
         int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
         if (options == 1) {
@@ -33,8 +33,6 @@ public class FoodView {
             return;
         }
         show();
-
-        //  showReceipt();
     }
 
     private void addItemOption() {
@@ -48,6 +46,7 @@ public class FoodView {
 
     private void showCartOption() {
         if (cart.getItems().isEmpty()) {
+            System.out.println("\n===== Your cart is empty. Please add an item first! =====");
             return;
         }
         showCart();
@@ -87,9 +86,26 @@ public class FoodView {
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
         }
+        System.out.println("Options :");
+        System.out.println("1. Edit");
+        System.out.println("2. Checkout");
+        System.out.println("3. Back");
+
+        int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
+        if (options == 1) {
+            editCart();
+        } else if (options == 2) {
+            checkout();
+        } else if (options == 3) {
+            return;
+        }
+        show();
     }
 
-    private void showReceipt() {
+    private void editCart() {
+    }
+
+    private void checkout() {
         String to = ScannerUtil.scanText("To : ");
         Driver driver = foodService.findDriver();
 
