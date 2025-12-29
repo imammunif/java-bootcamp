@@ -26,16 +26,16 @@ public class FoodView {
 
         int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
         if (options == 1) {
-            addItemOption();
+            itemSubmenu();
         } else if (options == 2) {
-            showCartOption();
+            cartSubmenu();
         } else if (options == 3) {
             return;
         }
         show();
     }
 
-    private void addItemOption() {
+    private void itemSubmenu() {
         if (cart.getItems().isEmpty()) {
             showRestaurants();
             showRestaurantMenu();
@@ -44,7 +44,7 @@ public class FoodView {
         showRestaurantMenu();
     }
 
-    private void showCartOption() {
+    private void cartSubmenu() {
         if (cart.getItems().isEmpty()) {
             System.out.println("\n===== Your cart is empty. Please add an item first! =====");
             return;
@@ -114,12 +114,11 @@ public class FoodView {
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
         }
-        System.out.println("Food Total Price : " + foodService.getCartGrandtotal(cart));
         System.out.println("From : " + restaurant.getName() + " (" + restaurant.getAddress() + ")");
         System.out.println("To : " + to);
         System.out.println("Driver Name : " + driver.getName());
         System.out.println("Driver Plat No : " + driver.getPlatNo());
         System.out.println("Total Price : " + foodService.calculateBill(cart, restaurant.getAddress(), to));
-        System.out.println("======= Thanks =======\n");
+        System.out.println("======= Thanks =======");
     }
 }
