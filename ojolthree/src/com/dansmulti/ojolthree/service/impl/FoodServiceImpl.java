@@ -56,6 +56,13 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    public void setCartRestaurant(Cart cart, Restaurant restaurant) {
+        if (cart.getRestaurant() == null) {
+            cart.setRestaurant(restaurant);
+        }
+    }
+
+    @Override
     public void setCartItems(Cart cart, CartItem newItem, Menu menu, int qty) {
         List<CartItem> cartItems = cart.getItems();
 

@@ -3,11 +3,20 @@ package com.dansmulti.ojolthree.model;
 import java.util.List;
 
 public class Cart {
+    private Restaurant restaurant;
     private List<CartItem> items;
     private double grandTotal;
 
     public Cart(List<CartItem> items) {
         this.items = items;
+    }
+
+    public Restaurant getRestaurant() {
+        return this.restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     public List<CartItem> getItems() {

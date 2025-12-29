@@ -23,11 +23,12 @@ public class FoodView {
         List<Restaurant> restaurants = foodService.getRestaurants();
         showRestaurants(restaurants);
         int indexResto = ScannerUtil.scanLimitedOption("\nSelect a restaurant : ", restaurants.size()) - 1;
+        Restaurant restaurant = restaurants.get(indexResto);
         List<Menu> restaurantMenu = restaurants.get(indexResto).getMenus();
         String restoName = restaurants.get(indexResto).getName();
         String restoAddress = restaurants.get(indexResto).getAddress();
 
-        showRestaurantMenu(restoName, restaurantMenu);
+        showRestaurantMenu(restaurant, restaurantMenu);
         showCart(restoName);
         String to = ScannerUtil.scanText("To : ");
         Driver driver = foodService.findDriver();
@@ -44,8 +45,8 @@ public class FoodView {
     }
 
 
-    private void showRestaurantMenu(String restoName, List<Menu> restaurantMenu) {
-        System.out.println("\n===== Menu in " + restoName + " =====");
+    private void showRestaurantMenu(Restaurant restaurant, List<Menu> restaurantMenu) {
+        System.out.println("\n===== Menu in " + restaurant.getName() + " =====");
         for (int i = 0; i < restaurantMenu.size(); i++) {
             System.out.println((i + 1) + ". " + restaurantMenu.get(i).getName() + " (Rp. " + restaurantMenu.get(i).getPrice() + ")");
         }
@@ -54,9 +55,10 @@ public class FoodView {
         int menuQty = ScannerUtil.scanInt("Input quantity : ");
         CartItem newItem = new CartItem(menu, menuQty, restaurantMenu.get(indexMenu).getPrice() * menuQty);
         foodService.setCartItems(cart, newItem, menu, menuQty);
+        foodService.setCartRestaurant(cart, restaurant);
         String addMore = ScannerUtil.scanText("\nDo you want to add more? [Y/N] : ");
         if ("y".equalsIgnoreCase(addMore)) {
-            showRestaurantMenu(restoName, restaurantMenu);
+            showRestaurantMenu(restaurant, restaurantMenu);
         }
     }
 

@@ -8,6 +8,8 @@ public interface FoodService {
 
     List<Restaurant> getRestaurants();
 
+    void setCartRestaurant(Cart cart, Restaurant restaurant);
+
     void setCartItems(Cart cart, CartItem cartItem, Menu menu, int qty);
 
     void setItemQty(CartItem cartItem, int additionQty);
