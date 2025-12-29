@@ -19,16 +19,16 @@ public class CartItem {
         return quantity;
     }
 
-    public void setQuantity(int additionQty) {
-        this.quantity += additionQty;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public double getSubtotal() {
         return subtotal;
     }
 
-    public void setSubtotal() {
-        this.subtotal = this.quantity * menu.getPrice();
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
     }
 
 }

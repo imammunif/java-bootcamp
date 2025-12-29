@@ -1,5 +1,6 @@
 package com.dansmulti.ojoltwo.service.impl;
 
+import com.dansmulti.ojoltwo.model.CartItem;
 import com.dansmulti.ojoltwo.model.Driver;
 import com.dansmulti.ojoltwo.model.Menu;
 import com.dansmulti.ojoltwo.model.Restaurant;
@@ -27,6 +28,18 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public double calculateBill(String from, String to, double grandTotalCart) {
         return (grandTotalCart + (from.length() * to.length() * 200));
+    }
+
+    @Override
+    public void setItemQty(CartItem cartItem, int additionQty) {
+        int newQuantity = cartItem.getQuantity() + additionQty;
+        cartItem.setQuantity(newQuantity);
+    }
+
+    @Override
+    public void setItemSubtotal(CartItem cartItem) {
+        double subtotal = cartItem.getQuantity() * cartItem.getMenu().getPrice();
+        cartItem.setSubtotal(subtotal);
     }
 
     @Override

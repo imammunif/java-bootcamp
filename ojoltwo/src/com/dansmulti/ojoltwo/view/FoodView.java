@@ -53,8 +53,8 @@ public class FoodView {
     private void addOrUpdateItem(CartItem newItem, Menu menu, int menuQty) {
         for (CartItem cartItem : cartItems) {
             if (cartItem.getMenu().equals(menu)) {
-                cartItem.setQuantity(menuQty);
-                cartItem.setSubtotal();
+                foodService.setItemQty(cartItem, menuQty);
+                foodService.setItemSubtotal(cartItem);
                 return;
             }
         }
