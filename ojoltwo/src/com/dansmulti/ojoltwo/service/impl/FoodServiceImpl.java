@@ -1,9 +1,6 @@
 package com.dansmulti.ojoltwo.service.impl;
 
-import com.dansmulti.ojoltwo.model.CartItem;
-import com.dansmulti.ojoltwo.model.Driver;
-import com.dansmulti.ojoltwo.model.Menu;
-import com.dansmulti.ojoltwo.model.Restaurant;
+import com.dansmulti.ojoltwo.model.*;
 import com.dansmulti.ojoltwo.service.FoodService;
 
 import java.util.Arrays;
@@ -11,36 +8,6 @@ import java.util.List;
 import java.util.Random;
 
 public class FoodServiceImpl implements FoodService {
-
-    @Override
-    public Driver findDriver() {
-        List<Driver> drivers = Arrays.asList(
-                new Driver("Dono", "B 8485 KX"),
-                new Driver("Kasino", "B 9876 YZ"),
-                new Driver("Indro", "A 7632 PK"),
-                new Driver("Nanu", "D 8542 KT"),
-                new Driver("Rudy", "D 3764 HK")
-        );
-        Random random = new Random();
-        return drivers.get(random.nextInt(drivers.size()));
-    }
-
-    @Override
-    public double calculateBill(String from, String to, double grandTotalCart) {
-        return (grandTotalCart + (from.length() * to.length() * 200));
-    }
-
-    @Override
-    public void setItemQty(CartItem cartItem, int additionQty) {
-        int newQuantity = cartItem.getQuantity() + additionQty;
-        cartItem.setQuantity(newQuantity);
-    }
-
-    @Override
-    public void setItemSubtotal(CartItem cartItem) {
-        double subtotal = cartItem.getQuantity() * cartItem.getMenu().getPrice();
-        cartItem.setSubtotal(subtotal);
-    }
 
     @Override
     public List<Restaurant> getRestaurants() {
@@ -86,6 +53,67 @@ public class FoodServiceImpl implements FoodService {
                         new Menu("Indomie kuah telur", 14000)
                 ))
         );
+    }
+
+    @Override
+    public void setCartItems(Cart cart, CartItem newItem, Menu menu, int qty) {
+        List<CartItem> cartItems = cart.getItems();
+
+        for (CartItem item : cartItems) {
+            if (item.getMenu().equals(menu)) {
+                setItemQty(item, qty);
+                setItemSubtotal(item);
+                return;
+            }
+        }
+        cartItems.add(newItem);
+        cart.setItems(cartItems);
+    }
+
+    @Override
+    public void setItemQty(CartItem cartItem, int additionQty) {
+        int newQuantity = cartItem.getQuantity() + additionQty;
+        cartItem.setQuantity(newQuantity);
+    }
+
+    @Override
+    public void setItemSubtotal(CartItem cartItem) {
+        double subtotal = cartItem.getQuantity() * cartItem.getMenu().getPrice();
+        cartItem.setSubtotal(subtotal);
+    }
+
+    @Override
+    public Driver findDriver() {
+        List<Driver> drivers = Arrays.asList(
+                new Driver("Dono", "B 8485 KX"),
+                new Driver("Kasino", "B 9876 YZ"),
+                new Driver("Indro", "A 7632 PK"),
+                new Driver("Nanu", "D 8542 KT"),
+                new Driver("Rudy", "D 3764 HK")
+        );
+        Random random = new Random();
+        return drivers.get(random.nextInt(drivers.size()));
+    }
+
+    @Override
+    public Double getCartGrandtotal(Cart cart) {
+        return cart.getGrandTotal();
+    }
+
+    @Override
+    public void setCartGrandtotal(Cart cart) {
+        List<CartItem> cartItems = cart.getItems();
+        double grandTotal = 0;
+        for (CartItem item : cartItems) {
+            grandTotal += item.getSubtotal();
+        }
+        cart.setGrandTotal(grandTotal);
+    }
+
+    @Override
+    public double calculateBill(Cart cart, String from, String to) {
+        setCartGrandtotal(cart);
+        return (getCartGrandtotal(cart) + (from.length() * to.length() * 200));
     }
 
 }

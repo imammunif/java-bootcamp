@@ -31,19 +31,8 @@ public class FoodView {
         showCart(restoName);
         String to = ScannerUtil.scanText("To : ");
         Driver driver = foodService.findDriver();
-        double totalBill = foodService.calculateBill(restoAddress, to, cart.getGrandTotal());
+        double totalBill = foodService.calculateBill(cart, restoAddress, to);
         showReceipt(restoName, restoAddress, driver.getName(), driver.getPlatNo(), to, totalBill);
-    }
-
-    private void addOrUpdateItem(CartItem newItem, Menu menu, int menuQty) {
-        for (CartItem cartItem : cartItems) {
-            if (cartItem.getMenu().equals(menu)) {
-                foodService.setItemQty(cartItem, menuQty);
-                foodService.setItemSubtotal(cartItem);
-                return;
-            }
-        }
-        cart.addItem(newItem);
     }
 
     private void showRestaurants(List<Restaurant> restaurants) {
@@ -63,9 +52,8 @@ public class FoodView {
         int indexMenu = ScannerUtil.scanLimitedOption("\nSelect a menu : ", restaurantMenu.size()) - 1;
         Menu menu = restaurantMenu.get(indexMenu);
         int menuQty = ScannerUtil.scanInt("Input quantity : ");
-        double menuPrice = restaurantMenu.get(indexMenu).getPrice();
-        CartItem newItem = new CartItem(menu, menuQty, menuPrice * menuQty);
-        addOrUpdateItem(newItem, menu, menuQty);
+        CartItem newItem = new CartItem(menu, menuQty, restaurantMenu.get(indexMenu).getPrice() * menuQty);
+        foodService.setCartItems(cart, newItem, menu, menuQty);
         String addMore = ScannerUtil.scanText("\nDo you want to add more? [Y/N] : ");
         if ("y".equalsIgnoreCase(addMore)) {
             showRestaurantMenu(restoName, restaurantMenu);
@@ -85,6 +73,7 @@ public class FoodView {
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
         }
+        System.out.println("Food Total Price : " + foodService.getCartGrandtotal(cart));
         System.out.println("From : " + restoName + " (" + restoAddress + ")");
         System.out.println("To : " + to);
         System.out.println("Driver Name : " + driverName);

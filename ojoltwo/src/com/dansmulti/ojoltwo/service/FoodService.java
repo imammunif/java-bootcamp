@@ -1,20 +1,24 @@
 package com.dansmulti.ojoltwo.service;
 
-import com.dansmulti.ojoltwo.model.CartItem;
-import com.dansmulti.ojoltwo.model.Driver;
-import com.dansmulti.ojoltwo.model.Restaurant;
+import com.dansmulti.ojoltwo.model.*;
 
 import java.util.List;
 
 public interface FoodService {
 
-    Driver findDriver();
+    List<Restaurant> getRestaurants();
 
-    double calculateBill(String from, String to, double grandTotalCart);
+    void setCartItems(Cart cart, CartItem cartItem, Menu menu, int qty);
 
     void setItemQty(CartItem cartItem, int additionQty);
 
     void setItemSubtotal(CartItem cartItem);
 
-    List<Restaurant> getRestaurants();
+    Driver findDriver();
+
+    Double getCartGrandtotal(Cart cart);
+
+    void setCartGrandtotal(Cart cart);
+
+    double calculateBill(Cart cart, String from, String to);
 }
