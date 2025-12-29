@@ -20,7 +20,6 @@ public class FoodView {
     void show() {
         cartItems = new ArrayList<>();
         cart = new Cart(cartItems);
-        boolean isConfirmed = false;
         List<Restaurant> restaurants = foodService.getRestaurants();
         showRestaurants(restaurants);
         int indexResto = ScannerUtil.scanLimitedOption("\nSelect a restaurant : ", restaurants.size()) - 1;
@@ -28,22 +27,8 @@ public class FoodView {
         String restoName = restaurants.get(indexResto).getName();
         String restoAddress = restaurants.get(indexResto).getAddress();
 
-        do {
-            showRestaurantMenu(restoName, restaurantMenu);
-            int indexMenu = ScannerUtil.scanLimitedOption("\nSelect a menu : ", restaurantMenu.size()) - 1;
-            Menu menu = restaurantMenu.get(indexMenu);
-            int menuQty = ScannerUtil.scanInt("Input quantity : ");
-            double menuPrice = restaurantMenu.get(indexMenu).getPrice();
-            CartItem newItem = new CartItem(menu, menuQty, menuPrice * menuQty);
-            addOrUpdateItem(newItem, menu, menuQty);
-            showCart(restoName);
-
-            String addMore = ScannerUtil.scanText("\nDo you want to add more? [Y/N] : ");
-            if (addMore.equalsIgnoreCase("n")) {
-                isConfirmed = true;
-            }
-        } while (!isConfirmed);
-
+        showRestaurantMenu(restoName, restaurantMenu);
+        showCart(restoName);
         String to = ScannerUtil.scanText("To : ");
         Driver driver = foodService.findDriver();
         double totalBill = foodService.calculateBill(restoAddress, to, cart.getGrandTotal());
@@ -74,6 +59,16 @@ public class FoodView {
         System.out.println("\n===== Menu in " + restoName + " =====");
         for (int i = 0; i < restaurantMenu.size(); i++) {
             System.out.println((i + 1) + ". " + restaurantMenu.get(i).getName() + " (Rp. " + restaurantMenu.get(i).getPrice() + ")");
+        }
+        int indexMenu = ScannerUtil.scanLimitedOption("\nSelect a menu : ", restaurantMenu.size()) - 1;
+        Menu menu = restaurantMenu.get(indexMenu);
+        int menuQty = ScannerUtil.scanInt("Input quantity : ");
+        double menuPrice = restaurantMenu.get(indexMenu).getPrice();
+        CartItem newItem = new CartItem(menu, menuQty, menuPrice * menuQty);
+        addOrUpdateItem(newItem, menu, menuQty);
+        String addMore = ScannerUtil.scanText("\nDo you want to add more? [Y/N] : ");
+        if ("y".equalsIgnoreCase(addMore)) {
+            showRestaurantMenu(restoName, restaurantMenu);
         }
     }
 
