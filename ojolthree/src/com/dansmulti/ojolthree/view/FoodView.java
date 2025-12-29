@@ -103,6 +103,52 @@ public class FoodView {
     }
 
     private void editCart() {
+        System.out.println("Edit cart :");
+        System.out.println("1. Edit quantity");
+        System.out.println("2. Delete per item");
+        System.out.println("3. Delete all");
+        int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
+        if (options == 1) {
+            editQuantity();
+        } else if (options == 2) {
+            deletePerItem();
+        } else if (options == 3) {
+            deleteAllItem();
+        }
+    }
+
+    private void deleteAllItem() {
+        cartItems.clear();
+        System.out.println("All items deleted successfully");
+    }
+
+    private void deletePerItem() {
+        for (int i = 0; i < cartItems.size(); i++) {
+            System.out.println((i + 1) + ". " + cartItems.get(i).getMenu().getName() + " x" + cartItems.get(i).getQuantity());
+        }
+        int input = ScannerUtil.scanLimitedOption("Select item number to delete :", cartItems.size());
+        cartItems.remove(input - 1);
+        System.out.println("Item deleted successfully");
+    }
+
+    private void editQuantity() {
+        for (int i = 0; i < cartItems.size(); i++) {
+            System.out.println((i + 1) + ". " + cartItems.get(i).getMenu().getName() + " x" + cartItems.get(i).getQuantity());
+        }
+        int input = ScannerUtil.scanLimitedOption("Select item number to edit : ", cartItems.size());
+        CartItem item = cartItems.get(input - 1);
+        int avail = item.getQuantity();
+        int target = ScannerUtil.scanInt("Set to : ");
+        if (target > avail) {
+            int addition = target - avail;
+            foodService.setItemQty(item, addition);
+        } else {
+            int reduction = avail - target;
+            foodService.setItemQty(item, (reduction * -1));
+        }
+        foodService.setCartGrandtotal(cart);
+        System.out.println("Item updated successfully");
+
     }
 
     private void checkout() {
@@ -120,5 +166,6 @@ public class FoodView {
         System.out.println("Driver Plat No : " + driver.getPlatNo());
         System.out.println("Total Price : " + foodService.calculateBill(cart, restaurant.getAddress(), to));
         System.out.println("======= Thanks =======");
+        cartItems.clear();
     }
 }

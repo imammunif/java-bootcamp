@@ -69,7 +69,6 @@ public class FoodServiceImpl implements FoodService {
         for (CartItem item : cartItems) {
             if (item.getMenu().equals(menu)) {
                 setItemQty(item, qty);
-                setItemSubtotal(item);
                 return;
             }
         }
@@ -81,6 +80,7 @@ public class FoodServiceImpl implements FoodService {
     public void setItemQty(CartItem cartItem, int additionQty) {
         int newQuantity = cartItem.getQuantity() + additionQty;
         cartItem.setQuantity(newQuantity);
+        setItemSubtotal(cartItem);
     }
 
     @Override
