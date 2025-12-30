@@ -1,15 +1,14 @@
 package com.dansmulti.ojolfour;
 
 import com.dansmulti.ojolfour.service.FoodService;
+import com.dansmulti.ojolfour.service.HistoryService;
 import com.dansmulti.ojolfour.service.RideService;
 import com.dansmulti.ojolfour.service.SendService;
 import com.dansmulti.ojolfour.service.impl.FoodServiceImpl;
+import com.dansmulti.ojolfour.service.impl.HistoryServiceImpl;
 import com.dansmulti.ojolfour.service.impl.RideServiceImpl;
 import com.dansmulti.ojolfour.service.impl.SendServiceImpl;
-import com.dansmulti.ojolfour.view.FoodView;
-import com.dansmulti.ojolfour.view.MainView;
-import com.dansmulti.ojolfour.view.RideView;
-import com.dansmulti.ojolfour.view.SendView;
+import com.dansmulti.ojolfour.view.*;
 
 public class App {
     public static void main(String[] args) {
@@ -17,12 +16,14 @@ public class App {
         RideService rideService = new RideServiceImpl();
         SendService sendService = new SendServiceImpl();
         FoodService foodService = new FoodServiceImpl();
+        HistoryService historyService = new HistoryServiceImpl();
 
         RideView rideView = new RideView(rideService);
         SendView sendView = new SendView(sendService);
         FoodView foodView = new FoodView(foodService);
+        HistoryView historyView = new HistoryView(historyService);
 
-        new MainView(rideView, sendView, foodView).show();
+        new MainView(rideView, sendView, foodView, historyView).show();
 
     }
 }
