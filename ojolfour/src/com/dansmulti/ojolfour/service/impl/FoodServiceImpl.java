@@ -3,9 +3,7 @@ package com.dansmulti.ojolfour.service.impl;
 import com.dansmulti.ojolfour.model.*;
 import com.dansmulti.ojolfour.service.FoodService;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class FoodServiceImpl implements FoodService {
 
@@ -103,6 +101,20 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    public Double getDiscount(String voucher) {
+        Map<String, Double> discounts = new HashMap<String, Double>();
+        discounts.put("DESEMBER12", 12.0);
+        discounts.put("AKHIRTAHUN25", 25.0);
+
+        for (Map.Entry<String, Double> set : discounts.entrySet()) {
+            if (voucher.equals(set.getKey())) {
+                return set.getValue();
+            }
+        }
+        return 0.0;
+    }
+
+    @Override
     public Double getCartGrandtotal(Cart cart) {
         return cart.getGrandTotal();
     }
@@ -118,9 +130,11 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public double calculateBill(Cart cart, String from, String to) {
+    public Double calculateBill(Cart cart, String voucher, String from, String to) {
+        Double discount = getDiscount(voucher);
         setCartGrandtotal(cart);
-        return (getCartGrandtotal(cart) + (from.length() * to.length() * 200));
+        Double total = getCartGrandtotal(cart) + (from.length() * to.length() * 200);
+        return total - (total * discount / 100.0);
     }
 
 }

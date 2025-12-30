@@ -18,9 +18,11 @@ public interface FoodService {
 
     Driver findDriver();
 
+    Double getDiscount(String voucher);
+
     Double getCartGrandtotal(Cart cart);
 
     void setCartGrandtotal(Cart cart);
 
-    double calculateBill(Cart cart, String from, String to);
+    Double calculateBill(Cart cart, String voucher, String from, String to);
 }

@@ -157,6 +157,12 @@ public class FoodView {
     }
 
     private void checkout(History history) {
+        String haveDiscount = ScannerUtil.scanText("\nDo you have voucher [y/n] : ");
+        String voucher = "";
+        if ("y".equalsIgnoreCase(haveDiscount)) {
+            voucher = ScannerUtil.scanText("Enter voucher : ");
+        }
+
         String to = ScannerUtil.scanText("To : ");
         Driver driver = foodService.findDriver();
 
@@ -169,7 +175,7 @@ public class FoodView {
         System.out.println("To : " + to);
         System.out.println("Driver Name : " + driver.getName());
         System.out.println("Driver Plat No : " + driver.getPlatNo());
-        System.out.println("Total Price : " + foodService.calculateBill(cart, restaurant.getAddress(), to));
+        System.out.println("Total Price : " + foodService.calculateBill(cart, voucher, restaurant.getAddress(), to));
         System.out.println("======= Thanks =======");
 
         FoodOrder foodOrder = new FoodOrder("Food", LocalDateTime.now(), restaurant.getAddress(), to);

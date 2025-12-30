@@ -27,7 +27,7 @@ public class RideView {
 
         Driver driver = rideService.findDriver();
 
-        String haveDiscount = ScannerUtil.scanText("\nDo you have discount? [y/n] : ");
+        String haveDiscount = ScannerUtil.scanText("\nDo you have voucher? [y/n] : ");
         String voucher = "";
         if ("y".equalsIgnoreCase(haveDiscount)) {
             voucher = ScannerUtil.scanText("Enter voucher : ");
