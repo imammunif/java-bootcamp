@@ -21,7 +21,8 @@ public class HistoryView {
         System.out.println("===== History =====");
         List<Order> orderList = historyService.getHistory(history);
         if (orderList.isEmpty()) {
-            System.out.println("\n===== Your have no history. Order a service first! =====");
+            System.out.println("Oops, you have no history.");
+            System.out.println("Order a service first!");
         } else {
             printRideHistory(orderList);
             printSendHistory(orderList);
@@ -31,7 +32,7 @@ public class HistoryView {
     }
 
     private void printRideHistory(List<Order> orderList) {
-        System.out.println("\n===== Ride service =====");
+        System.out.println("-- Ride service --");
         boolean found = false;
         for (Order order : orderList) {
             if ("ride".equalsIgnoreCase(order.getType())) {
@@ -40,12 +41,12 @@ public class HistoryView {
             }
         }
         if (!found) {
-            System.out.println("\n===== No ride service history! =====");
+            System.out.println("No ride service history!");
         }
     }
 
     private void printSendHistory(List<Order> orderList) {
-        System.out.println("\n===== Send service =====");
+        System.out.println("\n-- Send service --");
         boolean found = false;
         for (Order order : orderList) {
             if ("send".equalsIgnoreCase(order.getType())) {
@@ -54,12 +55,12 @@ public class HistoryView {
             }
         }
         if (!found) {
-            System.out.println("\n===== No send service history! =====");
+            System.out.println("No send service history!");
         }
     }
 
     private void printFoodHistory(List<Order> orderList) {
-        System.out.println("\n===== Food service =====");
+        System.out.println("\n-- Food service --");
         boolean found = false;
         for (Order order : orderList) {
             if ("food".equalsIgnoreCase(order.getType())) {
@@ -68,7 +69,7 @@ public class HistoryView {
             }
         }
         if (!found) {
-            System.out.println("\n===== No food service history! =====");
+            System.out.println("No food service history!");
         }
     }
 
