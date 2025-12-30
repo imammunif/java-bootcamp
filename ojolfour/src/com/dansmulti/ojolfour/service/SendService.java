@@ -6,9 +6,12 @@ import java.util.List;
 
 public interface SendService {
 
+    List<String> getCategories();
+
     Driver findDriver();
 
-    double calculatePrice(String from, String to, String category, double weight);
+    Double getDiscount(String voucher);
 
-    List<String> getCategories();
+    Double calculateBill(String from, String to, String category, double weight, String voucher);
+
 }

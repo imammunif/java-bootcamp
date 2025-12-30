@@ -37,7 +37,12 @@ public class SendView {
         String to = ScannerUtil.scanText("To : ");
 
         Driver driver = sendService.findDriver();
-        double totalBill = sendService.calculatePrice(from, to, categories.get(indexCategory), weight);
+        String haveDiscount = ScannerUtil.scanText("\nDo you have voucher? [y/n] : ");
+        String voucher = "";
+        if ("y".equalsIgnoreCase(haveDiscount)) {
+            voucher = ScannerUtil.scanText("Enter voucher : ");
+        }
+        Double totalBill = sendService.calculateBill(from, to, categories.get(indexCategory), weight, voucher);
 
         SendOrder sendOrder = new SendOrder("Send", LocalDateTime.now(), from, to);
         historyService.setOrderHistory(history, sendOrder);

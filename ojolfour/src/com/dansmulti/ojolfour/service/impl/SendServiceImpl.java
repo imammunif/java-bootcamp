@@ -3,11 +3,14 @@ package com.dansmulti.ojolfour.service.impl;
 import com.dansmulti.ojolfour.model.Driver;
 import com.dansmulti.ojolfour.service.SendService;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class SendServiceImpl implements SendService {
+
+    @Override
+    public List<String> getCategories() {
+        return Arrays.asList("kurir", "cargo", "logistic", "ekspedisi");
+    }
 
     @Override
     public Driver findDriver() {
@@ -23,15 +26,23 @@ public class SendServiceImpl implements SendService {
     }
 
     @Override
-    public double calculatePrice(String from, String to, String category, double weight) {
+    public Double getDiscount(String voucher) {
+        Map<String, Double> discounts = new HashMap<>();
+        discounts.put("RINGANMURAH12", 12.0);
+        discounts.put("PROMO25", 25.0);
 
-        double totalPrice = ((category.length() * weight) + (from.length() * to.length() + 1000));
-        return totalPrice;
+        if (discounts.containsKey(voucher)) {
+            return discounts.get(voucher);
+        }
+        return 0.0;
     }
 
     @Override
-    public List<String> getCategories() {
-        return Arrays.asList("kurir", "cargo", "logistic", "ekspedisi");
+    public Double calculateBill(String from, String to, String category, double weight, String voucher) {
+        Double discount = getDiscount(voucher);
+        Double total = (category.length() * weight) + (from.length() * to.length() + 1000);
+        return total - (total * discount / 100.0);
     }
+
 
 }
