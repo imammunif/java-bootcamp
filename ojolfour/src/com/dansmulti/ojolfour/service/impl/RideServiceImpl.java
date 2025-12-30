@@ -29,14 +29,12 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Double getDiscount(String voucher) {
-        Map<String, Double> discounts = new HashMap<String, Double>();
-        discounts.put("DESEMBER12", 12.0);
+        Map<String, Double> discounts = new HashMap<>();
+        discounts.put("DECEMBER12", 12.0);
         discounts.put("AKHIRTAHUN25", 25.0);
 
-        for (Map.Entry<String, Double> set : discounts.entrySet()) {
-            if (voucher.equals(set.getKey())) {
-                return set.getValue();
-            }
+        if (discounts.containsKey(voucher)) {
+            return discounts.get(voucher);
         }
         return 0.0;
     }
