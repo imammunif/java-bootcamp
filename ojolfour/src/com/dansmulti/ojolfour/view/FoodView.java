@@ -2,25 +2,30 @@ package com.dansmulti.ojolfour.view;
 
 import com.dansmulti.ojolfour.listener.OnBackListener;
 import com.dansmulti.ojolfour.model.*;
+import com.dansmulti.ojolfour.model.order.FoodOrder;
 import com.dansmulti.ojolfour.service.FoodService;
+import com.dansmulti.ojolfour.service.HistoryService;
 import com.dansmulti.ojolfour.util.ScannerUtil;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FoodView {
 
     private final FoodService foodService;
+    private final HistoryService historyService;
     private List<CartItem> cartItems = new ArrayList<>();
     private Cart cart = new Cart(cartItems);
     private Restaurant restaurant;
     private OnBackListener onBackListener;
 
-    public FoodView(FoodService foodService) {
+    public FoodView(FoodService foodService, HistoryService historyService) {
         this.foodService = foodService;
+        this.historyService = historyService;
     }
 
-    void show(OnBackListener listener) {
+    void show(History history, OnBackListener listener) {
         this.onBackListener = listener;
         System.out.println("\n==== Food ====");
         System.out.println("1. Show menu");
@@ -31,11 +36,11 @@ public class FoodView {
         if (options == 1) {
             itemSubmenu();
         } else if (options == 2) {
-            cartSubmenu();
+            cartSubmenu(history);
         } else if (options == 3) {
             listener.onBackPressed();
         }
-        show(listener);
+        show(history, listener);
     }
 
     private void itemSubmenu() {
@@ -47,12 +52,12 @@ public class FoodView {
         showRestaurantMenu();
     }
 
-    private void cartSubmenu() {
+    private void cartSubmenu(History history) {
         if (cart.getItems().isEmpty()) {
             System.out.println("\n===== Your cart is empty. Please add an item first! =====");
             return;
         }
-        showCart();
+        showCart(history);
     }
 
     private void showRestaurants() {
@@ -83,7 +88,7 @@ public class FoodView {
         }
     }
 
-    private void showCart() {
+    private void showCart(History history) {
         System.out.println("\n===== Your cart from : " + restaurant.getName() + " =====");
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
@@ -97,11 +102,11 @@ public class FoodView {
         if (options == 1) {
             editCart();
         } else if (options == 2) {
-            checkout();
+            checkout(history);
         } else if (options == 3) {
             return;
         }
-        show(onBackListener);
+        show(history, onBackListener);
     }
 
     private void editCart() {
@@ -151,7 +156,7 @@ public class FoodView {
 
     }
 
-    private void checkout() {
+    private void checkout(History history) {
         String to = ScannerUtil.scanText("To : ");
         Driver driver = foodService.findDriver();
 
@@ -166,6 +171,10 @@ public class FoodView {
         System.out.println("Driver Plat No : " + driver.getPlatNo());
         System.out.println("Total Price : " + foodService.calculateBill(cart, restaurant.getAddress(), to));
         System.out.println("======= Thanks =======");
+
+        FoodOrder foodOrder = new FoodOrder("Food", LocalDateTime.now(), restaurant.getAddress(), to);
+        historyService.setOrderHistory(history, foodOrder);
+
         cartItems.clear();
     }
 }

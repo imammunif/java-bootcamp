@@ -36,7 +36,7 @@ public class MainView {
         } else if (chosen == 2) {
             sendView.show(history, () -> show());
         } else if (chosen == 3) {
-            foodView.show(() -> show());
+            foodView.show(history, () -> show());
         } else if (chosen == 4) {
             historyView.show(history, () -> show());
         }

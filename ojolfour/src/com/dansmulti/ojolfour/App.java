@@ -20,7 +20,7 @@ public class App {
 
         RideView rideView = new RideView(rideService, historyService);
         SendView sendView = new SendView(sendService, historyService);
-        FoodView foodView = new FoodView(foodService);
+        FoodView foodView = new FoodView(foodService, historyService);
         HistoryView historyView = new HistoryView(historyService);
 
         new MainView(rideView, sendView, foodView, historyView).show();
