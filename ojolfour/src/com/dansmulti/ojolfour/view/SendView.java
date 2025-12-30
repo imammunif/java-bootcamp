@@ -2,20 +2,26 @@ package com.dansmulti.ojolfour.view;
 
 import com.dansmulti.ojolfour.listener.OnBackListener;
 import com.dansmulti.ojolfour.model.Driver;
+import com.dansmulti.ojolfour.model.History;
+import com.dansmulti.ojolfour.model.order.SendOrder;
+import com.dansmulti.ojolfour.service.HistoryService;
 import com.dansmulti.ojolfour.service.SendService;
 import com.dansmulti.ojolfour.util.ScannerUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class SendView {
 
     private final SendService sendService;
+    private final HistoryService historyService;
 
-    public SendView(SendService sendService) {
+    public SendView(SendService sendService, HistoryService historyService) {
         this.sendService = sendService;
+        this.historyService = historyService;
     }
 
-    void show(OnBackListener listener) {
+    void show(History history, OnBackListener listener) {
         System.out.println("===== Send =====");
         System.out.println("Available category");
 
@@ -32,6 +38,10 @@ public class SendView {
 
         Driver driver = sendService.findDriver();
         double totalBill = sendService.calculatePrice(from, to, categories.get(indexCategory), weight);
+
+        SendOrder sendOrder = new SendOrder("Send", LocalDateTime.now(), from, to);
+        historyService.setOrderHistory(history, sendOrder);
+
         showReceipt(categories.get(indexCategory), from, to, driver.getName(), driver.getPlatNo(), totalBill);
         listener.onBackPressed();
     }

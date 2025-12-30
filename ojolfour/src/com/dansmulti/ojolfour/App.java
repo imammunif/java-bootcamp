@@ -19,7 +19,7 @@ public class App {
         HistoryService historyService = new HistoryServiceImpl();
 
         RideView rideView = new RideView(rideService, historyService);
-        SendView sendView = new SendView(sendService);
+        SendView sendView = new SendView(sendService, historyService);
         FoodView foodView = new FoodView(foodService);
         HistoryView historyView = new HistoryView(historyService);
 
