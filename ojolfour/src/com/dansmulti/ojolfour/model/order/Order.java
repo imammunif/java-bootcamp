@@ -3,14 +3,15 @@ package com.dansmulti.ojolfour.model.order;
 import java.time.LocalDateTime;
 
 public abstract class Order {
-    private LocalDateTime dateTime;
     private String type;
+    private LocalDateTime dateTime;
     private String from;
     private String to;
     // private double totalBill;
     // private Driver driver;
 
-    public Order(LocalDateTime dateTime, String from, String to) {
+    public Order(String type, LocalDateTime dateTime, String from, String to) {
+        this.type = type;
         this.dateTime = dateTime;
         this.from = from;
         this.to = to;

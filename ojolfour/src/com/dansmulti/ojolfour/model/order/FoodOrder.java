@@ -8,8 +8,8 @@ public class FoodOrder extends Order {
 
     private Cart cart;
 
-    public FoodOrder(LocalDateTime dateTime, String from, String to) {
-        super(dateTime, from, to);
+    public FoodOrder(String type, LocalDateTime dateTime, String from, String to) {
+        super(type, dateTime, from, to);
     }
 
     public Cart getCart() {

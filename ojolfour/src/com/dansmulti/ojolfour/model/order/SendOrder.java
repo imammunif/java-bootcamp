@@ -7,8 +7,8 @@ public class SendOrder extends Order {
     private double weight;
     private String category;
 
-    public SendOrder(LocalDateTime dateTime, String from, String to) {
-        super(dateTime, from, to);
+    public SendOrder(String type, LocalDateTime dateTime, String from, String to) {
+        super(type, dateTime, from, to);
     }
 
     public void setWeight(double weight) {

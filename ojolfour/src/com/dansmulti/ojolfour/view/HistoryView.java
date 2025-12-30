@@ -5,11 +5,13 @@ import com.dansmulti.ojolfour.model.History;
 import com.dansmulti.ojolfour.model.order.Order;
 import com.dansmulti.ojolfour.service.HistoryService;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class HistoryView {
 
     private final HistoryService historyService;
+    DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public HistoryView(HistoryService historyService) {
         this.historyService = historyService;
@@ -20,6 +22,18 @@ public class HistoryView {
         List<Order> orderList = historyService.getHistory(history);
         if (orderList.isEmpty()) {
             System.out.println("\n===== Your have no history. Order a service first! =====");
+        }
+        for (Order order : orderList) {
+            if ("ride".equalsIgnoreCase(order.getType())) {
+                System.out.println("\n===== Ride service =====");
+                System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
+            } else if ("send".equalsIgnoreCase(order.getType())) {
+                System.out.println("\n===== Send service =====");
+                System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
+            } else if ("food".equalsIgnoreCase(order.getType())) {
+                System.out.println("\n===== Food service =====");
+                System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
+            }
         }
         listener.onBackPressed();
     }
