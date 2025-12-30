@@ -20,8 +20,8 @@ public class FoodView {
 
     void show() {
         System.out.println("\n==== Food ====");
-        System.out.println("1. See menu");
-        System.out.println("2. My cart");
+        System.out.println("1. Show menu");
+        System.out.println("2. Show cart");
         System.out.println("3. Back");
 
         int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
@@ -70,12 +70,12 @@ public class FoodView {
             System.out.println((i + 1) + ". " + restaurantMenu.get(i).getName() + " (Rp. " + restaurantMenu.get(i).getPrice() + ")");
         }
         Menu menu = restaurantMenu.get(ScannerUtil.scanLimitedOption("\nSelect a menu : ", restaurantMenu.size()) - 1);
-        int menuQty = ScannerUtil.scanInt("Input quantity : ");
+        int menuQty = ScannerUtil.scanInt("Enter quantity : ");
         CartItem newItem = new CartItem(menu, menuQty, menu.getPrice() * menuQty);
 
         foodService.setCartItems(cart, newItem, menu, menuQty);
         foodService.setCartRestaurant(cart, restaurant);
-        String addMore = ScannerUtil.scanText("\nDo you want to add more? [Y/N] : ");
+        String addMore = ScannerUtil.scanText("\nDo you want to add more? [y/n] : ");
         if ("y".equalsIgnoreCase(addMore)) {
             showRestaurantMenu();
         }
@@ -86,8 +86,8 @@ public class FoodView {
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
         }
-        System.out.println("Options :");
-        System.out.println("1. Edit");
+        System.out.println("Cart options :");
+        System.out.println("1. Edit cart");
         System.out.println("2. Checkout");
         System.out.println("3. Back");
 
@@ -103,7 +103,7 @@ public class FoodView {
     }
 
     private void editCart() {
-        System.out.println("Edit cart :");
+        System.out.println("Editing options :");
         System.out.println("1. Edit quantity");
         System.out.println("2. Delete per item");
         System.out.println("3. Delete all");
@@ -138,7 +138,7 @@ public class FoodView {
         int input = ScannerUtil.scanLimitedOption("Select item number to edit : ", cartItems.size());
         CartItem item = cartItems.get(input - 1);
         int avail = item.getQuantity();
-        int target = ScannerUtil.scanInt("Set to : ");
+        int target = ScannerUtil.scanInt("Enter new quantity : ");
         if (target > avail) {
             int addition = target - avail;
             foodService.setItemQty(item, addition);
