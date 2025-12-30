@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public abstract class Order {
     private LocalDateTime dateTime;
+    private String type;
     private String from;
     private String to;
     // private double totalBill;
@@ -27,6 +28,10 @@ public abstract class Order {
         this.to = to;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -37,5 +42,9 @@ public abstract class Order {
 
     public String getTo() {
         return to;
+    }
+
+    public String getType() {
+        return type;
     }
 }
