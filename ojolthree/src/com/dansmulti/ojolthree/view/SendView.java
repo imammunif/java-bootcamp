@@ -1,5 +1,6 @@
 package com.dansmulti.ojolthree.view;
 
+import com.dansmulti.ojolthree.listener.OnBackListener;
 import com.dansmulti.ojolthree.model.Driver;
 import com.dansmulti.ojolthree.service.SendService;
 import com.dansmulti.ojolthree.util.ScannerUtil;
@@ -14,7 +15,7 @@ public class SendView {
         this.sendService = sendService;
     }
 
-    void show() {
+    void show(OnBackListener listener) {
         System.out.println("===== Send =====");
         System.out.println("Available category");
 
@@ -32,6 +33,7 @@ public class SendView {
         Driver driver = sendService.findDriver();
         double totalBill = sendService.calculatePrice(from, to, categories.get(indexCategory), weight);
         showReceipt(categories.get(indexCategory), from, to, driver.getName(), driver.getPlatNo(), totalBill);
+        listener.onBackPressed();
     }
 
     void showReceipt(String category, String from, String to, String driverName, String licensePlate, double totalBill) {
