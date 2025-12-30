@@ -26,14 +26,21 @@ public class RideView {
         String to = ScannerUtil.scanText("To : ");
 
         Driver driver = rideService.findDriver();
-        int totalBill = rideService.calculatePrice(from, to);
+
+        String haveDiscount = ScannerUtil.scanText("\nDo you have discount? [y/n] : ");
+        String voucher = "";
+        if ("y".equalsIgnoreCase(haveDiscount)) {
+            voucher = ScannerUtil.scanText("Enter voucher : ");
+        }
+
+        Double totalBill = rideService.calculatePrice(voucher, from, to);
         RideOrder rideOrder = new RideOrder("Ride", LocalDateTime.now(), from, to);
         historyService.setOrderHistory(history, rideOrder);
         showReceipt(from, to, driver.getName(), driver.getPlatNo(), totalBill);
         listener.onBackPressed();
     }
 
-    void showReceipt(String from, String to, String driverName, String licensePlate, int totalBill) {
+    void showReceipt(String from, String to, String driverName, String licensePlate, Double totalBill) {
         System.out.println("===== Detail =====");
         System.out.println("From : " + from);
         System.out.println("To : " + to);

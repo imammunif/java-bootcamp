@@ -6,5 +6,7 @@ public interface RideService {
 
     Driver findDriver();
 
-    int calculatePrice(String from, String to);
+    Double getDiscount(String voucher);
+
+    Double calculatePrice(String voucher, String from, String to);
 }
