@@ -137,14 +137,12 @@ public class FoodView {
         }
         int input = ScannerUtil.scanLimitedOption("Select item number to edit : ", cartItems.size());
         CartItem item = cartItems.get(input - 1);
-        int avail = item.getQuantity();
-        int target = ScannerUtil.scanInt("Enter new quantity : ");
-        if (target > avail) {
-            int addition = target - avail;
-            foodService.setItemQty(item, addition);
+        int availQty = item.getQuantity();
+        int targetQty = ScannerUtil.scanInt("Enter new quantity : ");
+        if (targetQty > availQty) {
+            foodService.setItemQty(item, (targetQty - availQty));
         } else {
-            int reduction = avail - target;
-            foodService.setItemQty(item, (reduction * -1));
+            foodService.setItemQty(item, ((availQty - targetQty) * -1));
         }
         foodService.setCartGrandtotal(cart);
         System.out.println("Item updated successfully");
