@@ -11,4 +11,11 @@ public class HistoryServiceImpl implements HistoryService {
     public List<Order> getHistory(History history) {
         return history.getHistory();
     }
+
+    @Override
+    public void setOrderHistory(History history, Order order) {
+        List<Order> historyList = history.getHistory();
+        historyList.add(order);
+        history.setHistory(historyList);
+    }
 }

@@ -18,7 +18,7 @@ public class App {
         FoodService foodService = new FoodServiceImpl();
         HistoryService historyService = new HistoryServiceImpl();
 
-        RideView rideView = new RideView(rideService);
+        RideView rideView = new RideView(rideService, historyService);
         SendView sendView = new SendView(sendService);
         FoodView foodView = new FoodView(foodService);
         HistoryView historyView = new HistoryView(historyService);
