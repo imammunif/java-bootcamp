@@ -35,9 +35,9 @@ public class HistoryView {
         boolean found = false;
         for (Order order : orderList) {
             if ("ride".equalsIgnoreCase(order.getType())) {
+               found = true;
                 System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
             }
-            found = true;
         }
         if (!found) {
             System.out.println("\n===== No ride service history! =====");
@@ -49,9 +49,9 @@ public class HistoryView {
         boolean found = false;
         for (Order order : orderList) {
             if ("send".equalsIgnoreCase(order.getType())) {
+                found = true;
                 System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
             }
-            found = true;
         }
         if (!found) {
             System.out.println("\n===== No send service history! =====");
@@ -63,9 +63,9 @@ public class HistoryView {
         boolean found = false;
         for (Order order : orderList) {
             if ("food".equalsIgnoreCase(order.getType())) {
+                found = true;
                 System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
             }
-            found = true;
         }
         if (!found) {
             System.out.println("\n===== No food service history! =====");
