@@ -14,12 +14,14 @@ public class FoodView {
     private List<CartItem> cartItems = new ArrayList<>();
     private Cart cart = new Cart(cartItems);
     private Restaurant restaurant;
+    private OnBackListener onBackListener;
 
     public FoodView(FoodService foodService) {
         this.foodService = foodService;
     }
 
     void show(OnBackListener listener) {
+        this.onBackListener = listener;
         System.out.println("\n==== Food ====");
         System.out.println("1. Show menu");
         System.out.println("2. Show cart");
@@ -29,7 +31,7 @@ public class FoodView {
         if (options == 1) {
             itemSubmenu();
         } else if (options == 2) {
-            cartSubmenu(listener);
+            cartSubmenu();
         } else if (options == 3) {
             listener.onBackPressed();
         }
@@ -45,12 +47,12 @@ public class FoodView {
         showRestaurantMenu();
     }
 
-    private void cartSubmenu(OnBackListener listener) {
+    private void cartSubmenu() {
         if (cart.getItems().isEmpty()) {
             System.out.println("\n===== Your cart is empty. Please add an item first! =====");
             return;
         }
-        showCart(listener);
+        showCart();
     }
 
     private void showRestaurants() {
@@ -81,7 +83,7 @@ public class FoodView {
         }
     }
 
-    private void showCart(OnBackListener listener) {
+    private void showCart() {
         System.out.println("\n===== Your cart from : " + restaurant.getName() + " =====");
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
@@ -99,7 +101,7 @@ public class FoodView {
         } else if (options == 3) {
             return;
         }
-        show(listener);
+        show(onBackListener);
     }
 
     private void editCart() {
