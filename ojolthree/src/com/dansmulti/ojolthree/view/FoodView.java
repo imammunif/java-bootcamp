@@ -1,5 +1,6 @@
 package com.dansmulti.ojolthree.view;
 
+import com.dansmulti.ojolthree.listener.OnBackListener;
 import com.dansmulti.ojolthree.model.*;
 import com.dansmulti.ojolthree.service.FoodService;
 import com.dansmulti.ojolthree.util.ScannerUtil;
@@ -18,7 +19,7 @@ public class FoodView {
         this.foodService = foodService;
     }
 
-    void show() {
+    void show(OnBackListener listener) {
         System.out.println("\n==== Food ====");
         System.out.println("1. Show menu");
         System.out.println("2. Show cart");
@@ -28,11 +29,11 @@ public class FoodView {
         if (options == 1) {
             itemSubmenu();
         } else if (options == 2) {
-            cartSubmenu();
+            cartSubmenu(listener);
         } else if (options == 3) {
-            return;
+            listener.onBackPressed();
         }
-        show();
+        show(listener);
     }
 
     private void itemSubmenu() {
@@ -44,12 +45,12 @@ public class FoodView {
         showRestaurantMenu();
     }
 
-    private void cartSubmenu() {
+    private void cartSubmenu(OnBackListener listener) {
         if (cart.getItems().isEmpty()) {
             System.out.println("\n===== Your cart is empty. Please add an item first! =====");
             return;
         }
-        showCart();
+        showCart(listener);
     }
 
     private void showRestaurants() {
@@ -80,7 +81,7 @@ public class FoodView {
         }
     }
 
-    private void showCart() {
+    private void showCart(OnBackListener listener) {
         System.out.println("\n===== Your cart from : " + restaurant.getName() + " =====");
         for (CartItem cartItem : cartItems) {
             System.out.println("- " + cartItem.getMenu().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getMenu().getPrice() + " (" + cartItem.getSubtotal() + ")");
@@ -98,7 +99,7 @@ public class FoodView {
         } else if (options == 3) {
             return;
         }
-        show();
+        show(listener);
     }
 
     private void editCart() {

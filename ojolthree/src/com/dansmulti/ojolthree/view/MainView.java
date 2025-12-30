@@ -22,11 +22,11 @@ public class MainView {
 
         int chosen = ScannerUtil.scanLimitedOption("\nSelect [1-3] : ", 3);
         if (chosen == 1) {
-            rideView.show( () -> show());
+            rideView.show(() -> show());
         } else if (chosen == 2) {
-            sendView.show( () -> show());
+            sendView.show(() -> show());
         } else if (chosen == 3) {
-            foodView.show();
+            foodView.show(() -> show());
         }
     }
 }
