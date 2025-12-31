@@ -27,7 +27,7 @@ public class MainView {
         Scanner scanner = new Scanner(System.in);
         int chosen = scanner.nextInt();
         if (chosen == 1) {
-            scheduleView.show();
+            scheduleView.show(() -> show());
         } else if (chosen == 2) {
             historyView.show();
         } else if (chosen == 3) {
