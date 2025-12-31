@@ -7,7 +7,6 @@ import com.dansmultipro.train.service.TrainService;
 import com.dansmultipro.train.util.ScannerUtil;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -33,11 +32,11 @@ public class ScheduleView {
         }
         System.out.println("Options:");
         System.out.println("[1] Get Ticket");
-        System.out.println("[0] Back");
+        System.out.println("[2] Back");
         int options = ScannerUtil.scanLimitedOption("Select : ", 2);
         if (options == 1) {
             showGetTicket(trains);
-        } else if (options == 0) {
+        } else if (options == 2) {
             return;
         }
         show();
@@ -63,11 +62,10 @@ public class ScheduleView {
     private void showRailcarSeats(Railcar railcar) {
         System.out.println("\n----------- Displaying seats -----------");
         List<SeatRow> seatRows = railcar.getSeatRows();
-        Map<Integer, Boolean> seats;
         int rowCapacity = 0;
         for (SeatRow seatRow : seatRows) {
             System.out.print(seatRow.getName() + " : ");
-            seats = seatRow.getSeats();
+            Map<Integer, Boolean> seats = seatRow.getSeats();
             rowCapacity = seats.size();
             for (Map.Entry<Integer, Boolean> set : seats.entrySet()) {
                 if (set.getValue()) {
@@ -83,20 +81,35 @@ public class ScheduleView {
             System.out.print(" " + (i + 1) + "  ");
         }
 
-        showSelectSeat(rowCapacity);
-
-
-
-//        if selectseat == true {
-//            print already booked
-//        } else {
-//            update seat value
-//        }
+        showSelectSeat(seatRows);
     }
 
-    private void showSelectSeat(int rowCapacity) {
-        List<String> rowOptions = Arrays.asList("a","b","c","d");
+    private void showSelectSeat(List<SeatRow> seatRows) {
+        List<String> rowOptions = Arrays.asList("a", "b", "c", "d");
         String selectedRow = ScannerUtil.scanLimitedText("\nSelect row : ", rowOptions);
-        Integer selectedSeatNumber = ScannerUtil.scanLimitedOption("Select seat number : ", rowCapacity);
+        Integer selectedSeatNumber = ScannerUtil.scanLimitedOption("Select seat number : ", 10);
+
+        /*
+        seatrows = [
+            seatrow = [ name = "A", hashmap = {(1,true), (2,false) ..., (10,false)}],
+            seatrow = [ name = "B", hashmap = {(1,true), (2,false) ..., (10,false)}],
+            seatrow = [ name = "C", hashmap = {(1,true), (2,false) ..., (10,false)}],
+            seatrow = [ name = "D", hashmap = {(1,true), (2,false) ..., (10,false)}]
+        ]
+        */
+
+        for (SeatRow seatRow : seatRows) {
+            if (!selectedRow.equalsIgnoreCase(seatRow.getName())) {
+                continue;
+            }
+            Map<Integer, Boolean> seats = seatRow.getSeats();
+            for (Map.Entry<Integer, Boolean> entry : seats.entrySet()) {
+                if (entry.getKey().equals(selectedSeatNumber) && entry.getValue()) {
+                    System.out.println("Oops, seat already booked!");
+                    return;
+                }
+            }
+            System.out.println("Train ticket ordered successfully!");
+        }
     }
 }
