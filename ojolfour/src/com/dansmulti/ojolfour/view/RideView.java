@@ -50,4 +50,5 @@ public class RideView {
         System.out.println("Total Price : " + totalBill);
         System.out.println("===== Thanks =====");
     }
+
 }

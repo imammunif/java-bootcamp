@@ -11,6 +11,7 @@ import com.dansmulti.ojolfour.service.impl.SendServiceImpl;
 import com.dansmulti.ojolfour.view.*;
 
 public class App {
+
     public static void main(String[] args) {
 
         RideService rideService = new RideServiceImpl();

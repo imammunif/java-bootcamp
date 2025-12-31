@@ -38,4 +38,5 @@ public class RideServiceImpl implements RideService {
         }
         return 0.0;
     }
+
 }

@@ -44,5 +44,4 @@ public class SendServiceImpl implements SendService {
         return total - (total * discount / 100.0);
     }
 
-
 }

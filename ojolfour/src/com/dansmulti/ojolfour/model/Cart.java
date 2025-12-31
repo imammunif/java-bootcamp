@@ -3,6 +3,7 @@ package com.dansmulti.ojolfour.model;
 import java.util.List;
 
 public class Cart {
+
     private Restaurant restaurant;
     private List<CartItem> items;
     private double grandTotal;
@@ -36,4 +37,3 @@ public class Cart {
     }
 
 }
-

@@ -1,6 +1,7 @@
 package com.dansmulti.ojolfour.model;
 
 public class Driver {
+
     private String name;
     private String platNo;
 

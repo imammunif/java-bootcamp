@@ -3,6 +3,7 @@ package com.dansmulti.ojolfour.model;
 import java.util.List;
 
 public class Restaurant {
+
     private String name;
     private String address;
     private List<Menu> menu;
@@ -24,4 +25,5 @@ public class Restaurant {
     public List<Menu> getMenus() {
         return menu;
     }
+
 }

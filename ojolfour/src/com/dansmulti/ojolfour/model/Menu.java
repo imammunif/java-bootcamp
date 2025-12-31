@@ -1,6 +1,7 @@
 package com.dansmulti.ojolfour.model;
 
 public class Menu {
+
     private String name;
     private double price;
 
@@ -16,4 +17,5 @@ public class Menu {
     public double getPrice() {
         return price;
     }
+
 }

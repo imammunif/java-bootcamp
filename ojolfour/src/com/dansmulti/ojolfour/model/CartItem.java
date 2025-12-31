@@ -1,6 +1,7 @@
 package com.dansmulti.ojolfour.model;
 
 public class CartItem {
+
     private Menu menu;
     private int quantity;
     private double subtotal;

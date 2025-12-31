@@ -10,4 +10,5 @@ public interface HistoryService {
     List<Order> getHistory(History history);
 
     void setOrderHistory(History history, Order order);
+
 }

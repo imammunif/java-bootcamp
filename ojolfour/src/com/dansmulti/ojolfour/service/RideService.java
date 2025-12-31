@@ -9,4 +9,5 @@ public interface RideService {
     Double getDiscount(String voucher);
 
     Double calculatePrice(String voucher, String from, String to);
+
 }

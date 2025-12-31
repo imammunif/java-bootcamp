@@ -62,4 +62,5 @@ public class SendView {
         System.out.println("Total Price : " + totalBill);
         System.out.println("===== Thanks =====");
     }
+
 }

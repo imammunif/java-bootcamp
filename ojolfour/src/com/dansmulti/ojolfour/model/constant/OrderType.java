@@ -1,6 +1,7 @@
 package com.dansmulti.ojolfour.model.constant;
 
 public enum OrderType {
+
     RIDE("Ride"),
     SEND("Send"),
     FOOD("Food");

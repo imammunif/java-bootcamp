@@ -41,4 +41,5 @@ public class MainView {
             historyView.show(history, () -> show());
         }
     }
+
 }
