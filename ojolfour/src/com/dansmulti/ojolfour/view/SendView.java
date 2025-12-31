@@ -3,6 +3,7 @@ package com.dansmulti.ojolfour.view;
 import com.dansmulti.ojolfour.listener.OnBackListener;
 import com.dansmulti.ojolfour.model.Driver;
 import com.dansmulti.ojolfour.model.History;
+import com.dansmulti.ojolfour.model.constant.OrderType;
 import com.dansmulti.ojolfour.model.order.SendOrder;
 import com.dansmulti.ojolfour.service.HistoryService;
 import com.dansmulti.ojolfour.service.SendService;
@@ -44,7 +45,7 @@ public class SendView {
         }
         Double totalBill = sendService.calculateBill(from, to, categories.get(indexCategory), weight, voucher);
 
-        SendOrder sendOrder = new SendOrder("Send", LocalDateTime.now(), from, to);
+        SendOrder sendOrder = new SendOrder(OrderType.SEND, LocalDateTime.now(), from, to);
         historyService.setOrderHistory(history, sendOrder);
 
         showReceipt(categories.get(indexCategory), from, to, driver.getName(), driver.getPlatNo(), totalBill);

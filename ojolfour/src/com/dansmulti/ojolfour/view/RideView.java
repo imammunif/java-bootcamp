@@ -3,6 +3,7 @@ package com.dansmulti.ojolfour.view;
 import com.dansmulti.ojolfour.listener.OnBackListener;
 import com.dansmulti.ojolfour.model.Driver;
 import com.dansmulti.ojolfour.model.History;
+import com.dansmulti.ojolfour.model.constant.OrderType;
 import com.dansmulti.ojolfour.model.order.RideOrder;
 import com.dansmulti.ojolfour.service.HistoryService;
 import com.dansmulti.ojolfour.service.RideService;
@@ -34,7 +35,7 @@ public class RideView {
         }
 
         Double totalBill = rideService.calculatePrice(voucher, from, to);
-        RideOrder rideOrder = new RideOrder("Ride", LocalDateTime.now(), from, to);
+        RideOrder rideOrder = new RideOrder(OrderType.RIDE, LocalDateTime.now(), from, to);
         historyService.setOrderHistory(history, rideOrder);
         showReceipt(from, to, driver.getName(), driver.getPlatNo(), totalBill);
         listener.onBackPressed();

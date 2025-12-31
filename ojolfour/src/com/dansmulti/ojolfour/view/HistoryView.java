@@ -2,6 +2,7 @@ package com.dansmulti.ojolfour.view;
 
 import com.dansmulti.ojolfour.listener.OnBackListener;
 import com.dansmulti.ojolfour.model.History;
+import com.dansmulti.ojolfour.model.constant.OrderType;
 import com.dansmulti.ojolfour.model.order.Order;
 import com.dansmulti.ojolfour.service.HistoryService;
 
@@ -24,52 +25,30 @@ public class HistoryView {
             System.out.println("Oops, you have no history.");
             System.out.println("Order a service first!");
         } else {
-            printRideHistory(orderList);
-            printSendHistory(orderList);
-            printFoodHistory(orderList);
+            printOrderByType(orderList, OrderType.RIDE);
+            printOrderByType(orderList, OrderType.SEND);
+            printOrderByType(orderList, OrderType.FOOD);
         }
         listener.onBackPressed();
     }
 
-    private void printRideHistory(List<Order> orderList) {
-        System.out.println("-- Ride service --");
+    private void printOrderByType(List<Order> orderList, OrderType type) {
+        System.out.println("--" + type.getLabel() + " order --");
         boolean found = false;
         for (Order order : orderList) {
-            if ("ride".equalsIgnoreCase(order.getType())) {
-               found = true;
-                System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
-            }
-        }
-        if (!found) {
-            System.out.println("No ride service history!");
-        }
-    }
-
-    private void printSendHistory(List<Order> orderList) {
-        System.out.println("\n-- Send service --");
-        boolean found = false;
-        for (Order order : orderList) {
-            if ("send".equalsIgnoreCase(order.getType())) {
+            if (order.getType() == type) {
                 found = true;
-                System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
+                break;
             }
         }
         if (!found) {
-            System.out.println("No send service history!");
+            System.out.println("No " + type.getLabel() + " order history!");
+            return;
         }
-    }
-
-    private void printFoodHistory(List<Order> orderList) {
-        System.out.println("\n-- Food service --");
-        boolean found = false;
         for (Order order : orderList) {
-            if ("food".equalsIgnoreCase(order.getType())) {
-                found = true;
+            if (order.getType() == type) {
                 System.out.println("Date time : " + order.getDateTime().format(timeFormat) + " | From: " + order.getFrom() + " | To: " + order.getTo());
             }
-        }
-        if (!found) {
-            System.out.println("No food service history!");
         }
     }
 

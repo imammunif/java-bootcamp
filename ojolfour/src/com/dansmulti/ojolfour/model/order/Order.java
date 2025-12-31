@@ -1,16 +1,18 @@
 package com.dansmulti.ojolfour.model.order;
 
+import com.dansmulti.ojolfour.model.constant.OrderType;
+
 import java.time.LocalDateTime;
 
 public abstract class Order {
-    private String type;
+    private OrderType type;
     private LocalDateTime dateTime;
     private String from;
     private String to;
     // private double totalBill;
     // private Driver driver;
 
-    public Order(String type, LocalDateTime dateTime, String from, String to) {
+    public Order(OrderType type, LocalDateTime dateTime, String from, String to) {
         this.type = type;
         this.dateTime = dateTime;
         this.from = from;
@@ -29,7 +31,7 @@ public abstract class Order {
         this.to = to;
     }
 
-    public void setType(String type) {
+    public void setType(OrderType type) {
         this.type = type;
     }
 
@@ -45,7 +47,7 @@ public abstract class Order {
         return to;
     }
 
-    public String getType() {
+    public OrderType getType() {
         return type;
     }
 }

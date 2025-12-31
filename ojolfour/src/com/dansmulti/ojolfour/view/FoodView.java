@@ -2,6 +2,7 @@ package com.dansmulti.ojolfour.view;
 
 import com.dansmulti.ojolfour.listener.OnBackListener;
 import com.dansmulti.ojolfour.model.*;
+import com.dansmulti.ojolfour.model.constant.OrderType;
 import com.dansmulti.ojolfour.model.order.FoodOrder;
 import com.dansmulti.ojolfour.service.FoodService;
 import com.dansmulti.ojolfour.service.HistoryService;
@@ -178,7 +179,7 @@ public class FoodView {
         System.out.println("Total Price : " + foodService.calculateBill(cart, voucher, restaurant.getAddress(), to));
         System.out.println("======= Thanks =======");
 
-        FoodOrder foodOrder = new FoodOrder("Food", LocalDateTime.now(), restaurant.getAddress(), to);
+        FoodOrder foodOrder = new FoodOrder(OrderType.FOOD, LocalDateTime.now(), restaurant.getAddress(), to);
         historyService.setOrderHistory(history, foodOrder);
 
         cartItems.clear();
