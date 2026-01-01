@@ -4,5 +4,7 @@ public class Main {
 
         response.setData("data");
         response.setMessage("Success");
+
+        String result = response.getData();
     }
 }
