@@ -3,13 +3,9 @@ public class Main {
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick() {
-
-            }
-
-            @Override
-            public void onTap() {
-
+                System.out.println("Clicked");
             }
         };
+        listener.onClick(); // call the instance
     }
 }
