@@ -14,4 +14,9 @@ public class Response<T> {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    // defining its own parameter, with return
+    public <M> M  test(M param) {
+        return param;
+    }
 }
