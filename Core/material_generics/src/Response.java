@@ -1,14 +1,14 @@
-public class Response {
-    private Object data; // DATA CAN BE VARIOUS TYPE
+public class Response<T> {
+    private T data; // DATA CAN BE VARIOUS TYPE
     private String message;
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
     public String getMessage() {
         return message;
     }
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
     public void setMessage(String message) {
