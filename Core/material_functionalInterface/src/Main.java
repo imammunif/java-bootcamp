@@ -4,13 +4,7 @@ public class Main {
     public static void main(String[] args) {
 
         // Game context, has two clicks
-        OnClickListener rightListener = new OnClickListener() {
-            @Override
-            public void onClick() {
-                System.out.println("Right Clicked");
-            }
-        };
-        rightListener.onClick();
+        OnClickListener rightListener = () -> System.out.println("Right Clicked");
 
         OnClickListener leftListener = new OnClickListener() {
             @Override
@@ -18,6 +12,8 @@ public class Main {
                 System.out.println("Left Clicked");
             }
         };
+
+        rightListener.onClick();
         leftListener.onClick();
 
         Supplier<Integer> supplier = new Supplier<Integer>() {
