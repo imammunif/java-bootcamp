@@ -1,3 +1,5 @@
+import java.util.function.Supplier;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -17,5 +19,13 @@ public class Main {
             }
         };
         leftListener.onClick();
+
+        Supplier<Integer> supplier = new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return 100;
+            }
+        };
+        int result = supplier.get();
     }
 }
