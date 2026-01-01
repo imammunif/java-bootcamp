@@ -27,5 +27,12 @@ public class Main {
             }
         };
         int result = supplier.get();
+
+        new Main().testFunction(supplier);
     }
+
+    public Integer testFunction(Supplier<Integer> supplier) {
+        return supplier.get();
+    }
+
 }
