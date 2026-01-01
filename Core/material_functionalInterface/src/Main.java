@@ -1,11 +1,21 @@
 public class Main {
     public static void main(String[] args) {
-        OnClickListener listener = new OnClickListener() {
+
+        // Game context, has two clicks
+        OnClickListener rightListener = new OnClickListener() {
             @Override
             public void onClick() {
-                System.out.println("Clicked");
+                System.out.println("Right Clicked");
             }
         };
-        listener.onClick(); // call the instance
+        rightListener.onClick();
+
+        OnClickListener leftListener = new OnClickListener() {
+            @Override
+            public void onClick() {
+                System.out.println("Left Clicked");
+            }
+        };
+        leftListener.onClick();
     }
 }
