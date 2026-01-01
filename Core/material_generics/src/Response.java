@@ -1,4 +1,4 @@
-public class Response<T> {
+public class Response<T extends Person> {
     private T data; // DATA CAN BE VARIOUS TYPE
     private String message;
 
