@@ -16,15 +16,9 @@ public class Main {
         rightListener.onClick();
         leftListener.onClick();
 
-        Supplier<Integer> supplier = new Supplier<Integer>() {
-            @Override
-            public Integer get() {
-                return 100;
-            }
-        };
-        int result = supplier.get();
-
-        new Main().testFunction(supplier);
+        Supplier<Integer> supplier = () -> 100;
+        int result = new Main().testFunction(supplier);
+        System.out.println(result);
     }
 
     public Integer testFunction(Supplier<Integer> supplier) {
