@@ -14,8 +14,4 @@ public class History {
         return history;
     }
 
-    public void setHistory(List<Order> history) {
-        this.history = history;
-    }
-
 }

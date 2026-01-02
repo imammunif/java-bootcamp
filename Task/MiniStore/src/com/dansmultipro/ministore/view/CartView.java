@@ -3,6 +3,7 @@ package com.dansmultipro.ministore.view;
 import com.dansmultipro.ministore.listener.OnBackListener;
 import com.dansmultipro.ministore.model.CartItem;
 import com.dansmultipro.ministore.model.Order;
+import com.dansmultipro.ministore.model.Product;
 import com.dansmultipro.ministore.service.HistoryService;
 import com.dansmultipro.ministore.service.ProductService;
 import com.dansmultipro.ministore.util.RandomSequence;
@@ -79,46 +80,51 @@ public class CartView {
     }
 
     private void editCart(List<CartItem> cartItems) {
+        List<Product> products = productService.getProducts();
         System.out.println("Editing options :");
         System.out.println("[1] Edit quantity");
         System.out.println("[2] Delete per item");
         System.out.println("[3] Delete all");
         int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
         if (options == 1) {
-            editQuantity(cartItems);
+            editQuantity(cartItems, products);
         } else if (options == 2) {
-            deletePerItem(cartItems);
+            deletePerItem(cartItems, products);
         } else if (options == 3) {
-            deleteAllItem(cartItems);
+            deleteAllItem(cartItems, products);
         }
     }
 
-    private void deleteAllItem(List<CartItem> cartItems) {
+    private void deleteAllItem(List<CartItem> cartItems, List<Product> products) {
         cartItems.clear();
         System.out.println("All products deleted successfully");
+        // TODO : return the stock deleted
     }
 
-    private void deletePerItem(List<CartItem> cartItems) {
+    private void deletePerItem(List<CartItem> cartItems, List<Product> products) {
         for (int i = 0; i < cartItems.size(); i++) {
             System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
         }
         int input = ScannerUtil.scanLimitedOption("\nSelect product number to delete :", cartItems.size());
         cartItems.remove(input - 1);
         System.out.println("Product deleted successfully");
+        // TODO : return the stock deleted
     }
 
-    private void editQuantity(List<CartItem> cartItems) {
+    private void editQuantity(List<CartItem> cartItems, List<Product> products) {
         for (int i = 0; i < cartItems.size(); i++) {
             System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
         }
         int input = ScannerUtil.scanLimitedOption("\nSelect product number to edit : ", cartItems.size());
         CartItem item = cartItems.get(input - 1);
-        int availQty = item.getQuantity();
+        int itemQty = item.getQuantity();
         int targetQty = ScannerUtil.scanInt("Enter new quantity : ");
-        if (targetQty > availQty) {
-            productService.updateItemQuantity(item, (targetQty - availQty));
+        if (targetQty > itemQty) {
+            productService.updateItemQuantity(item, (targetQty - itemQty));
+            // TODO : return the stock deleted
         } else {
-            productService.updateItemQuantity(item, ((availQty - targetQty) * -1));
+            productService.updateItemQuantity(item, ((itemQty - targetQty) * -1));
+            // TODO : return the stock deleted
         }
         productService.updateCartGrandtotal();
         System.out.println("Item updated successfully");

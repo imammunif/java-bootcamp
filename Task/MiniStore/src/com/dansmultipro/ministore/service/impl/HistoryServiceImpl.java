@@ -14,7 +14,6 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public List<Order> getHistory() {
-//        addDummy();
         return history.getHistory();
     }
 

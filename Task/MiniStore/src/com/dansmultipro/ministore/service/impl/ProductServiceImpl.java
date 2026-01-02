@@ -43,6 +43,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void updateProductStock(Product product, int diffQty) {
+        int newQuantity = product.getStock() + diffQty;
+        product.setStock(newQuantity);
+    }
+
+    @Override
     public void updateItemQuantity(CartItem item, int additionQty) {
         int newQuantity = item.getQuantity() + additionQty;
         item.setQuantity(newQuantity);

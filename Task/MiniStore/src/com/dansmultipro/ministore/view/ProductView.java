@@ -27,6 +27,7 @@ public class ProductView {
         }
         Product product = products.get(ScannerUtil.scanLimitedOption("Select a product : ", products.size()) - 1);
         int productQty = ScannerUtil.scanLimitedOption("Enter quantity : ", product.getStock());
+        productService.updateProductStock(product, productQty * -1);
         CartItem newItem = new CartItem(product, productQty, product.getPrice() * productQty);
         productService.addOrUpdateCartItem(newItem);
         String addMore = ScannerUtil.scanText("\nDo you want to add more? [y/n] : ");

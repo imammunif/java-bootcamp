@@ -11,10 +11,6 @@ public class Cart {
         this.items = items;
     }
 
-    public List<CartItem> getItems() {
-        return this.items;
-    }
-
     public Double getGrandTotal() {
         return this.grandTotal;
     }
