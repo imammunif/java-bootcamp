@@ -120,10 +120,9 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public void setCartGrandtotal(Cart cart) {
         List<CartItem> cartItems = cart.getItems();
-        double grandTotal = 0;
-        for (CartItem item : cartItems) {
-            grandTotal += item.getSubtotal();
-        }
+        double grandTotal = cart.getItems().stream()
+                .map(item -> item.getSubtotal())
+                .reduce(0d, (sub1, sub2) -> sub1 + sub2);
         cart.setGrandTotal(grandTotal);
     }
 
