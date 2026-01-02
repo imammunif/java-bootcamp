@@ -1,17 +1,62 @@
 package com.dansmultipro.ministore.view;
 
 import com.dansmultipro.ministore.listener.OnBackListener;
+import com.dansmultipro.ministore.model.CartItem;
+import com.dansmultipro.ministore.model.Order;
+import com.dansmultipro.ministore.service.HistoryService;
 import com.dansmultipro.ministore.service.ProductService;
+import com.dansmultipro.ministore.util.RandomSequence;
+import com.dansmultipro.ministore.util.ScannerUtil;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class CartView {
 
     private final ProductService productService;
+    private final HistoryService historyService;
 
-    public CartView(ProductService productService) {
+    public CartView(ProductService productService, HistoryService historyService) {
         this.productService = productService;
+        this.historyService = historyService;
     }
 
     public void show(OnBackListener listener) {
+        List<CartItem> cartItems = productService.getCartItems();
+        if (cartItems.isEmpty()) {
+            System.out.println("Your cart is empty. Please add a product first!");
+            return;
+        }
+        System.out.println("--- Showing your cart ---");
+        for (CartItem cartItem : cartItems) {
+            System.out.println("- " + cartItem.getProduct().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getProduct().getPrice() + " (" + cartItem.getSubtotal() + ")");
+        }
+        System.out.println("""
+                Cart options :
+                [1] Edit cart
+                [2] Checkout to an order
+                [3] Back""");
+        int options = ScannerUtil.scanLimitedOption("Select an option [1-3] : ", 3);
+        if (options == 1) {
+            editCart();
+        } else if (options == 2) {
+            checkout(listener);
+        } else if (options == 3) {
+            return;
+        }
         listener.onBackPressed();
+    }
+
+    private void checkout(OnBackListener listener) {
+        String checkoutApproval = ScannerUtil.scanText("Are you sure you want checkout all products in your cart? [y/n] : ");
+        if ("y".equalsIgnoreCase(checkoutApproval)) {
+            Order newOrder = new Order(RandomSequence.getAlphaNumericString(8), LocalDateTime.now(), productService.getCartGrandtotal());
+            historyService.setOrderHistory(newOrder);
+            return;
+        }
+        show(listener);
+    }
+
+    private void editCart() {
     }
 }

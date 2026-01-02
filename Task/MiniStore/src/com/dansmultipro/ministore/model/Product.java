@@ -28,7 +28,7 @@ public class Product {
         return price;
     }
 
-    public double getStock() {
+    public int getStock() {
         return stock;
     }
 

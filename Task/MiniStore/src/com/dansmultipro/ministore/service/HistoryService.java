@@ -7,4 +7,6 @@ import java.util.List;
 public interface HistoryService {
 
     List<Order> getHistory();
+
+    void setOrderHistory(Order newOrder);
 }

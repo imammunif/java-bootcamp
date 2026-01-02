@@ -17,13 +17,22 @@ public class HistoryView {
     }
 
     public void show(OnBackListener listener) {
-        System.out.println("""
-                ---- Order History ----
-                """);
         List<Order> orderList = historyService.getHistory();
-        for (Order order : orderList) {
-            System.out.println("Order: " + order.getSequence() + " Grand total: " + order.getGrandTotal());
+        System.out.println("--- Showing your order History ---");
+
+        if (orderList.isEmpty()) {
+            System.out.println("Oops, you have no order history.");
+            System.out.println("Order a product first!");
+        } else {
+            showOrderHistory(orderList);
         }
         listener.onBackPressed();
     }
+
+    private void showOrderHistory(List<Order> orderList) {
+        for (Order order : orderList) {
+            System.out.println("Order ID: " + order.getSequence() + "Date: "  + order.getDateTime().format(timeFormat) + " Grand total: " + order.getGrandTotal());
+        }
+    }
+
 }

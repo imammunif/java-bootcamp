@@ -1,6 +1,5 @@
 package com.dansmultipro.ministore.view;
 
-import com.dansmultipro.ministore.listener.OnBackListener;
 import com.dansmultipro.ministore.util.ScannerUtil;
 
 public class MainView {
@@ -8,8 +7,6 @@ public class MainView {
     private final ProductView productView;
     private final CartView cartView;
     private final HistoryView historyView;
-//    private List<Order> orderList = new ArrayList<>();
-//    private History history = new History(orderList);
 
     public MainView(ProductView productView, CartView cartView, HistoryView historyView) {
         this.productView = productView;
@@ -23,10 +20,8 @@ public class MainView {
                 [1] Show available products
                 [2] Show my cart
                 [3] Show order history
-                [4] Exit
-                """);
-
-        int chosen = ScannerUtil.scanLimitedOption("\nSelect [1-4] : ", 4);
+                [4] Exit""");
+        int chosen = ScannerUtil.scanLimitedOption("Select an option [1-4] : ", 4);
         if (chosen == 1) {
             productView.show(() -> show());
         } else if (chosen == 2) {

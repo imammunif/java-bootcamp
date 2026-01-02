@@ -14,7 +14,7 @@ public class App {
         HistoryService historyService = new HistoryServiceImpl();
 
         ProductView productView = new ProductView(productService, historyService);
-        CartView cartView = new CartView(productService);
+        CartView cartView = new CartView(productService, historyService);
         HistoryView historyView = new HistoryView(historyService);
 
         new MainView(productView, cartView, historyView).show();
