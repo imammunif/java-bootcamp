@@ -38,7 +38,7 @@ public class CartView {
                 [3] Back""");
         int options = ScannerUtil.scanLimitedOption("Select an option [1-3] : ", 3);
         if (options == 1) {
-            editCart();
+            editCart(cartItems);
         } else if (options == 2) {
             checkout(listener, cartItems);
         } else if (options == 3) {
@@ -53,6 +53,7 @@ public class CartView {
             Order newOrder = new Order(RandomSequence.getAlphaNumericString(8), LocalDateTime.now(), productService.getCartGrandtotal());
             historyService.setOrderHistory(newOrder);
             printReceipt(cartItems);
+            cartItems.clear();
             return;
         }
         show(listener);
@@ -77,6 +78,49 @@ public class CartView {
         System.out.println("Thank you :D\n");
     }
 
-    private void editCart() {
+    private void editCart(List<CartItem> cartItems) {
+        System.out.println("Editing options :");
+        System.out.println("[1] Edit quantity");
+        System.out.println("[2] Delete per item");
+        System.out.println("[3] Delete all");
+        int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
+        if (options == 1) {
+            editQuantity(cartItems);
+        } else if (options == 2) {
+            deletePerItem(cartItems);
+        } else if (options == 3) {
+            deleteAllItem(cartItems);
+        }
+    }
+
+    private void deleteAllItem(List<CartItem> cartItems) {
+        cartItems.clear();
+        System.out.println("All products deleted successfully");
+    }
+
+    private void deletePerItem(List<CartItem> cartItems) {
+        for (int i = 0; i < cartItems.size(); i++) {
+            System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
+        }
+        int input = ScannerUtil.scanLimitedOption("\nSelect product number to delete :", cartItems.size());
+        cartItems.remove(input - 1);
+        System.out.println("Product deleted successfully");
+    }
+
+    private void editQuantity(List<CartItem> cartItems) {
+        for (int i = 0; i < cartItems.size(); i++) {
+            System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
+        }
+        int input = ScannerUtil.scanLimitedOption("\nSelect product number to edit : ", cartItems.size());
+        CartItem item = cartItems.get(input - 1);
+        int availQty = item.getQuantity();
+        int targetQty = ScannerUtil.scanInt("Enter new quantity : ");
+        if (targetQty > availQty) {
+            productService.updateItemQuantity(item, (targetQty - availQty));
+        } else {
+            productService.updateItemQuantity(item, ((availQty - targetQty) * -1));
+        }
+        productService.updateCartGrandtotal();
+        System.out.println("Item updated successfully");
     }
 }
