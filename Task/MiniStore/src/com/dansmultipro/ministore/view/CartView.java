@@ -40,21 +40,41 @@ public class CartView {
         if (options == 1) {
             editCart();
         } else if (options == 2) {
-            checkout(listener);
+            checkout(listener, cartItems);
         } else if (options == 3) {
             return;
         }
         listener.onBackPressed();
     }
 
-    private void checkout(OnBackListener listener) {
+    private void checkout(OnBackListener listener, List<CartItem> cartItems) {
         String checkoutApproval = ScannerUtil.scanText("Are you sure you want checkout all products in your cart? [y/n] : ");
         if ("y".equalsIgnoreCase(checkoutApproval)) {
             Order newOrder = new Order(RandomSequence.getAlphaNumericString(8), LocalDateTime.now(), productService.getCartGrandtotal());
             historyService.setOrderHistory(newOrder);
+            printReceipt(cartItems);
             return;
         }
         show(listener);
+    }
+
+    private void printReceipt(List<CartItem> cartItems) {
+        String haveDiscount = ScannerUtil.scanText("Do you have voucher [y/n] : ");
+        String voucher = "";
+        if ("y".equalsIgnoreCase(haveDiscount)) {
+            voucher = ScannerUtil.scanText("Enter voucher : ");
+        }
+        System.out.println("Processing your order ...");
+        System.out.println("\n-------------------------");
+        for (CartItem cartItem : cartItems) {
+            System.out.println(" - " + cartItem.getProduct().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getProduct().getPrice() + " (" + cartItem.getSubtotal() + ")");
+        }
+        System.out.println("  Total : " + productService.getCartGrandtotal());
+        System.out.println("  Discount : " + productService.calculateDiscount(voucher));
+        System.out.println("  Total billed : " + productService.calculateBil(voucher));
+        System.out.println("-------------------------");
+        System.out.println("Your order successfully checked out");
+        System.out.println("Thank you :D\n");
     }
 
     private void editCart() {

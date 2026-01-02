@@ -18,4 +18,10 @@ public interface ProductService {
     void updateItemSubtotal(CartItem item);
 
     void addOrUpdateCartItem(CartItem newItem);
+
+    void updateCartGrandtotal();
+
+    Double calculateBil(String voucher);
+
+    Double calculateDiscount(String voucher);
 }
