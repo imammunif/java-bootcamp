@@ -3,7 +3,6 @@ package com.dansmultipro.ministore.view;
 import com.dansmultipro.ministore.listener.OnBackListener;
 import com.dansmultipro.ministore.model.CartItem;
 import com.dansmultipro.ministore.model.Product;
-import com.dansmultipro.ministore.service.HistoryService;
 import com.dansmultipro.ministore.service.ProductService;
 import com.dansmultipro.ministore.util.ScannerUtil;
 
@@ -12,11 +11,9 @@ import java.util.List;
 public class ProductView {
 
     private final ProductService productService;
-    private final HistoryService historyService;
 
-    public ProductView(ProductService productService, HistoryService historyService) {
+    public ProductView(ProductService productService) {
         this.productService = productService;
-        this.historyService = historyService;
     }
 
     public void show(OnBackListener listener) {
@@ -27,7 +24,7 @@ public class ProductView {
         }
         Product product = products.get(ScannerUtil.scanLimitedOption("Select a product : ", products.size()) - 1);
         int productQty = ScannerUtil.scanLimitedOption("Enter quantity : ", product.getStock());
-        productService.updateProductStock(product, productQty * -1);
+        productService.updateProductStock(product, (productQty * -1));
         CartItem newItem = new CartItem(product, productQty, product.getPrice() * productQty);
         productService.addOrUpdateCartItem(newItem);
         String addMore = ScannerUtil.scanText("\nDo you want to add more? [y/n] : ");

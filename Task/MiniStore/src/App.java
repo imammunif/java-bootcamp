@@ -13,7 +13,7 @@ public class App {
         ProductService productService = new ProductServiceImpl();
         HistoryService historyService = new HistoryServiceImpl();
 
-        ProductView productView = new ProductView(productService, historyService);
+        ProductView productView = new ProductView(productService);
         CartView cartView = new CartView(productService, historyService);
         HistoryView historyView = new HistoryView(historyService);
 

@@ -12,19 +12,19 @@ public class ProductServiceImpl implements ProductService {
 
     private List<CartItem> cartItems = new ArrayList<>();
     private Cart cart = new Cart(cartItems);
+    private List<Product> products = Arrays.asList(
+            new Product(ProductType.FRUIT, "Nanas", 16000d, 20),
+            new Product(ProductType.FRUIT, "Pepaya", 14000d, 40),
+            new Product(ProductType.VEGGIE, "Bayam", 10000d, 80),
+            new Product(ProductType.VEGGIE, "Brokoli", 8000d, 50),
+            new Product(ProductType.NOODLE, "Indomie", 3000d, 500),
+            new Product(ProductType.NOODLE, "Mie Sedap", 3000d, 400),
+            new Product(ProductType.WATER, "Danone", 3500d, 300),
+            new Product(ProductType.WATER, "Le Minerale", 3500d, 400)
+    );
 
     @Override
     public List<Product> getProducts() {
-        List<Product> products = Arrays.asList(
-                new Product(ProductType.FRUIT, "Nanas", 16000d, 20),
-                new Product(ProductType.FRUIT, "Pepaya", 14000d, 40),
-                new Product(ProductType.VEGGIE, "Bayam", 10000d, 80),
-                new Product(ProductType.VEGGIE, "Brokoli", 8000d, 50),
-                new Product(ProductType.NOODLE, "Indomie", 3000d, 500),
-                new Product(ProductType.NOODLE, "Mie Sedap", 3000d, 400),
-                new Product(ProductType.WATER, "Danone", 3500d, 300),
-                new Product(ProductType.WATER, "Le Minerale", 3500d, 400)
-        );
         return products;
     }
 
@@ -39,9 +39,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProductStock(Product product, int diffQty) {
-        int newQuantity = product.getStock() + diffQty;
-        product.setStock(newQuantity);
+    public void updateProductStock(Product product, int diffStock) {
+        int newStock = product.getStock() + diffStock;
+        product.setStock(newStock);
     }
 
     @Override
