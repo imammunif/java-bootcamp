@@ -4,10 +4,6 @@ import com.dansmultipro.ministore.model.Cart;
 import com.dansmultipro.ministore.model.CartItem;
 import com.dansmultipro.ministore.model.Product;
 import com.dansmultipro.ministore.model.constant.ProductType;
-import com.dansmultipro.ministore.model.products.FruitsProduct;
-import com.dansmultipro.ministore.model.products.NoodlesProduct;
-import com.dansmultipro.ministore.model.products.VeggiesProduct;
-import com.dansmultipro.ministore.model.products.WaterProduct;
 import com.dansmultipro.ministore.service.ProductService;
 
 import java.util.*;
@@ -20,14 +16,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getProducts() {
         List<Product> products = Arrays.asList(
-                new FruitsProduct(ProductType.FRUIT, "Nanas", 16000, 20),
-                new FruitsProduct(ProductType.FRUIT, "Pepaya", 14000, 40),
-                new VeggiesProduct(ProductType.VEGGIE, "Bayam", 10000, 80),
-                new VeggiesProduct(ProductType.VEGGIE, "Brokoli", 8000, 50),
-                new NoodlesProduct(ProductType.NOODLE, "Indomie", 3000, 500),
-                new NoodlesProduct(ProductType.NOODLE, "Mie Sedap", 3000, 400),
-                new WaterProduct(ProductType.WATER, "Danone", 3500, 300),
-                new WaterProduct(ProductType.WATER, "Le Minerale", 3500, 400)
+                new Product(ProductType.FRUIT, "Nanas", 16000d, 20),
+                new Product(ProductType.FRUIT, "Pepaya", 14000d, 40),
+                new Product(ProductType.VEGGIE, "Bayam", 10000d, 80),
+                new Product(ProductType.VEGGIE, "Brokoli", 8000d, 50),
+                new Product(ProductType.NOODLE, "Indomie", 3000d, 500),
+                new Product(ProductType.NOODLE, "Mie Sedap", 3000d, 400),
+                new Product(ProductType.WATER, "Danone", 3500d, 300),
+                new Product(ProductType.WATER, "Le Minerale", 3500d, 400)
         );
         return products;
     }
