@@ -36,13 +36,13 @@ public class CartView {
                 Cart options :
                 [1] Edit cart
                 [2] Checkout to an order
-                [3] Back""");
-        int options = ScannerUtil.scanLimitedOption("Select an option [1-3] : ", 3, "Invalid option");
+                [0] Back""");
+        int options = ScannerUtil.scanIntegerLimited("Select an option [1-3] : ", 2, "Invalid option");
         if (options == 1) {
             editCart(cartItems);
         } else if (options == 2) {
             checkout(listener, cartItems);
-        } else if (options == 3) {
+        } else if (options == 0) {
             return;
         }
         listener.onBackPressed();
@@ -85,7 +85,7 @@ public class CartView {
         System.out.println("[1] Edit quantity");
         System.out.println("[2] Delete per item");
         System.out.println("[3] Delete all");
-        int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3, "Invalid option");
+        int options = ScannerUtil.scanIntegerLimited("Select [1-3] : ", 3, "Invalid option");
         if (options == 1) {
             editQuantity(cartItems, products);
         } else if (options == 2) {
@@ -96,26 +96,40 @@ public class CartView {
     }
 
     private void deleteAllItem(List<CartItem> cartItems, List<Product> products) {
+        for (CartItem item : cartItems) {
+            products.stream()
+                    .filter(product -> product.getName().equalsIgnoreCase(item.getProduct().getName()))
+                    .forEach(product -> {
+                        System.out.println("***** Debug: Update stock the same product ***** [" + product.getName() + "]");
+                        productService.updateProductStock(product, item.getQuantity());
+                    });
+        }
         cartItems.clear();
         System.out.println("All products deleted successfully");
-        // TODO : return the stock deleted
     }
 
     private void deletePerItem(List<CartItem> cartItems, List<Product> products) {
         for (int i = 0; i < cartItems.size(); i++) {
             System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
         }
-        int input = ScannerUtil.scanLimitedOption("\nSelect product number to delete :", cartItems.size());
-        cartItems.remove(input - 1);
+        int input = ScannerUtil.scanIntegerLimited("\nSelect product number to delete :", cartItems.size(), "Invalid product");
+        CartItem item = cartItems.get(input - 1);
+        int itemQty = item.getQuantity();
+        cartItems.remove(item);
         System.out.println("Product deleted successfully");
-        // TODO : return the stock deleted
+        products.stream()
+                .filter(product -> product.getName().equalsIgnoreCase(item.getProduct().getName()))
+                .forEach(product -> {
+                    System.out.println("***** Debug: Update stock the same product ***** [" + product.getName() + "]");
+                    productService.updateProductStock(product, (itemQty));
+                });
     }
 
     private void editQuantity(List<CartItem> cartItems, List<Product> products) {
         for (int i = 0; i < cartItems.size(); i++) {
             System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
         }
-        int input = ScannerUtil.scanLimitedOption("\nSelect product number to edit : ", cartItems.size(), "Invalid product");
+        int input = ScannerUtil.scanIntegerLimited("\nSelect product number to edit : ", cartItems.size(), "Invalid product");
         CartItem item = cartItems.get(input - 1);
         int itemQty = item.getQuantity();
         int targetQty = ScannerUtil.scanInt("Enter new quantity : ");
@@ -123,19 +137,19 @@ public class CartView {
             // addition
             productService.updateItemQuantity(item, (targetQty - itemQty));
             products.stream()
-                    .filter(obj -> obj.getName().equalsIgnoreCase(item.getProduct().getName()))
-                    .forEach(obj -> {
-                        System.out.println("Debug: Update stock the same product" + obj.getName());
-                        productService.updateProductStock(obj, ((targetQty - itemQty) * -1));
+                    .filter(product -> product.getName().equalsIgnoreCase(item.getProduct().getName()))
+                    .forEach(product -> {
+                        System.out.println("***** Debug: Update stock the same product ***** [" + product.getName() + "]");
+                        productService.updateProductStock(product, ((targetQty - itemQty) * -1));
                     });
         } else {
             // reduction
             productService.updateItemQuantity(item, ((itemQty - targetQty) * -1));
             products.stream()
-                    .filter(obj -> obj.getName().equalsIgnoreCase(item.getProduct().getName()))
-                    .forEach(obj -> {
-                        System.out.println("Debug: Update stock the same product" + obj.getName());
-                        productService.updateProductStock(obj, (targetQty - itemQty));
+                    .filter(product -> product.getName().equalsIgnoreCase(item.getProduct().getName()))
+                    .forEach(product -> {
+                        System.out.println("***** Debug: Update stock the same product ***** [" + product.getName() + "]");
+                        productService.updateProductStock(product, (itemQty - targetQty));
                     });
         }
         productService.updateCartGrandtotal();
