@@ -133,23 +133,24 @@ public class CartView {
         CartItem item = cartItems.get(input - 1);
         int itemQty = item.getQuantity();
         int targetQty = ScannerUtil.scanInt("Enter new quantity : ");
-        if (targetQty > itemQty) {
+        int diffQty = targetQty - itemQty;
+        if (diffQty > 0) {
             // addition
-            productService.updateItemQuantity(item, (targetQty - itemQty));
+            productService.updateItemQuantity(item, diffQty); //+
             products.stream()
                     .filter(product -> product.getName().equalsIgnoreCase(item.getProduct().getName()))
                     .forEach(product -> {
                         System.out.println("***** Debug: Update stock the same product ***** [" + product.getName() + "]");
-                        productService.updateProductStock(product, ((targetQty - itemQty) * -1));
+                        productService.updateProductStock(product, (diffQty * -1)); //-
                     });
         } else {
             // reduction
-            productService.updateItemQuantity(item, ((itemQty - targetQty) * -1));
+            productService.updateItemQuantity(item, (diffQty)); //-
             products.stream()
                     .filter(product -> product.getName().equalsIgnoreCase(item.getProduct().getName()))
                     .forEach(product -> {
                         System.out.println("***** Debug: Update stock the same product ***** [" + product.getName() + "]");
-                        productService.updateProductStock(product, (itemQty - targetQty));
+                        productService.updateProductStock(product, (diffQty * -1)); //+
                     });
         }
         productService.updateCartGrandtotal();

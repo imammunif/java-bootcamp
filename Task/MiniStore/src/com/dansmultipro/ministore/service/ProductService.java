@@ -13,9 +13,9 @@ public interface ProductService {
 
     Double getCartGrandtotal();
 
-    void updateProductStock(Product product, int qty);
+    void updateProductStock(Product product, int diffQty);
 
-    void updateItemQuantity(CartItem item, int qty);
+    void updateItemQuantity(CartItem item, int diffStock);
 
     void updateItemSubtotal(CartItem item);
 

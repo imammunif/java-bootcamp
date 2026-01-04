@@ -45,8 +45,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateItemQuantity(CartItem item, int additionQty) {
-        int newQuantity = item.getQuantity() + additionQty;
+    public void updateItemQuantity(CartItem item, int diffQty) {
+        int newQuantity = item.getQuantity() + diffQty;
         item.setQuantity(newQuantity);
         updateItemSubtotal(item);
     }
