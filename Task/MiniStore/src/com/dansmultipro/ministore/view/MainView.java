@@ -20,15 +20,15 @@ public class MainView {
                 [1] Show available products
                 [2] Show my cart
                 [3] Show order history
-                [4] Exit""");
-        int chosen = ScannerUtil.scanLimitedOption("Select an option [1-4] : ", 4);
+                [0] Exit""");
+        int chosen = ScannerUtil.scanLimitedOption("Select an option [0-3] : ", 3, "Invalid option");
         if (chosen == 1) {
             productView.show(() -> show());
         } else if (chosen == 2) {
             cartView.show(() -> show());
         } else if (chosen == 3) {
             historyView.show(() -> show());
-        } else if (chosen == 4) {
+        } else if (chosen == 0) {
             return;
         }
         show();

@@ -37,7 +37,7 @@ public class CartView {
                 [1] Edit cart
                 [2] Checkout to an order
                 [3] Back""");
-        int options = ScannerUtil.scanLimitedOption("Select an option [1-3] : ", 3);
+        int options = ScannerUtil.scanLimitedOption("Select an option [1-3] : ", 3, "Invalid option");
         if (options == 1) {
             editCart(cartItems);
         } else if (options == 2) {
@@ -85,7 +85,7 @@ public class CartView {
         System.out.println("[1] Edit quantity");
         System.out.println("[2] Delete per item");
         System.out.println("[3] Delete all");
-        int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3);
+        int options = ScannerUtil.scanLimitedOption("Select [1-3] : ", 3, "Invalid option");
         if (options == 1) {
             editQuantity(cartItems, products);
         } else if (options == 2) {
@@ -115,7 +115,7 @@ public class CartView {
         for (int i = 0; i < cartItems.size(); i++) {
             System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
         }
-        int input = ScannerUtil.scanLimitedOption("\nSelect product number to edit : ", cartItems.size());
+        int input = ScannerUtil.scanLimitedOption("\nSelect product number to edit : ", cartItems.size(), "Invalid product");
         CartItem item = cartItems.get(input - 1);
         int itemQty = item.getQuantity();
         int targetQty = ScannerUtil.scanInt("Enter new quantity : ");

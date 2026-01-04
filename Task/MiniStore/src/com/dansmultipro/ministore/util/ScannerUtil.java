@@ -4,21 +4,21 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ScannerUtil {
-    public static int scanLimitedOption(String message, int limit) {
+    public static int scanLimitedOption(String message, int limit, String response) {
         System.out.print(message);
         Scanner scanner = new Scanner(System.in);
         try {
             int option = scanner.nextInt();
 
-            if (option >= 1 && option <= limit) {
+            if (option >= 0 && option <= limit) {
                 return option;
             } else {
-                System.out.println("Invalid range");
-                return scanLimitedOption(message, limit);
+                System.out.println(response);
+                return scanLimitedOption(message, limit, response);
             }
         } catch (InputMismatchException ime) {
             System.out.println("Invalid input");
-            return scanLimitedOption(message, limit);
+            return scanLimitedOption(message, limit, response);
         }
     }
 
@@ -26,12 +26,6 @@ public class ScannerUtil {
         System.out.print(message);
         Scanner scanner = new Scanner(System.in);
         return scanner.nextInt();
-    }
-
-    public static double scanDouble(String message) {
-        System.out.print(message);
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextDouble();
     }
 
     public static String scanText(String message) {
