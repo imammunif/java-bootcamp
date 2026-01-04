@@ -17,14 +17,12 @@ public class ProductView {
     }
 
     public void show(OnBackListener listener) {
-        boolean added = false;
         List<Product> products = productService.getProducts();
         System.out.println("---- Available Products ----");
         for (int i = 0; i < products.size(); i++) {
             System.out.println((i + 1) + ". " + products.get(i).getName() + " (@" + products.get(i).getPrice() + ") Stock: " + products.get(i).getStock());
         }
-        selectProduct(products, listener, added);
-
+        boolean added = selectProduct(products, listener);
         if (added) {
             String addMore = ScannerUtil.scanText("Add another product? [y/n] : ");
             if ("y".equalsIgnoreCase(addMore)) {
@@ -35,27 +33,26 @@ public class ProductView {
         }
     }
 
-    private void selectProduct(List<Product> products, OnBackListener listener, boolean added) {
+    private boolean selectProduct(List<Product> products, OnBackListener listener) {
         System.out.println("---------------------------");
         System.out.println("[1-" + products.size() + "] Select a product");
         System.out.println("[0] Back to main");
         int input = ScannerUtil.scanIntegerLimited("Select : ", products.size(), "Invalid option");
         if (input == 0) {
             listener.onBackPressed();
-            added = false;
-            return;
+            return false;
         }
         Product product = products.get(input - 1);
         if (product.getStock() == 0) {
             System.out.println("Oops, product out of stock!");
-            return;
+            return false;
         }
         int productQty = ScannerUtil.scanIntegerLimited("Enter quantity : ", product.getStock(), "Invalid quantity");
         productService.updateProductStock(product, (productQty * -1));
         CartItem newItem = new CartItem(product, productQty, product.getPrice() * productQty);
         productService.addOrUpdateCartItem(newItem);
         System.out.println("Product successfully added to your cart");
-        added = true;
+        return true;
     }
 
 }
