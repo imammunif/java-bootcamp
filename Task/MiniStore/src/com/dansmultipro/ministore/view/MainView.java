@@ -21,7 +21,7 @@ public class MainView {
                 [2] Show my cart
                 [3] Show order history
                 [0] Exit""");
-        int chosen = ScannerUtil.scanLimitedOption("Select an option [0-3] : ", 3, "Invalid option");
+        int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-3] : ", 3, "Invalid option");
         if (chosen == 1) {
             productView.show(() -> show());
         } else if (chosen == 2) {

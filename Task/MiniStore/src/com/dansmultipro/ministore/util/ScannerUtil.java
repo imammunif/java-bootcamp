@@ -4,7 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ScannerUtil {
-    public static int scanLimitedOption(String message, int limit, String response) {
+    public static int scanIntegerLimited(String message, int limit, String response) {
         System.out.print(message);
         Scanner scanner = new Scanner(System.in);
         try {
@@ -14,11 +14,11 @@ public class ScannerUtil {
                 return option;
             } else {
                 System.out.println(response);
-                return scanLimitedOption(message, limit, response);
+                return scanIntegerLimited(message, limit, response);
             }
         } catch (InputMismatchException ime) {
             System.out.println("Invalid input");
-            return scanLimitedOption(message, limit, response);
+            return scanIntegerLimited(message, limit, response);
         }
     }
 

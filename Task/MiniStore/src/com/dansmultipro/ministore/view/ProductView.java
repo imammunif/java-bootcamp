@@ -17,39 +17,45 @@ public class ProductView {
     }
 
     public void show(OnBackListener listener) {
+        boolean added = false;
         List<Product> products = productService.getProducts();
         System.out.println("---- Available Products ----");
         for (int i = 0; i < products.size(); i++) {
             System.out.println((i + 1) + ". " + products.get(i).getName() + " (@" + products.get(i).getPrice() + ") Stock: " + products.get(i).getStock());
         }
-        selectProduct(products, listener);
+        selectProduct(products, listener, added);
 
-        String addMore = ScannerUtil.scanText("Add another product? [y/n] : ");
-        if ("y".equalsIgnoreCase(addMore)) {
-            show(listener);
-        } else {
-            listener.onBackPressed();
+        if (added) {
+            String addMore = ScannerUtil.scanText("Add another product? [y/n] : ");
+            if ("y".equalsIgnoreCase(addMore)) {
+                show(listener);
+            } else {
+                listener.onBackPressed();
+            }
         }
     }
 
-    private void selectProduct(List<Product> products, OnBackListener listener) {
+    private void selectProduct(List<Product> products, OnBackListener listener, boolean added) {
         System.out.println("---------------------------");
         System.out.println("[1-" + products.size() + "] Select a product");
         System.out.println("[0] Back to main");
-        int input = ScannerUtil.scanLimitedOption("Select : ", products.size(), "Invalid option");
+        int input = ScannerUtil.scanIntegerLimited("Select : ", products.size(), "Invalid option");
         if (input == 0) {
             listener.onBackPressed();
+            added = false;
+            return;
         }
         Product product = products.get(input - 1);
         if (product.getStock() == 0) {
             System.out.println("Oops, product out of stock!");
             return;
         }
-        int productQty = ScannerUtil.scanLimitedOption("Enter quantity : ", product.getStock(), "Invalid quantity");
+        int productQty = ScannerUtil.scanIntegerLimited("Enter quantity : ", product.getStock(), "Invalid quantity");
         productService.updateProductStock(product, (productQty * -1));
         CartItem newItem = new CartItem(product, productQty, product.getPrice() * productQty);
         productService.addOrUpdateCartItem(newItem);
         System.out.println("Product successfully added to your cart");
+        added = true;
     }
 
 }
