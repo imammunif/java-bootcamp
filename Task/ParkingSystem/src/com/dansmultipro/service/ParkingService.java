@@ -13,4 +13,6 @@ public interface ParkingService {
     List<Parking> getHistory();
 
     void setParkingHistory(Parking newParking);
+
+    void calculateBill(Parking parkingToCheckout);
 }

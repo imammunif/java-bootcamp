@@ -46,6 +46,10 @@ public class Parking {
         return checkInTime;
     }
 
+    public Double getGrandTotal() {
+        return grandTotal;
+    }
+
     public LocalDateTime getCheckOutTime() {
         return checkOutTime;
     }
@@ -56,6 +60,10 @@ public class Parking {
 
     public void setCheckOutTime(LocalDateTime checkOutTime) {
         this.checkOutTime = checkOutTime;
+    }
+
+    public void setGrandTotal(Double grandTotal) {
+        this.grandTotal = grandTotal;
     }
 
 }

@@ -57,6 +57,7 @@ public class ParkingView {
                 .findFirst()
                 .orElse(null);
         parkingService.checkoutParking(parkingToCheckout);
+        parkingService.calculateBill(parkingToCheckout);
         listener.onBackPressed();
     }
 
@@ -88,7 +89,7 @@ public class ParkingView {
     private void checkInConfirmation(OnBackListener listener, VehicleType vehicleType, String license, List<Parking> parkingList) {
         String checkoutApproval = ScannerUtil.scanText("Are you sure you want check in? [y/n] : ");
         if ("y".equalsIgnoreCase(checkoutApproval)) {
-            Parking newParking = new Parking(RandomSequence.getAlphaNumericString(8), vehicleType, license, true, false, LocalDateTime.now(), null, 0d);
+            Parking newParking = new Parking(RandomSequence.getAlphaNumericString(8), vehicleType, license, true, false, LocalDateTime.now().minusMinutes(75), null, 0d);
             if (parkingService.isExistLicenseCheckout(parkingList, newParking)) {
                 System.out.println("Oops, the license you input isn't checking out yet");
                 return;
