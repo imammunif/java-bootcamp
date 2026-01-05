@@ -56,6 +56,10 @@ public class ParkingView {
                 .filter(parking -> parking.getLicence().equalsIgnoreCase(license))
                 .findFirst()
                 .orElse(null);
+        if (parkingToCheckout == null) {
+            System.out.println("Oops, license not found!");
+            return;
+        }
         parkingService.checkoutParking(parkingToCheckout);
         parkingService.calculateBill(parkingToCheckout);
         listener.onBackPressed();

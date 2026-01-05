@@ -20,6 +20,7 @@ public class HistoryView {
         List<Parking> parkingList = parkingService.getHistory();
         if (parkingList.isEmpty()) {
             System.out.println("No parking history...");
+            return;
         }
         System.out.println("================ History view ================");
         for (Parking parking : parkingList) {
@@ -28,7 +29,9 @@ public class HistoryView {
                     " License " + parking.getLicence() +
                     " Type " + parking.getType().getLabel() +
                     " Check in " + parking.getCheckInTime().format(timeFormat) +
-                    " Check out " + (parking.getCheckOutTime() == null ? "-" : parking.getCheckOutTime().format(timeFormat))
+                    " Check out " + (parking.getCheckOutTime() == null ? "-" : parking.getCheckOutTime().format(timeFormat)) +
+                    " Billed " + parking.getGrandTotal()
+
             );
         }
         listener.onBackPressed();

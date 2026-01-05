@@ -14,7 +14,7 @@ public class MainView {
 
     public void show() {
         System.out.println("""
-                ======= Mini Store =======
+                ======= Parking System =======
                 [1] Check In
                 [2] Check Out
                 [3] Show Report
