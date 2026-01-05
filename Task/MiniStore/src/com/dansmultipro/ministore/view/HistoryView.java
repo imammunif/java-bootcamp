@@ -5,7 +5,9 @@ import com.dansmultipro.ministore.model.Order;
 import com.dansmultipro.ministore.service.HistoryService;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HistoryView {
 
@@ -30,9 +32,10 @@ public class HistoryView {
     }
 
     private void showOrderHistory(List<Order> orderList) {
-        for (Order order : orderList) {
-            System.out.println("Order ID: " + order.getSequence() + "Date: "  + order.getDateTime().format(timeFormat) + " Grand total: " + order.getGrandTotal());
-        }
+        orderList.stream()
+                .sorted(Comparator.comparing(Order::getDateTime).reversed())
+                .collect(Collectors.toList())
+                .forEach(order -> System.out.println("Order ID: " + order.getSequence() + " Date: " + order.getDateTime().format(timeFormat) + " Total: " + order.getGrandTotal()));
     }
 
 }
