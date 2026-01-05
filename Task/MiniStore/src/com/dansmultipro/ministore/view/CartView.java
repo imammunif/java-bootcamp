@@ -72,7 +72,7 @@ public class CartView {
             System.out.println(" - " + cartItem.getProduct().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getProduct().getPrice() + " (" + cartItem.getSubtotal() + ")");
         }
         System.out.println("  Total : " + productService.getCartGrandtotal());
-        System.out.println("  Discount : " + productService.calculateDiscount(voucher));
+        System.out.println("  Discount : " + productService.getCartGrandtotal() * productService.calculateDiscount(voucher) / 100);
         System.out.println("  Total billed : " + productService.calculateBil(voucher));
         System.out.println("-------------------------");
         System.out.println("Your order successfully checked out");
