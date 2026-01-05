@@ -9,13 +9,13 @@ public class Parking {
     private String sequence;
     private VehicleType type;
     private String licence;
-    private boolean isCheckIn;
-    private boolean isCheckOut;
+    private Boolean isCheckIn;
+    private Boolean isCheckOut;
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
     private Double grandTotal;
 
-    public Parking(String sequence, VehicleType type, String licence, boolean isCheckIn, boolean isCheckOut, LocalDateTime checkInTime, LocalDateTime checkOutTime, Double grandTotal) {
+    public Parking(String sequence, VehicleType type, String licence, Boolean isCheckIn, Boolean isCheckOut, LocalDateTime checkInTime, LocalDateTime checkOutTime, Double grandTotal) {
         this.sequence = sequence;
         this.type = type;
         this.licence = licence;
@@ -38,11 +38,11 @@ public class Parking {
         return licence;
     }
 
-    public boolean isCheckIn() {
+    public Boolean isCheckIn() {
         return isCheckIn;
     }
 
-    public boolean isCheckOut() {
+    public Boolean isCheckOut() {
         return isCheckOut;
     }
 
@@ -66,11 +66,11 @@ public class Parking {
         this.licence = licence;
     }
 
-    public void setCheckIn(boolean isCheckIn) {
+    public void setCheckIn(Boolean isCheckIn) {
         this.isCheckIn = isCheckIn;
     }
 
-    public void setCheckOut(boolean isCheckOut) {
+    public void setCheckOut(Boolean isCheckOut) {
         this.isCheckOut = isCheckOut;
     }
 

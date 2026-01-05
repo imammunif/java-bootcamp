@@ -18,15 +18,15 @@ public class MainView {
                 [1] Check In
                 [2] Check Out
                 [3] Show Report
-                [0] Exit App""");
-        int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-3] : ", 3, "Invalid option");
+                [4] Exit App""");
+        int chosen = ScannerUtil.scanLimitedOption("Select an option [1-4] : ", 4);
         if (chosen == 1) {
-            parkingView.show(() -> show());
+            parkingView.showCheckIn(() -> show());
         } else if (chosen == 2) {
-            parkingView.show(() -> show());
+            parkingView.showCheckOut(() -> show());
         } else if (chosen == 3) {
             historyView.show(() -> show());
-        } else if (chosen == 0) {
+        } else if (chosen == 4) {
             return;
         }
         show();

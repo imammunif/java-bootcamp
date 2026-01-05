@@ -3,10 +3,22 @@ package com.dansmultipro.service.impl;
 import com.dansmultipro.model.Parking;
 import com.dansmultipro.service.ParkingService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingServiceImpl implements ParkingService {
 
+    private List<Parking> parkingList = new ArrayList<>();
+
+    @Override
+    public List<Parking> getHistory() {
+        return parkingList;
+    }
+
+    @Override
+    public void setParkingHistory(Parking newParking) {
+        parkingList.add(newParking);
+    }
 
     @Override
     public void setLicense() {
@@ -38,13 +50,4 @@ public class ParkingServiceImpl implements ParkingService {
 
     }
 
-    @Override
-    public List<Parking> getHistory() {
-        return List.of();
-    }
-
-    @Override
-    public void setParkingHistory(Parking newParking) {
-
-    }
 }
