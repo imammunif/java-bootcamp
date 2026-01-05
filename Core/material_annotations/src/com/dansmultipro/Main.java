@@ -3,6 +3,8 @@ package com.dansmultipro;
 import com.dansmultipro.annotation.onCreate;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class Main {
 
@@ -29,6 +31,14 @@ public class Main {
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
         for (Constructor<?> constructor : constructors) {
             System.out.println("\n" + constructor.getName());
+        }
+
+        for (Method m : clazz.getDeclaredMethods()) {
+            System.out.println("\n" + m.getName());
+        }
+
+        for (Field f : clazz.getDeclaredFields()) {
+            System.out.println("\n"+ f.getName());
         }
     }
 
