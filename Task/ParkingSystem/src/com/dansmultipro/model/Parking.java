@@ -9,18 +9,14 @@ public class Parking {
     private String sequence;
     private VehicleType type;
     private String licence;
-    private Boolean isCheckIn;
-    private Boolean isCheckOut;
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
     private Double grandTotal;
 
-    public Parking(String sequence, VehicleType type, String licence, Boolean isCheckIn, Boolean isCheckOut, LocalDateTime checkInTime, LocalDateTime checkOutTime, Double grandTotal) {
+    public Parking(String sequence, VehicleType type, String licence, LocalDateTime checkInTime, LocalDateTime checkOutTime, Double grandTotal) {
         this.sequence = sequence;
         this.type = type;
         this.licence = licence;
-        this.isCheckIn = isCheckIn;
-        this.isCheckOut = isCheckOut;
         this.checkInTime = checkInTime;
         this.checkOutTime = checkOutTime;
         this.grandTotal = grandTotal;
@@ -38,10 +34,6 @@ public class Parking {
         return licence;
     }
 
-    public Boolean isCheckOut() {
-        return isCheckOut;
-    }
-
     public LocalDateTime getCheckInTime() {
         return checkInTime;
     }
@@ -52,10 +44,6 @@ public class Parking {
 
     public LocalDateTime getCheckOutTime() {
         return checkOutTime;
-    }
-
-    public void setCheckOut(Boolean isCheckOut) {
-        this.isCheckOut = isCheckOut;
     }
 
     public void setCheckOutTime(LocalDateTime checkOutTime) {

@@ -40,9 +40,9 @@ public class ParkingView {
             System.out.println("No active parking...");
             return;
         }
-        System.out.println(" --- Checking out ---");
+        System.out.println("--- Checking out ---");
         List<Parking> activeParking = parkingList.stream()
-                .filter(parking -> parking.isCheckOut() == false)
+                .filter(parking -> parking.getCheckOutTime() == null)
                 .collect(Collectors.toList());
         activeParking.forEach(parking -> System.out.println(
                 "ID " + parking.getSequence() +
@@ -51,7 +51,7 @@ public class ParkingView {
                 " Check in " + parking.getCheckInTime().format(timeFormat) +
                 " Check out " + (parking.getCheckOutTime() == null ? "-" : parking.getCheckOutTime().format(timeFormat))
         ));
-        String license = ScannerUtil.scanText("Input license to checkout: ");
+        String license = ScannerUtil.scanText("Input license to checkout: ").trim();
         Parking parkingToCheckout = activeParking.stream()
                 .filter(parking -> parking.getLicence().equalsIgnoreCase(license))
                 .findFirst()
@@ -62,6 +62,7 @@ public class ParkingView {
         }
         parkingService.checkoutParking(parkingToCheckout);
         parkingService.calculateBill(parkingToCheckout);
+        System.out.println("Successfully checking out, thanks...");
         listener.onBackPressed();
     }
 
@@ -93,7 +94,7 @@ public class ParkingView {
     private void checkInConfirmation(OnBackListener listener, VehicleType vehicleType, String license, List<Parking> parkingList) {
         String checkoutApproval = ScannerUtil.scanText("Are you sure you want check in? [y/n] : ");
         if ("y".equalsIgnoreCase(checkoutApproval)) {
-            Parking newParking = new Parking(RandomSequence.getAlphaNumericString(8), vehicleType, license, true, false, LocalDateTime.now().minusMinutes(75), null, 0d);
+            Parking newParking = new Parking(RandomSequence.getAlphaNumericString(8), vehicleType, license, LocalDateTime.now().minusMinutes(75), null, 0d);
             if (parkingService.isExistLicenseCheckout(parkingList, newParking)) {
                 System.out.println("Oops, the license you input isn't checking out yet");
                 return;

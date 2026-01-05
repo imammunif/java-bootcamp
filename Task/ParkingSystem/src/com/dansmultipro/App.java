@@ -1,3 +1,5 @@
+package com.dansmultipro;
+
 import com.dansmultipro.service.ParkingService;
 import com.dansmultipro.service.impl.ParkingServiceImpl;
 import com.dansmultipro.view.HistoryView;

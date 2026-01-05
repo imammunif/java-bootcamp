@@ -22,7 +22,7 @@ public class HistoryView {
             System.out.println("No parking history...");
             return;
         }
-        System.out.println("================ History view ================");
+        System.out.println("======== History view ========");
         for (Parking parking : parkingList) {
             System.out.println(
                     "ID " + parking.getSequence() +

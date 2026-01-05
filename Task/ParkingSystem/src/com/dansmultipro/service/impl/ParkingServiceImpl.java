@@ -25,12 +25,11 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public Boolean isExistLicenseCheckout(List<Parking> parkingList, Parking newParking) {
         return parkingList.stream()
-                .anyMatch(p -> p.getLicence().trim().equalsIgnoreCase(newParking.getLicence()) && (p.isCheckOut() == false));
+                .anyMatch(p -> p.getLicence().trim().equalsIgnoreCase(newParking.getLicence()) && (p.getCheckOutTime() == null));
     }
 
     @Override
     public void checkoutParking(Parking newParking) {
-        newParking.setCheckOut(true);
         newParking.setCheckOutTime(LocalDateTime.now());
     }
 
@@ -42,7 +41,6 @@ public class ParkingServiceImpl implements ParkingService {
         if (durationInMinute % 60 != 0) {
             durationInHours++;
         }
-        System.out.println("Bill " + parkingToCheckout.getType().getRate() + " * " + durationInHours);
         parkingToCheckout.setGrandTotal(parkingToCheckout.getType().getRate() * durationInHours);
     }
 
