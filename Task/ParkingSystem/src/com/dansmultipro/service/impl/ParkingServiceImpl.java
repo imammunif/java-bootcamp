@@ -3,6 +3,7 @@ package com.dansmultipro.service.impl;
 import com.dansmultipro.model.Parking;
 import com.dansmultipro.service.ParkingService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,33 +22,15 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
-    public void setLicense() {
-
+    public Boolean isExistLicenseCheckout(List<Parking> parkingList, Parking newParking) {
+        return parkingList.stream()
+                .anyMatch(p -> p.getLicence().trim().equalsIgnoreCase(newParking.getLicence()) && (p.isCheckOut() == false));
     }
 
     @Override
-    public void setCheckIn() {
-
-    }
-
-    @Override
-    public void setCheckOut() {
-
-    }
-
-    @Override
-    public void setCheckInTime() {
-
-    }
-
-    @Override
-    public void setCheckOutTime() {
-
-    }
-
-    @Override
-    public void setGrandTotal() {
-
+    public void checkoutParking(Parking newParking) {
+        newParking.setCheckOut(true);
+        newParking.setCheckOutTime(LocalDateTime.now());
     }
 
 }

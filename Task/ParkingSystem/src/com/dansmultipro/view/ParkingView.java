@@ -10,6 +10,7 @@ import com.dansmultipro.util.ScannerUtil;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ParkingView {
 
@@ -20,11 +21,8 @@ public class ParkingView {
         this.parkingService = parkingService;
     }
 
-    public void show(OnBackListener listener) {
-        listener.onBackPressed();
-    }
-
     public void showCheckIn(OnBackListener listener) {
+        List<Parking> parkingList = parkingService.getHistory();
         System.out.println(" --- Checking in ---");
         String firstPart = inputFirstPart();
         int secondPart = inputSecondPart();
@@ -32,18 +30,33 @@ public class ParkingView {
         String license = firstPart + secondPart + thirdPart;
         System.out.println("[1] Car [2] Motorcycle");
         VehicleType vehicleType = inputVehicleType();
-        checkInConfirmation(listener, vehicleType, license);
+        checkInConfirmation(listener, vehicleType, license, parkingList);
         listener.onBackPressed();
     }
 
     public void showCheckOut(OnBackListener listener) {
         List<Parking> parkingList = parkingService.getHistory();
-        System.out.println(" --- Checking out ---");
-        for (Parking parking : parkingList) {
-            if (parking.isCheckOut() == false) {
-                System.out.println("ID " + parking.getSequence() + " License " + parking.getLicence() + " Check in " + parking.getCheckInTime().format(timeFormat) + " Check out " + parking.getCheckOutTime().format(timeFormat));
-            }
+        if (parkingList.isEmpty()) {
+            System.out.println("No active parking...");
+            return;
         }
+        System.out.println(" --- Checking out ---");
+        List<Parking> activeParking = parkingList.stream()
+                .filter(parking -> parking.isCheckOut() == false)
+                .collect(Collectors.toList());
+        activeParking.forEach(parking -> System.out.println(
+                "ID " + parking.getSequence() +
+                " License " + parking.getLicence() +
+                " Type " + parking.getType().getLabel() +
+                " Check in " + parking.getCheckInTime().format(timeFormat) +
+                " Check out " + (parking.getCheckOutTime() == null ? "-" : parking.getCheckOutTime().format(timeFormat))
+        ));
+        String license = ScannerUtil.scanText("Input license to checkout: ");
+        Parking parkingToCheckout = activeParking.stream()
+                .filter(parking -> parking.getLicence().equalsIgnoreCase(license))
+                .findFirst()
+                .orElse(null);
+        parkingService.checkoutParking(parkingToCheckout);
         listener.onBackPressed();
     }
 
@@ -57,7 +70,7 @@ public class ParkingView {
     }
 
     private int inputSecondPart() {
-        return ScannerUtil.scanInt("Input the main number : ");
+        return ScannerUtil.scanLimitedOption("Input the main number : ", 99999);
     }
 
     private String inputThirdPart() {
@@ -72,10 +85,14 @@ public class ParkingView {
         return VehicleType.MOTORCYCLE;
     }
 
-    private void checkInConfirmation(OnBackListener listener, VehicleType vehicleType, String license) {
+    private void checkInConfirmation(OnBackListener listener, VehicleType vehicleType, String license, List<Parking> parkingList) {
         String checkoutApproval = ScannerUtil.scanText("Are you sure you want check in? [y/n] : ");
         if ("y".equalsIgnoreCase(checkoutApproval)) {
             Parking newParking = new Parking(RandomSequence.getAlphaNumericString(8), vehicleType, license, true, false, LocalDateTime.now(), null, 0d);
+            if (parkingService.isExistLicenseCheckout(parkingList, newParking)) {
+                System.out.println("Oops, the license you input isn't checking out yet");
+                return;
+            }
             parkingService.setParkingHistory(newParking);
             return;
         }

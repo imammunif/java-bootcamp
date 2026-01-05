@@ -38,10 +38,6 @@ public class Parking {
         return licence;
     }
 
-    public Boolean isCheckIn() {
-        return isCheckIn;
-    }
-
     public Boolean isCheckOut() {
         return isCheckOut;
     }
@@ -54,28 +50,12 @@ public class Parking {
         return checkOutTime;
     }
 
-    public Double getGrandTotal() {
-        return grandTotal;
-    }
-
-    public void setSequence(String sequence) {
-        this.sequence = sequence;
-    }
-
-    public void setLicence(String licence) {
-        this.licence = licence;
-    }
-
-    public void setCheckIn(Boolean isCheckIn) {
-        this.isCheckIn = isCheckIn;
-    }
-
     public void setCheckOut(Boolean isCheckOut) {
         this.isCheckOut = isCheckOut;
     }
 
-    public void setGrandTotal(Double grandTotal) {
-        this.grandTotal = grandTotal;
+    public void setCheckOutTime(LocalDateTime checkOutTime) {
+        this.checkOutTime = checkOutTime;
     }
 
 }

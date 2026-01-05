@@ -18,6 +18,9 @@ public class HistoryView {
 
     public void show(OnBackListener listener) {
         List<Parking> parkingList = parkingService.getHistory();
+        if (parkingList.isEmpty()) {
+            System.out.println("No parking history...");
+        }
         System.out.println("================ History view ================");
         for (Parking parking : parkingList) {
             System.out.println(

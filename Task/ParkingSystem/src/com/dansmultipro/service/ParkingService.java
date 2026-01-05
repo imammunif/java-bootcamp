@@ -6,17 +6,9 @@ import java.util.List;
 
 public interface ParkingService {
 
-    void setLicense();
+    Boolean isExistLicenseCheckout(List<Parking> parkingList, Parking newParking);
 
-    void setCheckIn();
-
-    void setCheckOut();
-
-    void setCheckInTime();
-
-    void setCheckOutTime();
-
-    void setGrandTotal();
+    void checkoutParking(Parking newParking);
 
     List<Parking> getHistory();
 
