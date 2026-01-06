@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MiniStore/MiniStore.iml" filepath="$PROJECT_DIR$/MiniStore/MiniStore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ParkingSystem/ParkingSystem.iml" filepath="$PROJECT_DIR$/ParkingSystem/ParkingSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Task.iml" filepath="$PROJECT_DIR$/.idea/Task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TrainApp/TrainApp.iml" filepath="$PROJECT_DIR$/TrainApp/TrainApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ojolfour/ojolfour.iml" filepath="$PROJECT_DIR$/ojolfour/ojolfour.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ojolone/ojolone.iml" filepath="$PROJECT_DIR$/ojolone/ojolone.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ojolthree/ojolthree.iml" filepath="$PROJECT_DIR$/ojolthree/ojolthree.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ojoltwo/ojoltwo.iml" filepath="$PROJECT_DIR$/ojoltwo/ojoltwo.iml" />
+    </modules>
+  </component>
+</project>
