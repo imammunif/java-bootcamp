@@ -44,22 +44,22 @@ public class BuyerView {
 
 
     private void showCategory(OnBackListener listener) {
-        List<Category> catalogList = marketService.getCategories();
-        if (catalogList.isEmpty()) {
+        List<Category> categories = marketService.getCategories();
+        if (categories.isEmpty()) {
             System.out.println("Sorry, currently no any product category available");
             return;
         }
         System.out.println("---- Available Product Category ----");
-        for (int i = 0; i < catalogList.size(); i++) {
-            System.out.println((i + 1) + ". " + "Category: " + catalogList.get(i).getName());
+        for (int i = 0; i < categories.size(); i++) {
+            System.out.println((i + 1) + ". " + "Category: " + categories.get(i).getName());
         }
-        System.out.println("[1-" + catalogList.size() + "] Select a category");
+        System.out.println("[1-" + categories.size() + "] Select a category");
         System.out.println("[0] Back to main");
-        int input = ScannerUtil.scanIntegerLimited("Select : ", catalogList.size(), "Invalid option");
+        int input = ScannerUtil.scanIntegerLimited("Select : ", categories.size(), "Invalid option");
         if (input == 0) {
             return;
         }
-        Category category = catalogList.get(input - 1);
+        Category category = categories.get(input - 1);
         if (category.getProducts().isEmpty()) {
             System.out.println("Sorry, this category has no product");
         }

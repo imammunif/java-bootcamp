@@ -16,7 +16,7 @@ public interface MarketService {
 
     void setOrderHistory(Order newOrder);
 
-    void setCatalogList(Category newCategory);
+    boolean addCategory(Category newCategory);
 
     //-------------------------------------------------------
 
