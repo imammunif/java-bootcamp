@@ -4,6 +4,7 @@ import com.dansmultipro.minimarket.model.constant.UserType;
 import com.dansmultipro.minimarket.util.ScannerUtil;
 
 public class MainView {
+
     private final BuyerView buyerView;
     private final SellerView sellerView;
 
@@ -16,7 +17,7 @@ public class MainView {
         System.out.println("======= Mini Market =======");
         String username = inputUsername();
         String password = inputPassword();
-        if (password.equals("seller")) {
+        if (username.equals("seller") && password.equals("seller")) {
             sellerView.show(() -> show());
         } else {
             buyerView.show(() -> show());

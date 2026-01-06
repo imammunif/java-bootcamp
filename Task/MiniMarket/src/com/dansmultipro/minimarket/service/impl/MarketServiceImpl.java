@@ -67,4 +67,11 @@ public class MarketServiceImpl implements MarketService {
     public void setCatalogList(Category newCategory) {
 
     }
+
+    @Override
+    public void updateProductStock(Product product, int diffQty) {
+        int newStock = product.getStock() + diffQty;
+        product.setStock(newStock);
+
+    }
 }

@@ -2,8 +2,6 @@ package com.dansmultipro.minimarket.service.impl;
 
 import com.dansmultipro.minimarket.model.Cart;
 import com.dansmultipro.minimarket.model.CartItem;
-import com.dansmultipro.minimarket.model.Category;
-import com.dansmultipro.minimarket.model.Product;
 import com.dansmultipro.minimarket.service.BuyerService;
 
 import java.util.ArrayList;
@@ -14,10 +12,6 @@ public class BuyerServiceImpl implements BuyerService {
     private List<CartItem> cartItems = new ArrayList<>();
     private Cart cart = new Cart(cartItems);
 
-    @Override
-    public List<Category> getCategories() {
-        return List.of();
-    }
 
     @Override
     public List<CartItem> getCartItems() {
@@ -29,10 +23,6 @@ public class BuyerServiceImpl implements BuyerService {
         return 0.0;
     }
 
-    @Override
-    public void updateProductStock(Product product, int diffQty) {
-
-    }
 
     @Override
     public void updateItemQuantity(CartItem item, int diffStock) {
@@ -46,7 +36,16 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Override
     public void addOrUpdateCartItem(CartItem newItem) {
-
+        for (CartItem item : cartItems) {
+            if (item.getProduct().getName().equals(newItem.getProduct().getName())) {
+                updateItemQuantity(item, newItem.getQuantity());
+                updateCartGrandtotal();
+                return;
+            }
+        }
+        cartItems.add(newItem);
+        cart.setItems(cartItems);
+        updateCartGrandtotal();
     }
 
     @Override
@@ -56,6 +55,11 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Override
     public Double calculateBil(String voucher) {
+        return 0.0;
+    }
+
+    @Override
+    public Double calculateDiscount(String voucher) {
         return 0.0;
     }
 }
