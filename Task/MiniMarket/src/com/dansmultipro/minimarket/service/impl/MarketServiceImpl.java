@@ -54,8 +54,13 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
-    public List<Category> getCatalogList() {
+    public List<Category> getCategories() {
         return catalogList;
+    }
+
+    @Override
+    public List<Product> getProducts(Category category) {
+        return List.of();
     }
 
     @Override

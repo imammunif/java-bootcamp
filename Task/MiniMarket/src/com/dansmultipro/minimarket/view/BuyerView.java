@@ -31,7 +31,7 @@ public class BuyerView {
         if (chosen == 1) {
             showCategory(listener);
         } else if (chosen == 2) {
-            showCart();
+            showCart(listener);
         } else if (chosen == 3) {
             showHistory();
         } else if (chosen == 4) {
@@ -44,7 +44,7 @@ public class BuyerView {
 
 
     private void showCategory(OnBackListener listener) {
-        List<Category> catalogList = marketService.getCatalogList();
+        List<Category> catalogList = marketService.getCategories();
         if (catalogList.isEmpty()) {
             System.out.println("Sorry, currently no any product category available");
             return;
@@ -106,6 +106,70 @@ public class BuyerView {
     private void showHistory() {
     }
 
-    private void showCart() {
+    private void showCart(OnBackListener listener) {
+        List<CartItem> cartItems = buyerService.getCartItems();
+        System.out.println(cartItems);
+        if (cartItems.isEmpty()) {
+            System.out.println("Your cart is empty. Please add a product first!");
+            return;
+        }
+        System.out.println("--- Showing your cart ---");
+        for (CartItem cartItem : cartItems) {
+            System.out.println("- " + cartItem.getProduct().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getProduct().getPrice() + " (" + cartItem.getSubtotal() + ")");
+        }
+        System.out.println("""
+                Cart options :
+                [1] Edit cart
+                [2] Checkout to an order
+                [0] Back""");
+        int options = ScannerUtil.scanIntegerLimited("Select an option [1-3] : ", 2, "Invalid option");
+        if (options == 1) {
+            editCart(cartItems);
+        } else if (options == 2) {
+            checkout(listener, cartItems);
+        } else if (options == 0) {
+            return;
+        }
+        listener.onBackPressed();
+    }
+
+    private void editCart(List<CartItem> cartItems) {
+        System.out.println("Editing options :");
+        System.out.println("[1] Edit quantity");
+        System.out.println("[2] Delete per item");
+        System.out.println("[3] Delete all");
+        int options = ScannerUtil.scanIntegerLimited("Select [1-3] : ", 3, "Invalid option");
+        if (options == 1) {
+            showEditQuantity(cartItems);
+        } else if (options == 2) {
+            showDeletePerItem(cartItems);
+        } else if (options == 3) {
+            showDeleteAllItems(cartItems);
+        }
+    }
+
+    private void showDeletePerItem(List<CartItem> cartItems) {
+        for (int i = 0; i < cartItems.size(); i++) {
+            System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
+        }
+        int input = ScannerUtil.scanIntegerLimited("\nSelect item number to delete :", cartItems.size(), "Invalid product");
+        CartItem item = cartItems.get(input - 1);
+//        Product product = products.stream()
+//                .filter(p -> p.getName().equalsIgnoreCase(item.getProduct().getName()))
+//                .findFirst()
+//                .orElse(null);
+//        if (product != null) {
+//            deleteSingleItem(cartItems, product, item);
+//        }
+    }
+
+    private void showEditQuantity(List<CartItem> cartItems) {
+    }
+
+    private void showDeleteAllItems(List<CartItem> cartItems) {
+    }
+
+    private void checkout(OnBackListener listener, List<CartItem> cartItems) {
+
     }
 }

@@ -15,7 +15,7 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Override
     public List<CartItem> getCartItems() {
-        return List.of();
+        return cartItems;
     }
 
     @Override

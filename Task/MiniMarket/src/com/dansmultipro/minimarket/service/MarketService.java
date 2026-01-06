@@ -10,7 +10,9 @@ public interface MarketService {
 
     List<Order> getHistory();
 
-    List<Category> getCatalogList();
+    List<Category> getCategories();
+
+    List<Product> getProducts(Category category);
 
     void setOrderHistory(Order newOrder);
 
