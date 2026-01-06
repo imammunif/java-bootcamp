@@ -28,12 +28,15 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Override
     public void updateItemQuantity(CartItem item, int diffStock) {
-
+        int newQuantity = item.getQuantity() + diffStock;
+        item.setQuantity(newQuantity);
+        updateItemSubtotal(item);
     }
 
     @Override
     public void updateItemSubtotal(CartItem item) {
-
+        double newSubtotal = item.getQuantity() * item.getProduct().getPrice();
+        item.setSubtotal(newSubtotal);
     }
 
     @Override

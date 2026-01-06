@@ -167,17 +167,62 @@ public class BuyerView {
         for (int i = 0; i < cartItems.size(); i++) {
             System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
         }
-        int input = ScannerUtil.scanIntegerLimited("\nSelect item number to delete :", cartItems.size(), "Invalid product");
+        int input = ScannerUtil.scanIntegerLimited("\nSelect item number to delete : ", cartItems.size(), "Invalid product");
         CartItem item = cartItems.get(input - 1);
-        // TODO
+        List<Product> products = marketService.getProducts(item.getProduct().getCategory());
+        Product product = products.stream()
+                .filter(p -> p.getName().equalsIgnoreCase(item.getProduct().getName()))
+                .findFirst()
+                .orElse(null);
+        if (product != null) {
+            deleteSingleItem(cartItems, product, item);
+        }
     }
 
     private void showEditQuantity(List<CartItem> cartItems) {
-        // TODO
+        for (int i = 0; i < cartItems.size(); i++) {
+            System.out.println((i + 1) + ". " + cartItems.get(i).getProduct().getName() + " x" + cartItems.get(i).getQuantity());
+        }
+        int input = ScannerUtil.scanIntegerLimited("\nSelect product number to edit : ", cartItems.size(), "Invalid product");
+        CartItem item = cartItems.get(input - 1);
+        List<Product> products = marketService.getProducts(item.getProduct().getCategory());
+        Product product = products.stream()
+                .filter(p -> p.getName().equalsIgnoreCase(item.getProduct().getName()))
+                .findFirst()
+                .orElse(null);
+        int itemQty = item.getQuantity();
+        int targetQty = ScannerUtil.scanIntegerLimited("Enter new quantity : ", 1000, "Invalid quantity");
+        int diffQty = targetQty - itemQty;
+        if (product != null && diffQty > product.getStock()) {
+            System.out.println("Can't exceeded available stock in the catalog");
+            return;
+        } else if (targetQty == 0) {
+            deleteSingleItem(cartItems, product, item);
+            return;
+        }
+        buyerService.updateItemQuantity(item, diffQty); //+
+        marketService.updateProductStock(product, (diffQty * -1)); //-
+        buyerService.updateCartGrandtotal();
+        System.out.println("Item updated successfully");
     }
 
     private void showDeleteAllItems(List<CartItem> cartItems) {
-        // TODO
+        for (CartItem item : cartItems) {
+            List<Product> products = marketService.getProducts(item.getProduct().getCategory());
+            products.stream()
+                    .filter(product -> product.getName().equalsIgnoreCase(item.getProduct().getName()))
+                    .forEach(product -> {
+                        marketService.updateProductStock(product, item.getQuantity());
+                    });
+        }
+        cartItems.clear();
+        System.out.println("All products deleted successfully");
+    }
+
+    private void deleteSingleItem(List<CartItem> cartItems, Product product, CartItem item) {
+        marketService.updateProductStock(product, (item.getQuantity()));
+        cartItems.remove(item);
+        System.out.println("Product deleted successfully");
     }
 
     private void checkout(List<CartItem> cartItems) {

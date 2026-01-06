@@ -55,7 +55,7 @@ public class SellerView {
         String productName = ScannerUtil.scanText("Enter new product name : ");
         Double productPrice = ScannerUtil.scanDouble("Enter the price : ");
         int productQuantity = ScannerUtil.scanInt("Enter the quantity : ");
-        Product newProduct = new Product(productName, productPrice, productQuantity);
+        Product newProduct = new Product(productName, productPrice, productQuantity, category);
         boolean isProductAdded = marketService.addProduct(category, newProduct);
         if (!isProductAdded) {
             System.out.println("Oops, product is already exist!");
