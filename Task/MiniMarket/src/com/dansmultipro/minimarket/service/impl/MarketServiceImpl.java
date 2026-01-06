@@ -36,7 +36,7 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public List<Product> getProducts(Category category) {
-        return List.of();
+        return category.getProducts();
     }
 
     @Override
@@ -47,11 +47,23 @@ public class MarketServiceImpl implements MarketService {
     @Override
     public boolean addCategory(Category newCategory) {
         for (Category category : categories) {
-            if (category.getName().equals(newCategory.getName())) {
+            if (category.getName().trim().equalsIgnoreCase(newCategory.getName().trim())) {
                 return false;
             }
         }
         categories.add(newCategory);
+        return true;
+    }
+
+    @Override
+    public boolean addProduct(Category category, Product newProduct) {
+        List<Product> products = category.getProducts();
+        for (Product product : products) {
+            if (product.getName().trim().equalsIgnoreCase(newProduct.getName().trim())) {
+                return false;
+            }
+        }
+        products.add(newProduct);
         return true;
     }
 
