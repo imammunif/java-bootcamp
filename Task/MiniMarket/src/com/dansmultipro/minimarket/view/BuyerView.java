@@ -17,6 +17,7 @@ public class BuyerView {
 
     private final MarketService marketService;
     private final BuyerService buyerService;
+    private OnBackListener onBackListener;
 
     public BuyerView(MarketService marketService, BuyerService buyerService) {
         this.marketService = marketService;
@@ -24,6 +25,7 @@ public class BuyerView {
     }
 
     public void show(OnBackListener listener) {
+        this.onBackListener = listener;
         System.out.println("""
                 [1] Show products
                 [2] Show my cart
@@ -32,11 +34,11 @@ public class BuyerView {
                 [0] Exit""");
         int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-4] : ", 4, "Invalid option");
         if (chosen == 1) {
-            showCategory(listener);
+            showCategory();
         } else if (chosen == 2) {
-            showCart(listener);
+            showCart();
         } else if (chosen == 3) {
-            showHistory(listener);
+            showHistory();
         } else if (chosen == 4) {
             switchUser();
         } else if (chosen == 0) {
@@ -46,7 +48,7 @@ public class BuyerView {
     }
 
 
-    private void showCategory(OnBackListener listener) {
+    private void showCategory() {
         List<Category> categories = marketService.getCategories();
         if (categories.isEmpty()) {
             System.out.println("Sorry, currently no any product category available");
@@ -65,20 +67,20 @@ public class BuyerView {
         if (category.getProducts().isEmpty()) {
             System.out.println("Sorry, this category has no product");
         }
-        boolean added = showProducts(category, listener);
+        boolean added = showProducts(category);
         if (added) {
             String addMore = ScannerUtil.scanText("Add another product? [y/n] : ");
             if ("y".equalsIgnoreCase(addMore)) {
-                showCategory(listener);
+                showCategory();
             } else {
                 return;
             }
         }
-        show(listener);
+        show(onBackListener);
     }
 
 
-    private boolean showProducts(Category category, OnBackListener listener) {
+    private boolean showProducts(Category category) {
         List<Product> products = category.getProducts();
         for (int i = 0; i < products.size(); i++) {
             System.out.println((i + 1) + ". " + products.get(i).getName() + " (@" + products.get(i).getPrice() + ") Stock: " + products.get(i).getStock());
@@ -104,16 +106,14 @@ public class BuyerView {
     private void switchUser() {
     }
 
-    private void showHistory(OnBackListener listener) {
+    private void showHistory() {
         List<Order> myHistories = marketService.getHistories();
         if (myHistories.isEmpty()) {
             System.out.println("Your history is empty. Please checkout an order first!");
-            return;
         }
-        listener.onBackPressed();
     }
 
-    private void showCart(OnBackListener listener) {
+    private void showCart() {
         List<CartItem> cartItems = buyerService.getCartItems();
         if (cartItems.isEmpty()) {
             System.out.println("Your cart is empty. Please add a product first!");
@@ -132,11 +132,10 @@ public class BuyerView {
         if (options == 1) {
             editCart(cartItems);
         } else if (options == 2) {
-            checkout(listener, cartItems);
+            checkout(cartItems);
         } else if (options == 0) {
-            return;
+            show(onBackListener);
         }
-        listener.onBackPressed();
     }
 
     private void editCart(List<CartItem> cartItems) {
@@ -160,31 +159,25 @@ public class BuyerView {
         }
         int input = ScannerUtil.scanIntegerLimited("\nSelect item number to delete :", cartItems.size(), "Invalid product");
         CartItem item = cartItems.get(input - 1);
-//        Product product = products.stream()
-//                .filter(p -> p.getName().equalsIgnoreCase(item.getProduct().getName()))
-//                .findFirst()
-//                .orElse(null);
-//        if (product != null) {
-//            deleteSingleItem(cartItems, product, item);
-//        }
+        // TODO
     }
 
     private void showEditQuantity(List<CartItem> cartItems) {
+        // TODO
     }
 
     private void showDeleteAllItems(List<CartItem> cartItems) {
+        // TODO
     }
 
-    private void checkout(OnBackListener listener, List<CartItem> cartItems) {
+    private void checkout(List<CartItem> cartItems) {
         String checkoutApproval = ScannerUtil.scanText("Are you sure you want checkout all products in your cart? [y/n] : ");
         if ("y".equalsIgnoreCase(checkoutApproval)) {
             Order newOrder = new Order(RandomSequence.getAlphaNumericString(8), LocalDateTime.now(), buyerService.getCartGrandtotal());
             marketService.setOrderHistory(newOrder);
             printReceipt(cartItems);
             cartItems.clear();
-            return;
         }
-        show(listener);
     }
 
     private void printReceipt(List<CartItem> cartItems) {
