@@ -20,8 +20,6 @@ public interface MarketService {
 
     boolean addProduct(Category category, Product newProduct);
 
-    //-------------------------------------------------------
-
     void updateProductStock(Product product, int diffQty);
 
 }

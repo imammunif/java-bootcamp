@@ -11,12 +11,16 @@ import com.dansmultipro.minimarket.util.RandomSequence;
 import com.dansmultipro.minimarket.util.ScannerUtil;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BuyerView {
 
     private final MarketService marketService;
     private final BuyerService buyerService;
+    DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     private OnBackListener onBackListener;
 
     public BuyerView(MarketService marketService, BuyerService buyerService) {
@@ -109,8 +113,14 @@ public class BuyerView {
     private void showHistory() {
         List<Order> myHistories = marketService.getHistories();
         if (myHistories.isEmpty()) {
-            System.out.println("Your history is empty. Please checkout an order first!");
+            System.out.println("Oops you have no order history. Please checkout an order first!");
+            return;
         }
+        System.out.println("--- Showing your order History ---");
+        myHistories.stream()
+                .sorted(Comparator.comparing(Order::getDateTime).reversed())
+                .collect(Collectors.toList())
+                .forEach(order -> System.out.println("Order ID: " + order.getSequence() + " Date: " + order.getDateTime().format(timeFormat) + " Total: " + order.getGrandTotal()));
     }
 
     private void showCart() {

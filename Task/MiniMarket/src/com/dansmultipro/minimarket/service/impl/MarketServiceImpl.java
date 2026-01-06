@@ -6,15 +6,12 @@ import com.dansmultipro.minimarket.model.Product;
 import com.dansmultipro.minimarket.service.MarketService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MarketServiceImpl implements MarketService {
 
-    // String sequence, LocalDateTime dateTime, Double grandTotal
-    private List<Order> orderList = new ArrayList<>();
-    private List<Category> categories = new ArrayList<>();
     private List<Order> histories = new ArrayList<>();
+    private List<Category> categories = new ArrayList<>();
 
     @Override
     public List<Order> getHistories() {
@@ -33,7 +30,7 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public void setOrderHistory(Order newOrder) {
-        orderList.add(newOrder);
+        histories.add(newOrder);
     }
 
     @Override
