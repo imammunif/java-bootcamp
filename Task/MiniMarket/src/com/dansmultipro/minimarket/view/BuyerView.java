@@ -3,11 +3,14 @@ package com.dansmultipro.minimarket.view;
 import com.dansmultipro.minimarket.listener.OnBackListener;
 import com.dansmultipro.minimarket.model.CartItem;
 import com.dansmultipro.minimarket.model.Category;
+import com.dansmultipro.minimarket.model.Order;
 import com.dansmultipro.minimarket.model.Product;
 import com.dansmultipro.minimarket.service.BuyerService;
 import com.dansmultipro.minimarket.service.MarketService;
+import com.dansmultipro.minimarket.util.RandomSequence;
 import com.dansmultipro.minimarket.util.ScannerUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BuyerView {
@@ -33,11 +36,11 @@ public class BuyerView {
         } else if (chosen == 2) {
             showCart(listener);
         } else if (chosen == 3) {
-            showHistory();
+            showHistory(listener);
         } else if (chosen == 4) {
             switchUser();
         } else if (chosen == 0) {
-            return;
+            listener.onBackPressed();
         }
         show(listener);
     }
@@ -51,11 +54,10 @@ public class BuyerView {
         }
         System.out.println("---- Available Product Category ----");
         for (int i = 0; i < categories.size(); i++) {
-            System.out.println((i + 1) + ". " + "Category: " + categories.get(i).getName());
+            System.out.println((i + 1) + ". " + "Category " + categories.get(i).getName());
         }
-        System.out.println("[1-" + categories.size() + "] Select a category");
-        System.out.println("[0] Back to main");
-        int input = ScannerUtil.scanIntegerLimited("Select : ", categories.size(), "Invalid option");
+        System.out.println("[1-" + categories.size() + "] Select a category [0] Back to main");
+        int input = ScannerUtil.scanIntegerLimited("Select an option : ", categories.size(), "Invalid option");
         if (input == 0) {
             return;
         }
@@ -81,8 +83,7 @@ public class BuyerView {
         for (int i = 0; i < products.size(); i++) {
             System.out.println((i + 1) + ". " + products.get(i).getName() + " (@" + products.get(i).getPrice() + ") Stock: " + products.get(i).getStock());
         }
-        System.out.println("[1-" + products.size() + "] Select a product");
-        System.out.println("[0] Back to main");
+        System.out.println("[1-" + products.size() + "] Select a product [0] Back to main");
         int input = ScannerUtil.scanIntegerLimited("Select : ", products.size(), "Invalid option");
         if (input == 0) {
             return false;
@@ -103,12 +104,17 @@ public class BuyerView {
     private void switchUser() {
     }
 
-    private void showHistory() {
+    private void showHistory(OnBackListener listener) {
+        List<Order> myHistories = marketService.getHistories();
+        if (myHistories.isEmpty()) {
+            System.out.println("Your history is empty. Please checkout an order first!");
+            return;
+        }
+        listener.onBackPressed();
     }
 
     private void showCart(OnBackListener listener) {
         List<CartItem> cartItems = buyerService.getCartItems();
-        System.out.println(cartItems);
         if (cartItems.isEmpty()) {
             System.out.println("Your cart is empty. Please add a product first!");
             return;
@@ -170,6 +176,33 @@ public class BuyerView {
     }
 
     private void checkout(OnBackListener listener, List<CartItem> cartItems) {
+        String checkoutApproval = ScannerUtil.scanText("Are you sure you want checkout all products in your cart? [y/n] : ");
+        if ("y".equalsIgnoreCase(checkoutApproval)) {
+            Order newOrder = new Order(RandomSequence.getAlphaNumericString(8), LocalDateTime.now(), buyerService.getCartGrandtotal());
+            marketService.setOrderHistory(newOrder);
+            printReceipt(cartItems);
+            cartItems.clear();
+            return;
+        }
+        show(listener);
+    }
 
+    private void printReceipt(List<CartItem> cartItems) {
+        String haveDiscount = ScannerUtil.scanText("Do you have voucher [y/n] : ");
+        String voucher = "";
+        if ("y".equalsIgnoreCase(haveDiscount)) {
+            voucher = ScannerUtil.scanText("Enter voucher : ");
+        }
+        System.out.println("Processing your order ...");
+        System.out.println("\n-------------------------");
+        for (CartItem cartItem : cartItems) {
+            System.out.println(" - " + cartItem.getProduct().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getProduct().getPrice() + " (" + cartItem.getSubtotal() + ")");
+        }
+        System.out.println("  Total : " + buyerService.getCartGrandtotal());
+        System.out.println("  Discount : " + buyerService.getCartGrandtotal() * buyerService.calculateDiscount(voucher) / 100);
+        System.out.println("  Total billed : " + buyerService.calculateBil(voucher));
+        System.out.println("-------------------------");
+        System.out.println("Your order successfully checked out");
+        System.out.println("Thank you :D\n");
     }
 }

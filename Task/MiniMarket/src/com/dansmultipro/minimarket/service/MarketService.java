@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MarketService {
 
-    List<Order> getHistory();
+    List<Order> getHistories();
 
     List<Category> getCategories();
 

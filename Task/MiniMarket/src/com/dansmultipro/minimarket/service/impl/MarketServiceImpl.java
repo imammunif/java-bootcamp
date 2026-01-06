@@ -5,7 +5,6 @@ import com.dansmultipro.minimarket.model.Order;
 import com.dansmultipro.minimarket.model.Product;
 import com.dansmultipro.minimarket.service.MarketService;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,20 +12,13 @@ import java.util.List;
 public class MarketServiceImpl implements MarketService {
 
     // String sequence, LocalDateTime dateTime, Double grandTotal
-    private List<Order> orderList = Arrays.asList(
-            new Order("TRX1109", LocalDateTime.now().minusMinutes(156), 56000d),
-            new Order("TRX1109", LocalDateTime.now().minusMinutes(156), 56000d),
-            new Order("TRX1109", LocalDateTime.now().minusMinutes(156), 56000d),
-            new Order("TRX1109", LocalDateTime.now().minusMinutes(156), 56000d),
-            new Order("TRX1109", LocalDateTime.now().minusMinutes(156), 56000d),
-            new Order("TRX1109", LocalDateTime.now().minusMinutes(156), 56000d)
-    );
-
+    private List<Order> orderList = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
+    private List<Order> histories = new ArrayList<>();
 
     @Override
-    public List<Order> getHistory() {
-        return List.of();
+    public List<Order> getHistories() {
+        return histories;
     }
 
     @Override
@@ -41,7 +33,7 @@ public class MarketServiceImpl implements MarketService {
 
     @Override
     public void setOrderHistory(Order newOrder) {
-
+        orderList.add(newOrder);
     }
 
     @Override

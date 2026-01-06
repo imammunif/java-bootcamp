@@ -5,7 +5,9 @@ import com.dansmultipro.minimarket.model.CartItem;
 import com.dansmultipro.minimarket.service.BuyerService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BuyerServiceImpl implements BuyerService {
 
@@ -20,7 +22,7 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Override
     public Double getCartGrandtotal() {
-        return 0.0;
+        return cart.getGrandTotal();
     }
 
 
@@ -50,16 +52,28 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Override
     public void updateCartGrandtotal() {
-
+        Double newGrandtotal = cartItems.stream()
+                .map(item -> item.getSubtotal())
+                .reduce(0d, (sub1, sub2) -> sub1 + sub2);
+        cart.setGrandTotal(newGrandtotal);
     }
 
     @Override
     public Double calculateBil(String voucher) {
-        return 0.0;
+        Double discount = calculateDiscount(voucher);
+        Double totalBill = getCartGrandtotal();
+        return totalBill - (totalBill * discount / 100.0);
     }
 
     @Override
     public Double calculateDiscount(String voucher) {
+        Map<String, Double> discounts = new HashMap<>();
+        discounts.put("TAKASIMURAH12", 12.0);
+        discounts.put("KENYANGAJA25", 25.0);
+
+        if (discounts.containsKey(voucher)) {
+            return discounts.get(voucher);
+        }
         return 0.0;
     }
 }

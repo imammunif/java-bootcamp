@@ -67,7 +67,7 @@ public class SellerView {
     private void showCategory(List<Category> categories) {
         System.out.println("---- Showing Product Categories ----");
         for (int i = 0; i < categories.size(); i++) {
-            System.out.println((i + 1) + ". " + categories.get(i).getName());
+            System.out.println((i + 1) + ". " + "Category " + categories.get(i).getName());
         }
         if (categories.isEmpty()) {
             System.out.println("\nYou haven't set any product category yet...\n");
