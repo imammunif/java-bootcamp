@@ -3,6 +3,7 @@ package com.dansmultipro.minimarket.service.impl;
 import com.dansmultipro.minimarket.model.Category;
 import com.dansmultipro.minimarket.model.Order;
 import com.dansmultipro.minimarket.model.Product;
+import com.dansmultipro.minimarket.model.Voucher;
 import com.dansmultipro.minimarket.service.MarketService;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class MarketServiceImpl implements MarketService {
 
     private List<Order> histories = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
+    private List<Voucher> vouchers = new ArrayList<>();
 
     @Override
     public List<Order> getHistories() {
@@ -26,6 +28,11 @@ public class MarketServiceImpl implements MarketService {
     @Override
     public List<Product> getProducts(Category category) {
         return category.getProducts();
+    }
+
+    @Override
+    public List<Voucher> getVouchers() {
+        return vouchers;
     }
 
     @Override
@@ -57,9 +64,13 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
+    public boolean addVoucher(Voucher voucher) {
+        // TODO
+    }
+
+    @Override
     public void updateProductStock(Product product, int diffQty) {
         int newStock = product.getStock() + diffQty;
         product.setStock(newStock);
-
     }
 }

@@ -4,6 +4,7 @@ import com.dansmultipro.minimarket.listener.OnBackListener;
 import com.dansmultipro.minimarket.model.Category;
 import com.dansmultipro.minimarket.model.Order;
 import com.dansmultipro.minimarket.model.Product;
+import com.dansmultipro.minimarket.model.Voucher;
 import com.dansmultipro.minimarket.service.MarketService;
 import com.dansmultipro.minimarket.util.ScannerUtil;
 
@@ -28,7 +29,8 @@ public class SellerView {
                 ======= Mini Market =======
                 [1] Add category
                 [2] Add products
-                [3] Show buyer history
+                [3] Add voucher
+                [4] Show buyer history
                 [0] Logout""");
         int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-4] : ", 3, "Invalid option");
         if (chosen == 1) {
@@ -37,11 +39,38 @@ public class SellerView {
             showProducts(categories);
         } else if (chosen == 3) {
             showHistory();
+        } else if (chosen == 4) {
+            showVoucher();
         } else if (chosen == 0) {
             System.out.println("Successfully logged out\n");
             listener.onBackPressed();
         }
         show(listener);
+    }
+
+    private void showVoucher() {
+        List<Voucher> vouchers = marketService.getVouchers();
+        if (vouchers.isEmpty()) {
+            System.out.println("\nNo active voucher...\n");
+        }
+        System.out.println("---- Showing Active Voucher ----");
+        for (int i = 0; i < vouchers.size(); i++) {
+            System.out.println((i + 1) + ". " + "Voucher \"" + vouchers.get(i).getCode() + "\" discount value " + vouchers.get(i).getDiscount() + "%");
+        }
+        System.out.println("[1] Input voucher [0] Back to main");
+        int input = ScannerUtil.scanIntegerLimited("Select : ", 1, "Invalid option");
+        if (input == 0) {
+            return;
+        }
+        String voucherName = ScannerUtil.scanText("Enter new voucher name : ");
+        Double voucherDiscount = ScannerUtil.scanDouble("Enter the price : ");
+        Voucher newVoucher = new Voucher(voucherName, voucherDiscount);
+        boolean isVoucherAdded = marketService.addVoucher(newVoucher);
+        if (!isVoucherAdded) {
+            System.out.println("Oops, category is already exist!");
+        } else {
+            System.out.println("Category successfully added");
+        }
     }
 
     private void showHistory() {
