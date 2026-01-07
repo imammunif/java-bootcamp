@@ -12,7 +12,7 @@ import java.util.Map;
 public class BuyerServiceImpl implements BuyerService {
 
     private List<CartItem> cartItems = new ArrayList<>();
-    private Cart cart = new Cart(cartItems);
+    private Cart cart = new Cart();
 
 
     @Override

@@ -7,10 +7,6 @@ public class Cart {
     private List<CartItem> items;
     private Double grandTotal;
 
-    public Cart(List<CartItem> items) {
-        this.items = items;
-    }
-
     public Double getGrandTotal() {
         return this.grandTotal;
     }

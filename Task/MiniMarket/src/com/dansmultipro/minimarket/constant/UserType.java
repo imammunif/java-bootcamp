@@ -1,4 +1,4 @@
-package com.dansmultipro.minimarket.model.constant;
+package com.dansmultipro.minimarket.constant;
 
 public enum UserType {
 

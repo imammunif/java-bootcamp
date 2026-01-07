@@ -34,7 +34,7 @@ public class BuyerView {
                 [1] Show products
                 [2] Show my cart
                 [3] Show my history
-                [0] Exit""");
+                [0] Logout""");
         int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-4] : ", 4, "Invalid option");
         if (chosen == 1) {
             showCategory();

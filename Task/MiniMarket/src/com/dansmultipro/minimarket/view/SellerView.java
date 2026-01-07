@@ -28,7 +28,7 @@ public class SellerView {
                 [1] Add category
                 [2] Add products
                 [3] Show buyer history
-                [0] Exit""");
+                [0] Logout""");
         int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-4] : ", 3, "Invalid option");
         if (chosen == 1) {
             showCategory(categories);
