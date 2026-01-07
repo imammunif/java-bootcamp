@@ -2,10 +2,8 @@ package com.dansmultipro.minimarket;
 
 import com.dansmultipro.minimarket.service.BuyerService;
 import com.dansmultipro.minimarket.service.MarketService;
-import com.dansmultipro.minimarket.service.SellerService;
 import com.dansmultipro.minimarket.service.impl.BuyerServiceImpl;
 import com.dansmultipro.minimarket.service.impl.MarketServiceImpl;
-import com.dansmultipro.minimarket.service.impl.SellerServiceImpl;
 import com.dansmultipro.minimarket.view.BuyerView;
 import com.dansmultipro.minimarket.view.MainView;
 import com.dansmultipro.minimarket.view.SellerView;
@@ -15,10 +13,9 @@ public class App {
 
         MarketService marketService = new MarketServiceImpl();
         BuyerService buyerService = new BuyerServiceImpl();
-        SellerService sellerService = new SellerServiceImpl();
 
         BuyerView buyerView = new BuyerView(marketService, buyerService);
-        SellerView sellerView = new SellerView(marketService, sellerService);
+        SellerView sellerView = new SellerView(marketService);
 
         new MainView(buyerView, sellerView).show();
     }

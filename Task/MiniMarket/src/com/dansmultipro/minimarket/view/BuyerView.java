@@ -34,7 +34,6 @@ public class BuyerView {
                 [1] Show products
                 [2] Show my cart
                 [3] Show my history
-                [4] Switch user
                 [0] Exit""");
         int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-4] : ", 4, "Invalid option");
         if (chosen == 1) {
@@ -43,8 +42,6 @@ public class BuyerView {
             showCart();
         } else if (chosen == 3) {
             showHistory();
-        } else if (chosen == 4) {
-            switchUser();
         } else if (chosen == 0) {
             listener.onBackPressed();
         }
@@ -105,9 +102,6 @@ public class BuyerView {
         buyerService.addOrUpdateCartItem(newItem);
         System.out.println("Product successfully added to your cart");
         return true;
-    }
-
-    private void switchUser() {
     }
 
     private void showHistory() {

@@ -2,22 +2,24 @@ package com.dansmultipro.minimarket.view;
 
 import com.dansmultipro.minimarket.listener.OnBackListener;
 import com.dansmultipro.minimarket.model.Category;
+import com.dansmultipro.minimarket.model.Order;
 import com.dansmultipro.minimarket.model.Product;
 import com.dansmultipro.minimarket.service.MarketService;
-import com.dansmultipro.minimarket.service.SellerService;
 import com.dansmultipro.minimarket.util.ScannerUtil;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SellerView {
 
     private final MarketService marketService;
-    private final SellerService sellerService;
+    DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-    public SellerView(MarketService marketService, SellerService sellerService) {
+    public SellerView(MarketService marketService) {
         this.marketService = marketService;
-        this.sellerService = sellerService;
     }
 
     public void show(OnBackListener listener) {
@@ -25,16 +27,32 @@ public class SellerView {
         System.out.println("""
                 [1] Add category
                 [2] Add products
+                [3] Show buyer history
                 [0] Exit""");
-        int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-4] : ", 2, "Invalid option");
+        int chosen = ScannerUtil.scanIntegerLimited("Select an option [0-4] : ", 3, "Invalid option");
         if (chosen == 1) {
             showCategory(categories);
         } else if (chosen == 2) {
             showProducts(categories);
+        } else if (chosen == 3) {
+            showHistory();
         } else if (chosen == 0) {
             listener.onBackPressed();
         }
         show(listener);
+    }
+
+    private void showHistory() {
+        List<Order> myHistories = marketService.getHistories();
+        if (myHistories.isEmpty()) {
+            System.out.println("No order history...");
+            return;
+        }
+        System.out.println("--- Showing your order History ---");
+        myHistories.stream()
+                .sorted(Comparator.comparing(Order::getDateTime).reversed())
+                .collect(Collectors.toList())
+                .forEach(order -> System.out.println("Order ID: " + order.getSequence() + " Date: " + order.getDateTime().format(timeFormat) + " Total: " + order.getGrandTotal()));
     }
 
     private void showProducts(List<Category> categories) {
@@ -46,7 +64,7 @@ public class SellerView {
         Category category = categories.get(input - 1);
         List<Product> products = marketService.getProducts(category);
         System.out.println("-- Showing products of " + category.getName() + " --");
-        if (products.isEmpty()){
+        if (products.isEmpty()) {
             System.out.println("Category " + category.getName() + " has no product...");
         }
         for (int i = 0; i < products.size(); i++) {
