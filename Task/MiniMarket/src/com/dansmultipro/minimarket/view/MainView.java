@@ -14,7 +14,7 @@ public class MainView {
     }
 
     public void show() {
-        System.out.println("======= Mini Market =======");
+        System.out.println("---- Please login first ----");
         String username = inputUsername();
         String password = inputPassword();
         if (username.equals("seller") && password.equals("seller")) {

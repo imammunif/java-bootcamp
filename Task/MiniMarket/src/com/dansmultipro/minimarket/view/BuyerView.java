@@ -31,6 +31,7 @@ public class BuyerView {
     public void show(OnBackListener listener) {
         this.onBackListener = listener;
         System.out.println("""
+                ======= Mini Market =======
                 [1] Show products
                 [2] Show my cart
                 [3] Show my history
@@ -43,6 +44,7 @@ public class BuyerView {
         } else if (chosen == 3) {
             showHistory();
         } else if (chosen == 0) {
+            System.out.println("Successfully logged out\n");
             listener.onBackPressed();
         }
         show(listener);
@@ -52,7 +54,7 @@ public class BuyerView {
     private void showCategory() {
         List<Category> categories = marketService.getCategories();
         if (categories.isEmpty()) {
-            System.out.println("Sorry, currently no any product category available");
+            System.out.println("\nSorry, currently no any product category available...\n");
             return;
         }
         System.out.println("---- Available Product Category ----");
@@ -66,7 +68,7 @@ public class BuyerView {
         }
         Category category = categories.get(input - 1);
         if (category.getProducts().isEmpty()) {
-            System.out.println("Sorry, this category has no product");
+            System.out.println("\nSorry, this category has no product...\n");
         }
         boolean added = showProducts(category);
         if (added) {
@@ -107,7 +109,8 @@ public class BuyerView {
     private void showHistory() {
         List<Order> myHistories = marketService.getHistories();
         if (myHistories.isEmpty()) {
-            System.out.println("Oops you have no order history. Please checkout an order first!");
+            System.out.println("\nYou have no order history");
+            System.out.println("Please checkout an order first...!\n");
             return;
         }
         System.out.println("--- Showing your order History ---");
@@ -120,7 +123,8 @@ public class BuyerView {
     private void showCart() {
         List<CartItem> cartItems = buyerService.getCartItems();
         if (cartItems.isEmpty()) {
-            System.out.println("Your cart is empty. Please add a product first!");
+            System.out.println("\nYour cart is empty");
+            System.out.println("Please add a product first...!\n");
             return;
         }
         System.out.println("--- Showing your cart ---");
@@ -236,7 +240,7 @@ public class BuyerView {
             voucher = ScannerUtil.scanText("Enter voucher : ");
         }
         System.out.println("Processing your order ...");
-        System.out.println("\n-------------------------");
+        System.out.println("-------------------------");
         for (CartItem cartItem : cartItems) {
             System.out.println(" - " + cartItem.getProduct().getName() + " " + cartItem.getQuantity() + "x@" + cartItem.getProduct().getPrice() + " (" + cartItem.getSubtotal() + ")");
         }
@@ -245,6 +249,6 @@ public class BuyerView {
         System.out.println("  Total billed : " + buyerService.calculateBil(voucher));
         System.out.println("-------------------------");
         System.out.println("Your order successfully checked out");
-        System.out.println("Thank you :D\n");
+        System.out.println("Thank you...\n");
     }
 }

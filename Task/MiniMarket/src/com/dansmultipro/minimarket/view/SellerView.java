@@ -25,6 +25,7 @@ public class SellerView {
     public void show(OnBackListener listener) {
         List<Category> categories = marketService.getCategories();
         System.out.println("""
+                ======= Mini Market =======
                 [1] Add category
                 [2] Add products
                 [3] Show buyer history
@@ -37,6 +38,7 @@ public class SellerView {
         } else if (chosen == 3) {
             showHistory();
         } else if (chosen == 0) {
+            System.out.println("Successfully logged out\n");
             listener.onBackPressed();
         }
         show(listener);
@@ -45,7 +47,7 @@ public class SellerView {
     private void showHistory() {
         List<Order> myHistories = marketService.getHistories();
         if (myHistories.isEmpty()) {
-            System.out.println("No order history...");
+            System.out.println("\nNo order history...\n");
             return;
         }
         System.out.println("--- Showing your order History ---");
@@ -56,6 +58,11 @@ public class SellerView {
     }
 
     private void showProducts(List<Category> categories) {
+        if (categories.isEmpty()) {
+            System.out.println("\nYou haven't set any product category yet");
+            System.out.println("Please create a category first...!\n");
+            return;
+        }
         System.out.println("-- Showing categories --");
         for (int i = 0; i < categories.size(); i++) {
             System.out.println((i + 1) + ". " + categories.get(i).getName());
@@ -83,12 +90,12 @@ public class SellerView {
     }
 
     private void showCategory(List<Category> categories) {
+        if (categories.isEmpty()) {
+            System.out.println("\nYou haven't set any product category yet...\n");
+        }
         System.out.println("---- Showing Product Categories ----");
         for (int i = 0; i < categories.size(); i++) {
             System.out.println((i + 1) + ". " + "Category " + categories.get(i).getName());
-        }
-        if (categories.isEmpty()) {
-            System.out.println("\nYou haven't set any product category yet...\n");
         }
         System.out.println("[1] Input category [0] Back to main");
         int input = ScannerUtil.scanIntegerLimited("Select : ", 1, "Invalid option");
