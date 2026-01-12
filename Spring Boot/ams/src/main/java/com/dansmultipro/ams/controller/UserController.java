@@ -1,5 +1,6 @@
 package com.dansmultipro.ams.controller;
 
+import com.dansmultipro.ams.dto.user.UserSaveDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,5 +15,11 @@ public class UserController {
     @GetMapping("welcome2")
     public String hello2() {
         return "Hello 2";
+    }
+
+    @PostMapping()
+    public String save(@RequestBody UserSaveDto data) {
+        // Request Body only allow single parameter
+        return data.getFullName() + " saved";
     }
 }
