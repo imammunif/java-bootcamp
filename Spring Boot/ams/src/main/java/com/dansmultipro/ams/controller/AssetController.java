@@ -3,8 +3,8 @@ package com.dansmultipro.ams.controller;
 import com.dansmultipro.ams.dto.CreateResponse;
 import com.dansmultipro.ams.dto.DeleteResponse;
 import com.dansmultipro.ams.dto.UpdateResponse;
-import com.dansmultipro.ams.dto.asset.AssetRequest;
-import com.dansmultipro.ams.dto.asset.AssetResponse;
+import com.dansmultipro.ams.dto.asset.AssetRequestDto;
+import com.dansmultipro.ams.dto.asset.AssetResponseDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,22 +14,22 @@ import java.util.List;
 public class AssetController {
 
     @GetMapping("{companyId}/assets")
-    public List<AssetResponse> getAllAssets(@PathVariable String companyId) {
+    public List<AssetResponseDto> getAllAssets(@PathVariable String companyId) {
         return null;
     }
 
     @GetMapping("{companyId}/assets/{id}")
-    public AssetResponse getAssetById(@PathVariable String companyId, @PathVariable String id) {
+    public AssetResponseDto getAssetById(@PathVariable String companyId, @PathVariable String id) {
         return null;
     }
 
     @PostMapping("{companyId}/assets")
-    public CreateResponse createAsset(@PathVariable String companyId, @RequestBody AssetRequest asset) {
+    public CreateResponse createAsset(@PathVariable String companyId, @RequestBody AssetRequestDto asset) {
         return null;
     }
 
     @PutMapping("{companyId}/assets/{id}")
-    public UpdateResponse updateAsset(@PathVariable String companyId, @PathVariable String id, @RequestBody AssetRequest asset) {
+    public UpdateResponse updateAsset(@PathVariable String companyId, @PathVariable String id, @RequestBody AssetRequestDto asset) {
         return null;
     }
 

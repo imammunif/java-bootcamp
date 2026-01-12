@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.asset;
 
-public class AssetResponse {
+public class AssetResponseDto {
 
     private String id;
     private String name;

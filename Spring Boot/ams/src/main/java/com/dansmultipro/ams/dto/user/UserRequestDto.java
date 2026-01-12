@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.user;
 
-public class UserRequest {
+public class UserRequestDto {
 
     private String fullName;
     private String roleName;

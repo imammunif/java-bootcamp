@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.assignment;
 
-public class AssignmentRequest {
+public class AssignmentRequestDto {
 
     private String code;
     private String assignDate;

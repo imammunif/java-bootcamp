@@ -1,9 +1,10 @@
-package com.dansmultipro.ams.dto.company;
+package com.dansmultipro.ams.dto.asset;
 
-public class CompanyResponse {
+public class AssetCategoryResponseDto {
 
     private String id;
     private String name;
+    private String code;
     private Integer version;
 
     public String getId() {
@@ -12,6 +13,10 @@ public class CompanyResponse {
 
     public String getName() {
         return name;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public Integer getVersion() {

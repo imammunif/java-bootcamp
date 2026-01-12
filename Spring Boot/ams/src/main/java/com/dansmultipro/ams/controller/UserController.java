@@ -4,8 +4,8 @@ import com.dansmultipro.ams.dto.CreateResponse;
 import com.dansmultipro.ams.dto.DeleteResponse;
 import com.dansmultipro.ams.dto.UpdateResponse;
 import com.dansmultipro.ams.dto.user.ResetPassRequestDto;
-import com.dansmultipro.ams.dto.user.UserRequest;
-import com.dansmultipro.ams.dto.user.UserResponse;
+import com.dansmultipro.ams.dto.user.UserRequestDto;
+import com.dansmultipro.ams.dto.user.UserResponseDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,22 +15,22 @@ import java.util.List;
 public class UserController {
 
     @GetMapping
-    public List<UserResponse> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         return null;
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUserById(@PathVariable String id) {
+    public UserResponseDto getUserById(@PathVariable String id) {
         return null;
     }
 
     @PostMapping
-    public CreateResponse createUser(@RequestBody UserRequest user) {
+    public CreateResponse createUser(@RequestBody UserRequestDto user) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public UpdateResponse updateUser(@PathVariable String id, @RequestBody UserRequest user) {
+    public UpdateResponse updateUser(@PathVariable String id, @RequestBody UserRequestDto user) {
         return null;
     }
 

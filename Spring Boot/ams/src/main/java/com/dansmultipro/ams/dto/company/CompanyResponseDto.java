@@ -1,10 +1,9 @@
-package com.dansmultipro.ams.dto.assetStatus;
+package com.dansmultipro.ams.dto.company;
 
-public class AssetStatusResponse {
+public class CompanyResponseDto {
 
     private String id;
     private String name;
-    private String code;
     private Integer version;
 
     public String getId() {
@@ -13,10 +12,6 @@ public class AssetStatusResponse {
 
     public String getName() {
         return name;
-    }
-
-    public String getCode() {
-        return code;
     }
 
     public Integer getVersion() {

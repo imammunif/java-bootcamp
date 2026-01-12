@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.location;
 
-public class LocationRequest {
+public class LocationRequestDto {
 
     private String name;
 

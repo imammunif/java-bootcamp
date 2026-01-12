@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.assignment;
 
-public class AssignmentUpdateResponse {
+public class AssignmentUpdateResponseDto {
 
     private String version;
     private String message;

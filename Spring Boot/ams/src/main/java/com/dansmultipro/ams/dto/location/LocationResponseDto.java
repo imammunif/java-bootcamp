@@ -1,10 +1,9 @@
-package com.dansmultipro.ams.dto.assetCategory;
+package com.dansmultipro.ams.dto.location;
 
-public class AssetCategoryResponse {
+public class LocationResponseDto {
 
     private String id;
     private String name;
-    private String code;
     private Integer version;
 
     public String getId() {
@@ -13,10 +12,6 @@ public class AssetCategoryResponse {
 
     public String getName() {
         return name;
-    }
-
-    public String getCode() {
-        return code;
     }
 
     public Integer getVersion() {

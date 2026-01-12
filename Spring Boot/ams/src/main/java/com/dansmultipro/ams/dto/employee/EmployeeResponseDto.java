@@ -2,7 +2,7 @@ package com.dansmultipro.ams.dto.employee;
 
 import java.util.Date;
 
-public class EmployeeResponse {
+public class EmployeeResponseDto {
 
     private String id;
     private String fullName;

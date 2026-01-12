@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.user;
 
-public class UserResponse {
+public class UserResponseDto {
 
     private String id;
     private String fullName;

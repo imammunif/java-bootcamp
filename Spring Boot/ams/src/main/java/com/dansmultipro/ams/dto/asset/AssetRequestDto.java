@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.asset;
 
-public class AssetRequest {
+public class AssetRequestDto {
 
     private String name;
     private String categoryName;

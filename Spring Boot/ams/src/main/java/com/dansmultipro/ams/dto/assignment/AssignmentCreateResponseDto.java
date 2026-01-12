@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.assignment;
 
-public class AssignmentCreateResponse {
+public class AssignmentCreateResponseDto {
 
     private String id;
 
