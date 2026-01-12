@@ -5,6 +5,7 @@ public class RoleResponse {
     private String id;
     private String name;
     private String code;
+    private Integer version;
 
     public String getId() {
         return id;
@@ -16,6 +17,10 @@ public class RoleResponse {
 
     public String getCode() {
         return code;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
 }

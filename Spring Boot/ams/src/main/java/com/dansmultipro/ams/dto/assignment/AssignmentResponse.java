@@ -8,6 +8,7 @@ public class AssignmentResponse {
     private String targetLocationName;
     private String targetAssetName;
     private String targetEmployeeName;
+    private Integer version;
 
     public String getId() {
         return id;
@@ -32,4 +33,9 @@ public class AssignmentResponse {
     public String getTargetEmployeeName() {
         return targetEmployeeName;
     }
+
+    public Integer getVersion() {
+        return version;
+    }
+
 }

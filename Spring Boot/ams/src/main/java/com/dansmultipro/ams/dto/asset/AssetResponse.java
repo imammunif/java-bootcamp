@@ -9,6 +9,7 @@ public class AssetResponse {
     private String companyName;
     private String expiredDate;
     private String code;
+    private Integer version;
 
     public String getId() {
         return id;
@@ -36,6 +37,10 @@ public class AssetResponse {
 
     public String getCode() {
         return code;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
 }

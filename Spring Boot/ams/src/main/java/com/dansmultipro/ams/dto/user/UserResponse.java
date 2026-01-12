@@ -7,6 +7,7 @@ public class UserResponse {
     private String phone;
     private String address;
     private String roleName;
+    private Integer version;
 
     public String getId() {
         return id;
@@ -26,6 +27,10 @@ public class UserResponse {
 
     public String getRoleName() {
         return roleName;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
 }

@@ -11,6 +11,7 @@ public class EmployeeResponse {
     private String address;
     private String code;
     private Date dateOfBirth;
+    private Integer version;
 
     public String getId() {
         return id;
@@ -38,6 +39,10 @@ public class EmployeeResponse {
 
     public Date getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
 }
