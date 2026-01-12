@@ -8,8 +8,6 @@ public class EmployeeRequestDto {
     private String companyName;
     private String phone;
     private String address;
-    private String code;
     private Date dateOfBirth;
-    private Integer version;
 
 }

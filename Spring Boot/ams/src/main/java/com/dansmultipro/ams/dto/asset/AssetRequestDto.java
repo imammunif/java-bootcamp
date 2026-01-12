@@ -7,7 +7,5 @@ public class AssetRequestDto {
     private String companyName;
     private String statusName;
     private String expiredDate;
-    private String code;
-    private Integer version;
 
 }
