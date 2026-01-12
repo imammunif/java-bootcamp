@@ -1,9 +1,9 @@
 package com.dansmultipro.ams.controller;
 
+import com.dansmultipro.ams.dto.UpdateResponse;
 import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
-import com.dansmultipro.ams.dto.assignment.AssignmentUpdateResponseDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +29,7 @@ public class AssignmentController {
 
     @PatchMapping("check-in/{id}")
     public AssignmentUpdateResponseDto updateAssignment(@PathVariable String id, @RequestBody AssignmentRequestDto assignment) {
+    public UpdateResponse updateAssignment(@PathVariable String id, @RequestBody List<String> assignmentDetailIds) {
         return null;
     }
 
