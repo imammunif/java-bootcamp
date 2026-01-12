@@ -1,25 +1,47 @@
 package com.dansmultipro.ams.controller;
 
-import com.dansmultipro.ams.dto.user.UserSaveDto;
+import com.dansmultipro.ams.dto.CreateResponse;
+import com.dansmultipro.ams.dto.DeleteResponse;
+import com.dansmultipro.ams.dto.UpdateResponse;
+import com.dansmultipro.ams.dto.user.ResetPassRequestDto;
+import com.dansmultipro.ams.dto.user.UserRequest;
+import com.dansmultipro.ams.dto.user.UserResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 public class UserController {
 
-    @GetMapping("welcome")
-    public String hello(@RequestParam(required = false) String name) {
-        return "Hello, " + name;
+    @GetMapping
+    public List<UserResponse> getAllUsers() {
+        return null;
     }
 
-    @GetMapping("welcome2")
-    public String hello2() {
-        return "Hello 2";
+    @GetMapping("/{id}")
+    public UserResponse getUserById(@PathVariable String id) {
+        return null;
     }
 
-    @PostMapping()
-    public String save(@RequestBody UserSaveDto data) {
-        // Request Body only allow single parameter
-        return data.getFullName() + " saved";
+    @PostMapping
+    public CreateResponse createUser(@RequestBody UserRequest user) {
+        return null;
     }
+
+    @PutMapping("/{id}")
+    public UpdateResponse updateUser(@PathVariable String id, @RequestBody UserRequest user) {
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public DeleteResponse deleteUser(@PathVariable String id) {
+        return null;
+    }
+
+    @PatchMapping("/change-password")
+    public UpdateResponse changePassword(@RequestBody ResetPassRequestDto reset) {
+        return null;
+    }
+
 }
