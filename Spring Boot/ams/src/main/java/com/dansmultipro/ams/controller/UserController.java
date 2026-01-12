@@ -1,16 +1,13 @@
 package com.dansmultipro.ams.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("user")
 public class UserController {
 
-    @GetMapping("welcome/{name}")
-    public String hello(@PathVariable String name) {
+    @GetMapping("welcome")
+    public String hello(@RequestParam String name) {
         return "Hello, " + name;
     }
 
