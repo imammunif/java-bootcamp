@@ -6,5 +6,6 @@ public class UserRequestDto {
     private String roleName;
     private String email;
     private String password;
+    private Integer version;
 
 }

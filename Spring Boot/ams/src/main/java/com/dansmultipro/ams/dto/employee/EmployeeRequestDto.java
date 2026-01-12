@@ -10,5 +10,6 @@ public class EmployeeRequestDto {
     private String address;
     private String code;
     private Date dateOfBirth;
+    private Integer version;
 
 }

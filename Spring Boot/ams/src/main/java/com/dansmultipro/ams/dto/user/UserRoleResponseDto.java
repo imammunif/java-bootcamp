@@ -1,6 +1,6 @@
-package com.dansmultipro.ams.dto.role;
+package com.dansmultipro.ams.dto.user;
 
-public class RoleResponseDto {
+public class UserRoleResponseDto {
 
     private String id;
     private String name;
