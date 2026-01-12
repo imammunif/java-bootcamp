@@ -27,8 +27,7 @@ public class AssignmentController {
         return null;
     }
 
-    @PatchMapping("check-in/{id}")
-    public AssignmentUpdateResponseDto updateAssignment(@PathVariable String id, @RequestBody AssignmentRequestDto assignment) {
+    @PatchMapping("{id}/check-in")
     public UpdateResponse updateAssignment(@PathVariable String id, @RequestBody List<String> assignmentDetailIds) {
         return null;
     }

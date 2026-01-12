@@ -1,13 +1,14 @@
 package com.dansmultipro.ams.dto.assignment;
 
+import java.util.List;
+
 public class AssignmentResponseDto {
 
     private String id;
     private String code;
     private String assignDate;
-    private String targetLocationName;
-    private String targetAssetName;
-    private String targetEmployeeName;
+    private String targetName;
+    private List<String> assignmentList;
     private Integer version;
 
     public String getId() {
@@ -22,16 +23,8 @@ public class AssignmentResponseDto {
         return assignDate;
     }
 
-    public String getTargetLocationName() {
-        return targetLocationName;
-    }
-
-    public String getTargetAssetName() {
-        return targetAssetName;
-    }
-
-    public String getTargetEmployeeName() {
-        return targetEmployeeName;
+    public List<String> getAssignmentList() {
+        return assignmentList;
     }
 
     public Integer getVersion() {
