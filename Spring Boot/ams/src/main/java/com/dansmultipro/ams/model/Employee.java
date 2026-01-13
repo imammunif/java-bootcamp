@@ -68,4 +68,8 @@ public class Employee extends BaseModel {
         this.code = code;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
 }
