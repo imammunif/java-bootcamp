@@ -42,10 +42,4 @@ public class AssignmentDaoImpl implements AssignmentDao {
         return assignmentUpdate;
     }
 
-    @Override
-    public void deleteById(UUID id) {
-        Assignment assignment = em.find(Assignment.class, id);
-        em.remove(assignment);
-    }
-
 }

@@ -16,6 +16,4 @@ public interface AssignmentDao {
 
     Assignment update(Assignment assignment);
 
-    void deleteById(UUID id);
-
 }
