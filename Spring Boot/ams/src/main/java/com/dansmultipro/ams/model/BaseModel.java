@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

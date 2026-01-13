@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "t_user")
-public class User {
+public class User extends BaseModel {
 
     @Column(nullable = false, length = 50, unique = true)
     private String email;
@@ -14,7 +14,13 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)
+    @Column(length = 36)
     private Role role;
+
+    @OneToOne
+    @JoinColumn(name="employee_id", nullable = false)
+    @Column(length = 36)
+    private Employee employee;
 
     public String getPassword() {
         return password;
