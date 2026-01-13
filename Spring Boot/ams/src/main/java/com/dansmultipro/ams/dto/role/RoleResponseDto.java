@@ -14,16 +14,4 @@ public class RoleResponseDto {
         this.name = name;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
 }

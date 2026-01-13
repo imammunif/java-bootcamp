@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.company;
 
-public class CompanyRequestDto {
+public class UpdateCompanyRequestDto {
 
     private String name;
 
