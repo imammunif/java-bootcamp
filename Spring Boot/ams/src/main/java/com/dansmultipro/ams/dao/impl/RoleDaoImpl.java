@@ -11,24 +11,34 @@ import java.util.UUID;
 
 public class RoleDaoImpl implements RoleDao {
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Override
     public Role insert(Role role) {
-        return null;
+        em.persist(role);
+        return role;
     }
 
     @Override
     public Role update(Role role) {
-        return null;
+        Role roleUpdate = em.merge(role);
+        return roleUpdate;
     }
 
+    // not provided from JPA, need to use HQL
     @Override
     public List<Role> getAll() {
-        return List.of();
+        String hql = "SELECT r FROM Role r";
+        List<Role> result = em.createQuery(hql, Role.class)
+                .getResultList();
+        return result;
     }
 
     @Override
     public Optional<Role> getById(UUID id) {
-        return Optional.empty();
+        Role role = em.find(Role.class, id);
+        return Optional.ofNullable(role);
     }
 
     @Override
