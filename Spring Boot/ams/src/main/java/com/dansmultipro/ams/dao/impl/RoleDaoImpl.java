@@ -16,6 +16,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Role insert(Role role) {
+        // insert should use persis, can't use manual query
         em.persist(role);
         return role;
     }
@@ -38,11 +39,13 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Optional<Role> getById(UUID id) {
         Role role = em.find(Role.class, id);
+        // should be careful because its entering manage state
         return Optional.ofNullable(role);
     }
 
     @Override
     public void deleteRole(UUID id) {
-
+        Role role = em.find(Role.class, id);
+        em.remove(role);
     }
 }
