@@ -8,10 +8,10 @@ import jakarta.persistence.Table;
 @Table(name = "t_user")
 public class User {
 
-    @Column(length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String email;
 
-    @Column(length = 200)
+    @Column(nullable = false, length = 200)
     private String password;
 
     public String getPassword() {
@@ -29,4 +29,5 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

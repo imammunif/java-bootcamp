@@ -11,7 +11,7 @@ public class Role extends BaseModel {
     @Column(nullable = false, length = 5, unique = true)
     private String roleCode;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 20)
     private String roleName;
 
     public String getRoleName() {
