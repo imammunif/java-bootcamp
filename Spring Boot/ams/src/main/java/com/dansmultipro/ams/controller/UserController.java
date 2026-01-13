@@ -39,10 +39,6 @@ public class UserController {
         return null;
     }
 
-    // TODO REGISTER API
-
-    // TODO LOGIN API
-
     @PatchMapping("/change-password")
     public UpdateResponse changePassword(@RequestBody ResetPassRequestDto reset) {
         return null;
