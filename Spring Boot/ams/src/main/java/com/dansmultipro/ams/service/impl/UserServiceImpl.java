@@ -4,6 +4,7 @@ import com.dansmultipro.ams.dao.EmployeeDao;
 import com.dansmultipro.ams.dao.RoleDao;
 import com.dansmultipro.ams.dao.UserDao;
 import com.dansmultipro.ams.dto.CreateResponseDto;
+import com.dansmultipro.ams.dto.DeleteResponseDto;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
@@ -81,8 +82,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(UUID id) {
-
+    public DeleteResponseDto deleteById(UUID id) {
+        return null;
     }
 
 }

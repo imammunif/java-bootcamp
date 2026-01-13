@@ -1,6 +1,7 @@
 package com.dansmultipro.ams.service;
 
 import com.dansmultipro.ams.dto.CreateResponseDto;
+import com.dansmultipro.ams.dto.DeleteResponseDto;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
@@ -19,6 +20,6 @@ public interface UserService {
 
     UpdateResponseDto update(UpdateUserRequestDto data);
 
-    void deleteById(UUID id);
+    DeleteResponseDto deleteById(UUID id);
 
 }
