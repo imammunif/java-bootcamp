@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> getAll() {
         List<UserResponseDto> result = userDao.getAll().stream()
-                .map(u -> new UserResponseDto(u.getId(), u.getEmployee().getName(), u.getEmployee().getPhone(), u.getEmployee().getAddress(), u.getRole().getRoleName()))
+                .map(v -> new UserResponseDto(v.getId(), v.getEmployee().getName(), v.getEmployee().getPhone(), v.getEmployee().getAddress(), v.getRole().getRoleName()))
                 .toList();
         return result;
     }

@@ -23,7 +23,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleResponseDto> getAll() {
         List<RoleResponseDto> result = roleDao.getAll().stream()
-                .map(r -> new RoleResponseDto(r.getId(), r.getRoleCode(), r.getRoleName()))
+                .map(v -> new RoleResponseDto(v.getId(), v.getRoleCode(), v.getRoleName()))
                 .toList();
         return result;
     }
