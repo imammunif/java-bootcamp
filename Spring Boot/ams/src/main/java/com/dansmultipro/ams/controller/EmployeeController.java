@@ -1,8 +1,8 @@
 package com.dansmultipro.ams.controller;
 
-import com.dansmultipro.ams.dto.CreateResponse;
-import com.dansmultipro.ams.dto.DeleteResponse;
-import com.dansmultipro.ams.dto.UpdateResponse;
+import com.dansmultipro.ams.dto.CreateResponseDto;
+import com.dansmultipro.ams.dto.DeleteResponseDto;
+import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +24,17 @@ public class EmployeeController {
     }
 
     @PostMapping("{companyId}/employees")
-    public CreateResponse createEmployee(@PathVariable String companyId, @RequestBody EmployeeRequestDto employee) {
+    public CreateResponseDto createEmployee(@PathVariable String companyId, @RequestBody EmployeeRequestDto employee) {
         return null;
     }
 
     @PutMapping("{companyId}/employees/{id}")
-    public UpdateResponse updateEmployee(@PathVariable String companyId, @PathVariable String id, @RequestBody EmployeeRequestDto employee) {
+    public UpdateResponseDto updateEmployee(@PathVariable String companyId, @PathVariable String id, @RequestBody EmployeeRequestDto employee) {
         return null;
     }
 
     @DeleteMapping("{companyId}/employees/{id}")
-    public DeleteResponse deleteEmployee(@PathVariable String companyId, @PathVariable String id) {
+    public DeleteResponseDto deleteEmployee(@PathVariable String companyId, @PathVariable String id) {
         return null;
     }
 

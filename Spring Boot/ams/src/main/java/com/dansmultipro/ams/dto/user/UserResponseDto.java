@@ -1,15 +1,24 @@
 package com.dansmultipro.ams.dto.user;
 
+import java.util.UUID;
+
 public class UserResponseDto {
 
-    private String id;
+    private UUID id;
     private String fullName;
     private String phone;
     private String address;
     private String roleName;
-    private Integer version;
 
-    public String getId() {
+    public UserResponseDto(UUID id, String fullName, String phone, String address, String roleName) {
+        this.id = id;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.address = address;
+        this.roleName = roleName;
+    }
+
+    public UUID getId() {
         return id;
     }
 
@@ -27,10 +36,6 @@ public class UserResponseDto {
 
     public String getRoleName() {
         return roleName;
-    }
-
-    public Integer getVersion() {
-        return version;
     }
 
 }

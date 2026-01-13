@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto;
 
-public class DeleteResponse {
+public class DeleteResponseDto {
 
     private String message;
 

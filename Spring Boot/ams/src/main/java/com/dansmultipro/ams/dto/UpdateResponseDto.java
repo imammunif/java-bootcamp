@@ -1,8 +1,8 @@
 package com.dansmultipro.ams.dto;
 
-public class CreateResponse {
+public class UpdateResponseDto {
 
-    private String id;
+    private String version;
     private String message;
 
 }

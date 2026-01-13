@@ -1,8 +1,8 @@
 package com.dansmultipro.ams.controller;
 
-import com.dansmultipro.ams.dto.CreateResponse;
-import com.dansmultipro.ams.dto.DeleteResponse;
-import com.dansmultipro.ams.dto.UpdateResponse;
+import com.dansmultipro.ams.dto.CreateResponseDto;
+import com.dansmultipro.ams.dto.DeleteResponseDto;
+import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.asset.AssetRequestDto;
 import com.dansmultipro.ams.dto.asset.AssetResponseDto;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +24,17 @@ public class AssetController {
     }
 
     @PostMapping("{companyId}/assets")
-    public CreateResponse createAsset(@PathVariable String companyId, @RequestBody AssetRequestDto asset) {
+    public CreateResponseDto createAsset(@PathVariable String companyId, @RequestBody AssetRequestDto asset) {
         return null;
     }
 
     @PutMapping("{companyId}/assets/{id}")
-    public UpdateResponse updateAsset(@PathVariable String companyId, @PathVariable String id, @RequestBody AssetRequestDto asset) {
+    public UpdateResponseDto updateAsset(@PathVariable String companyId, @PathVariable String id, @RequestBody AssetRequestDto asset) {
         return null;
     }
 
     @DeleteMapping("{companyId}/assets/{id}")
-    public DeleteResponse deleteAsset(@PathVariable String companyId, @PathVariable String id) {
+    public DeleteResponseDto deleteAsset(@PathVariable String companyId, @PathVariable String id) {
         return null;
     }
 

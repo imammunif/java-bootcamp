@@ -1,8 +1,8 @@
 package com.dansmultipro.ams.controller;
 
-import com.dansmultipro.ams.dto.CreateResponse;
-import com.dansmultipro.ams.dto.DeleteResponse;
-import com.dansmultipro.ams.dto.UpdateResponse;
+import com.dansmultipro.ams.dto.CreateResponseDto;
+import com.dansmultipro.ams.dto.DeleteResponseDto;
+import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.user.ResetPassRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
 import com.dansmultipro.ams.dto.user.UserResponseDto;
@@ -25,22 +25,22 @@ public class UserController {
     }
 
     @PostMapping
-    public CreateResponse createUser(@RequestBody UserRequestDto user) {
+    public CreateResponseDto createUser(@RequestBody UserRequestDto user) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public UpdateResponse updateUser(@PathVariable String id, @RequestBody UserRequestDto user) {
+    public UpdateResponseDto updateUser(@PathVariable String id, @RequestBody UserRequestDto user) {
         return null;
     }
 
     @DeleteMapping("/{id}")
-    public DeleteResponse deleteUser(@PathVariable String id) {
+    public DeleteResponseDto deleteUser(@PathVariable String id) {
         return null;
     }
 
     @PatchMapping("/change-password")
-    public UpdateResponse changePassword(@RequestBody ResetPassRequestDto reset) {
+    public UpdateResponseDto changePassword(@RequestBody ResetPassRequestDto reset) {
         return null;
     }
 

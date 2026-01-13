@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.controller;
 
-import com.dansmultipro.ams.dto.UpdateResponse;
+import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
@@ -28,7 +28,7 @@ public class AssignmentController {
     }
 
     @PatchMapping("{id}/check-in")
-    public UpdateResponse updateAssignment(@PathVariable String id, @RequestBody List<String> assignmentDetailIds) {
+    public UpdateResponseDto updateAssignment(@PathVariable String id, @RequestBody List<String> assignmentDetailIds) {
         return null;
     }
 

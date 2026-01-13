@@ -1,8 +1,8 @@
 package com.dansmultipro.ams.controller;
 
-import com.dansmultipro.ams.dto.CreateResponse;
-import com.dansmultipro.ams.dto.DeleteResponse;
-import com.dansmultipro.ams.dto.UpdateResponse;
+import com.dansmultipro.ams.dto.CreateResponseDto;
+import com.dansmultipro.ams.dto.DeleteResponseDto;
+import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.location.LocationRequestDto;
 import com.dansmultipro.ams.dto.location.LocationResponseDto;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +24,17 @@ public class LocationController {
     }
 
     @PostMapping
-    public CreateResponse createLocation(@RequestBody LocationRequestDto location) {
+    public CreateResponseDto createLocation(@RequestBody LocationRequestDto location) {
         return null;
     }
 
     @PutMapping("/{id}")
-    public UpdateResponse updateLocation(@PathVariable String id, @RequestBody LocationRequestDto location) {
+    public UpdateResponseDto updateLocation(@PathVariable String id, @RequestBody LocationRequestDto location) {
         return null;
     }
 
     @DeleteMapping("/{id}")
-    public DeleteResponse deleteLocation(@PathVariable String id) {
+    public DeleteResponseDto deleteLocation(@PathVariable String id) {
         return null;
     }
 
