@@ -38,8 +38,15 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Optional<Role> getById(UUID id) {
-        Role role = em.find(Role.class, id);
-        // should be careful because its entering manage state
+        // using .find
+        // Role role = em.find(Role.class, id);
+
+        // using HQL
+        String hql = "SELECT * FROM Role r WHERE id = :id";
+        Role role = em.createQuery(hql, Role.class)
+                .setParameter("id", id) //parameterized
+                .getSingleResult();
+
         return Optional.ofNullable(role);
     }
 
