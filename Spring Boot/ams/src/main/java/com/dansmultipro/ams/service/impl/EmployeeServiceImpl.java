@@ -8,13 +8,13 @@ import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.service.EmployeeService;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Repository
+@Service
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeDao employeeDao;

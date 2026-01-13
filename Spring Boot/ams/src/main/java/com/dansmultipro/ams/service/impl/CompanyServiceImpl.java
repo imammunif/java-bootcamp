@@ -9,13 +9,13 @@ import com.dansmultipro.ams.dto.company.CompanyResponseDto;
 import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.service.CompanyService;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Repository
+@Service
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyDao companyDao;

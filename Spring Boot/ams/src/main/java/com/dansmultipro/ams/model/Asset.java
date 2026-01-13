@@ -2,6 +2,7 @@ package com.dansmultipro.ams.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -27,7 +28,7 @@ public class Asset extends BaseModel {
     private AssetStatus assetStatus;
 
     @Column
-    private Date expiredDate;
+    private LocalDate expiredDate;
 
     @Column(nullable = false, length = 5, unique = true)
     private String code;
@@ -72,11 +73,11 @@ public class Asset extends BaseModel {
         this.code = code;
     }
 
-    public Date getExpiredDate() {
+    public LocalDate getExpiredDate() {
         return expiredDate;
     }
 
-    public void setExpiredDate(Date expiredDate) {
+    public void setExpiredDate(LocalDate expiredDate) {
         this.expiredDate = expiredDate;
     }
 
