@@ -1,8 +1,6 @@
 package com.dansmultipro.ams.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "t_user")
@@ -13,6 +11,10 @@ public class User {
 
     @Column(nullable = false, length = 200)
     private String password;
+
+    @ManyToOne
+    @JoinColumn(name="role_id", nullable = false)
+    private Role role;
 
     public String getPassword() {
         return password;
