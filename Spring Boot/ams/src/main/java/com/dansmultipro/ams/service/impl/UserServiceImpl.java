@@ -61,7 +61,6 @@ public class UserServiceImpl implements UserService {
         Employee userEmployee = employeeDao.getById(UUID.fromString(userEmployeeId)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
-        // email, password, roleId, employeeId + id, createdBy, createdAt
         User userInsert = new User();
         userInsert.setId(UUID.randomUUID());
         userInsert.setCreatedBy(UUID.randomUUID().toString());
@@ -77,13 +76,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UpdateResponseDto update(UpdateUserRequestDto data) {
-        return null;
+    public UpdateResponseDto update(UUID id, UpdateUserRequestDto data) {
+        User userUpdate = userDao.getById(id).orElseThrow(
+                () -> new RuntimeException("User not found")
+        );
+        userUpdate.setEmail(data.getEmail());
+        userUpdate.setUpdatedBy(UUID.randomUUID().toString());
+        userUpdate.setUpdatedAt(LocalDateTime.now());
+
+        userDao.update(userUpdate);
+
+        return new UpdateResponseDto(userUpdate.getVersion(), "Updated");
     }
 
     @Override
     public DeleteResponseDto deleteById(UUID id) {
-        return null;
+        User user = userDao.getById(id).orElseThrow(
+                () -> new RuntimeException("User not found")
+        );
+
+        userDao.deleteById(user.getId());
+
+        return new DeleteResponseDto("Deleted");
     }
 
 }

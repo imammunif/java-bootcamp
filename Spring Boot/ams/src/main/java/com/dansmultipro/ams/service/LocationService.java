@@ -19,7 +19,7 @@ public interface LocationService {
 
     CreateResponseDto insert(LocationRequestDto data);
 
-    UpdateResponseDto update(UpdateLocationRequestDto data);
+    UpdateResponseDto update(UUID id, UpdateLocationRequestDto data);
 
     DeleteResponseDto deleteById(UUID id);
 

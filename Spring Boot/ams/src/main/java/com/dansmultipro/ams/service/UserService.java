@@ -18,7 +18,7 @@ public interface UserService {
 
     CreateResponseDto insert(UserRequestDto data);
 
-    UpdateResponseDto update(UpdateUserRequestDto data);
+    UpdateResponseDto update(UUID id, UpdateUserRequestDto data);
 
     DeleteResponseDto deleteById(UUID id);
 

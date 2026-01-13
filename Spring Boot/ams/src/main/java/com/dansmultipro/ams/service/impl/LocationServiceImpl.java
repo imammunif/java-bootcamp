@@ -54,12 +54,28 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public UpdateResponseDto update(UpdateLocationRequestDto data) {
-        return null;
+    public UpdateResponseDto update(UUID id, UpdateLocationRequestDto data) {
+        Location locationUpdate = locationDao.getById(id).orElseThrow(
+                () -> new RuntimeException("Location not found")
+        );
+        locationUpdate.setName(data.getName());
+        locationUpdate.setUpdatedBy(UUID.randomUUID().toString());
+        locationUpdate.setUpdatedAt(LocalDateTime.now());
+
+        locationDao.update(locationUpdate);
+
+        return new UpdateResponseDto(locationUpdate.getVersion(), "Updated");
     }
 
     @Override
     public DeleteResponseDto deleteById(UUID id) {
-        return null;
+        Location location = locationDao.getById(id).orElseThrow(
+                () -> new RuntimeException("Location not found")
+        );
+
+        locationDao.deleteById(location.getId());
+
+        return new DeleteResponseDto("Deleted");
     }
+
 }
