@@ -29,11 +29,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleResponseDto getById(UUID id) {
-        Role role = roleDao.getById(id).orElseThrow(
+    public RoleResponseDto getById(String id) {
+        Role role = roleDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Role not found")
         );
-        return new RoleResponseDto(id, role.getRoleCode(), role.getRoleName());
+        return new RoleResponseDto(role.getId(), role.getRoleCode(), role.getRoleName());
     }
 
 }
