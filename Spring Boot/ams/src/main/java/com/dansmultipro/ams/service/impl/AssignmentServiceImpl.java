@@ -66,7 +66,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         return new AssignmentResponseDto(assignment.getId(), assignment.getCode(), assignment.getAssignDate());
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public AssignmentCreateResponseDto insert(AssignmentRequestDto data) {
         Assignment assignmentInsert = new Assignment();
@@ -116,7 +116,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         return new AssignmentCreateResponseDto(assignment.getId());
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateAssignmentRequestDto data) {
         Assignment assignmentUpdate = assignmentDao.getById(UUID.fromString(id)).orElseThrow(

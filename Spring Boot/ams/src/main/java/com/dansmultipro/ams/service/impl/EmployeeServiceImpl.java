@@ -53,7 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new EmployeeResponseDto(employee.getId(), employee.getFullName(), employee.getPhone(), employee.getAddress(), employee.getCode(), employee.getCompany().getName(), employee.getDateOfBirth());
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(EmployeeRequestDto data) {
         Company company = companyDao.getById(UUID.fromString(data.getCompanyId())).orElseThrow(
@@ -75,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new CreateResponseDto(employee.getId(), "Saved");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateEmployeeRequestDto data) {
         Employee employeeUpdate = employeeDao.getById(UUID.fromString(id)).orElseThrow(
@@ -94,7 +94,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new UpdateResponseDto(employeeUpdate.getVersion(), "Updated");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
         Employee employee = employeeDao.getById(UUID.fromString(id)).orElseThrow(

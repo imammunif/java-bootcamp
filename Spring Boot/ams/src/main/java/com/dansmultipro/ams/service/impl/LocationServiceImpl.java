@@ -46,7 +46,7 @@ public class LocationServiceImpl implements LocationService {
         return new LocationResponseDto(location.getId(), location.getName());
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(LocationRequestDto data) {
         Location locationInsert = new Location();
@@ -60,7 +60,7 @@ public class LocationServiceImpl implements LocationService {
         return new CreateResponseDto(location.getId(), "Saved");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateLocationRequestDto data) {
         Location locationUpdate = locationDao.getById(UUID.fromString(id)).orElseThrow(
@@ -76,7 +76,7 @@ public class LocationServiceImpl implements LocationService {
         return new UpdateResponseDto(locationUpdate.getVersion(), "Updated");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
         Location location = locationDao.getById(UUID.fromString(id)).orElseThrow(

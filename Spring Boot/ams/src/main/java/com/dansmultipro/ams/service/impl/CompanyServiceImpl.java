@@ -46,7 +46,7 @@ public class CompanyServiceImpl implements CompanyService {
         return new CompanyResponseDto(company.getId(), company.getName());
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(CompanyRequestDto data) {
         Company companyInsert = new Company();
@@ -60,7 +60,7 @@ public class CompanyServiceImpl implements CompanyService {
         return new CreateResponseDto(company.getId(), "Saved");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateCompanyRequestDto data) {
         Company companyUpdate = companyDao.getById(UUID.fromString(id)).orElseThrow(
@@ -76,7 +76,7 @@ public class CompanyServiceImpl implements CompanyService {
         return new UpdateResponseDto(companyUpdate.getVersion(), "Updated");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
         Company company = companyDao.getById(UUID.fromString(id)).orElseThrow(

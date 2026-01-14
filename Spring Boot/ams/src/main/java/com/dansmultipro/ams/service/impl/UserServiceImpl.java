@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         return new UserResponseDto(user.getId(), user.getEmployee().getFullName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getName());
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(UserRequestDto data) {
         String userRoleId = data.getRoleId();
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         return new CreateResponseDto(user.getId(), "Saved");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateUserRequestDto data) {
         User userUpdate = userDao.getById(UUID.fromString(id)).orElseThrow(
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
         return new UpdateResponseDto(userUpdate.getVersion(), "Updated");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
         User user = userDao.getById(UUID.fromString(id)).orElseThrow(

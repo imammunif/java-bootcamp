@@ -68,7 +68,7 @@ public class AssetServiceImpl implements AssetService {
                 .getName(), asset.getExpiredDate(), asset.getCode());
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(AssetRequestDto data) {
         String assetCompanyId = data.getCompanyId();
@@ -103,7 +103,7 @@ public class AssetServiceImpl implements AssetService {
         return new CreateResponseDto(asset.getId(), "Saved");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateAssetRequestDto data) {
         Asset assetUpdate = assetDao.getById(UUID.fromString(id)).orElseThrow(
@@ -127,7 +127,7 @@ public class AssetServiceImpl implements AssetService {
         return new UpdateResponseDto(assetUpdate.getVersion(), "Updated");
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
         Asset asset = assetDao.getById(UUID.fromString(id)).orElseThrow(
