@@ -4,6 +4,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
+import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface AssignmentService {
 
     AssignmentCreateResponseDto insert(AssignmentRequestDto data);
 
-    UpdateResponseDto update(String id, List<String> detailIdList);
+    UpdateResponseDto update(String id, UpdateAssignmentRequestDto data);
 
 }

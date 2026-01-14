@@ -5,8 +5,11 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
+import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
 import com.dansmultipro.ams.model.*;
 import com.dansmultipro.ams.service.AssignmentService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +24,11 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final LocationDao locationDao;
     private final AssetDao assetDao;
     private final EmployeeDao employeeDao;
-
     private final AssignmentDao assignmentDao;
     private final AssignmentDetailDao assignmentDetailDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     public AssignmentServiceImpl(LocationDao locationDao, AssetDao assetDao, EmployeeDao employeeDao, AssignmentDao assignmentDao, AssignmentDetailDao assignmentDetailDao) {
         this.locationDao = locationDao;
@@ -113,13 +118,14 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Transactional
     @Override
-    public UpdateResponseDto update(String id, List<String> detailIdList) {
+    public UpdateResponseDto update(String id, UpdateAssignmentRequestDto data) {
         Assignment assignmentUpdate = assignmentDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Assignment not found")
         );
-        for (String detailId : detailIdList) {
+        List<String> assignmentDetailIdList = data.getAssignmentDetailIdList();
+        for (String detailId : assignmentDetailIdList) {
             AssignmentDetail assignmentDetail = assignmentDetailDao.getById(UUID.fromString(detailId)).orElseThrow(
-                    () -> new RuntimeException("No not found")
+                    () -> new RuntimeException("Detail not found")
             );
             assignmentDetail.setReturnDate(LocalDateTime.now());
             assignmentDetail.setUpdatedBy(UUID.randomUUID().toString());
@@ -128,6 +134,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
         assignmentUpdate.setUpdatedBy(UUID.randomUUID().toString());
         assignmentUpdate.setUpdatedAt(LocalDateTime.now());
+        em.flush();
 
         return new UpdateResponseDto(assignmentUpdate.getVersion(), "Updated");
     }

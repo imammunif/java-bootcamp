@@ -4,6 +4,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
+import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
 import com.dansmultipro.ams.service.AssignmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,8 @@ public class AssignmentController {
     }
 
     @PatchMapping("{id}/check-in")
-    public ResponseEntity<UpdateResponseDto> updateAssignment(@PathVariable String id, @RequestBody List<String> assignmentDetailIds) {
-        UpdateResponseDto res = assignmentService.update(id, assignmentDetailIds);
+    public ResponseEntity<UpdateResponseDto> updateAssignment(@PathVariable String id, @RequestBody UpdateAssignmentRequestDto assignment) {
+        UpdateResponseDto res = assignmentService.update(id, assignment);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
