@@ -9,6 +9,8 @@ import com.dansmultipro.ams.dto.location.LocationResponseDto;
 import com.dansmultipro.ams.dto.location.UpdateLocationRequestDto;
 import com.dansmultipro.ams.model.Location;
 import com.dansmultipro.ams.service.LocationService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ import java.util.UUID;
 public class LocationServiceImpl implements LocationService {
 
     private final LocationDao locationDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     public LocationServiceImpl(LocationDao locationDao) {
         this.locationDao = locationDao;
@@ -34,11 +39,11 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationResponseDto getById(UUID id) {
-        Location location = locationDao.getById(id).orElseThrow(
+    public LocationResponseDto getById(String id) {
+        Location location = locationDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Location not found")
         );
-        return new LocationResponseDto(id, location.getName());
+        return new LocationResponseDto(location.getId(), location.getName());
     }
 
     @Transactional
@@ -57,8 +62,8 @@ public class LocationServiceImpl implements LocationService {
 
     @Transactional
     @Override
-    public UpdateResponseDto update(UUID id, UpdateLocationRequestDto data) {
-        Location locationUpdate = locationDao.getById(id).orElseThrow(
+    public UpdateResponseDto update(String id, UpdateLocationRequestDto data) {
+        Location locationUpdate = locationDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Location not found")
         );
         locationUpdate.setName(data.getName());
@@ -66,14 +71,15 @@ public class LocationServiceImpl implements LocationService {
         locationUpdate.setUpdatedAt(LocalDateTime.now());
 
         locationDao.update(locationUpdate);
+        em.flush();
 
         return new UpdateResponseDto(locationUpdate.getVersion(), "Updated");
     }
 
     @Transactional
     @Override
-    public DeleteResponseDto deleteById(UUID id) {
-        Location location = locationDao.getById(id).orElseThrow(
+    public DeleteResponseDto deleteById(String id) {
+        Location location = locationDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Location not found")
         );
 

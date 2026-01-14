@@ -8,7 +8,6 @@ import com.dansmultipro.ams.dto.company.CompanyResponseDto;
 import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface CompanyService {
 

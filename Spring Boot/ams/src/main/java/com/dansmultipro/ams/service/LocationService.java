@@ -6,21 +6,19 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.location.LocationRequestDto;
 import com.dansmultipro.ams.dto.location.LocationResponseDto;
 import com.dansmultipro.ams.dto.location.UpdateLocationRequestDto;
-import com.dansmultipro.ams.model.Location;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface LocationService {
 
     List<LocationResponseDto> getAll();
 
-    LocationResponseDto getById(UUID id);
+    LocationResponseDto getById(String id);
 
     CreateResponseDto insert(LocationRequestDto data);
 
-    UpdateResponseDto update(UUID id, UpdateLocationRequestDto data);
+    UpdateResponseDto update(String id, UpdateLocationRequestDto data);
 
-    DeleteResponseDto deleteById(UUID id);
+    DeleteResponseDto deleteById(String id);
 
 }
