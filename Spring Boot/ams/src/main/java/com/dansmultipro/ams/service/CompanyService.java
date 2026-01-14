@@ -14,12 +14,12 @@ public interface CompanyService {
 
     List<CompanyResponseDto> getAll();
 
-    CompanyResponseDto getById(UUID id);
+    CompanyResponseDto getById(String id);
 
     CreateResponseDto insert(CompanyRequestDto data);
 
-    UpdateResponseDto update(UUID id, UpdateCompanyRequestDto data);
+    UpdateResponseDto update(String id, UpdateCompanyRequestDto data);
 
-    DeleteResponseDto deleteById(UUID id);
+    DeleteResponseDto deleteById(String id);
 
 }

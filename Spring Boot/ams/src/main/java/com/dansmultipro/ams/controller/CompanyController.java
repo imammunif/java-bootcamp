@@ -5,6 +5,10 @@ import com.dansmultipro.ams.dto.DeleteResponseDto;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.company.CompanyRequestDto;
 import com.dansmultipro.ams.dto.company.CompanyResponseDto;
+import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
+import com.dansmultipro.ams.service.CompanyService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,29 +17,40 @@ import java.util.List;
 @RequestMapping("companies")
 public class CompanyController {
 
-    @GetMapping
-    public List<CompanyResponseDto> getAllCompanies() {
-        return null;
+    private final CompanyService companyService;
+
+    public CompanyController(CompanyService companyService) {
+        this.companyService = companyService;
     }
 
-    @GetMapping("/{id}")
-    public CompanyResponseDto getCompanyById(@PathVariable String id) {
-        return null;
+    @GetMapping
+    public ResponseEntity<List<CompanyResponseDto>> getAllCompanies() {
+        List<CompanyResponseDto> res = companyService.getAll();
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<CompanyResponseDto> getCompanyById(@PathVariable String id) {
+        CompanyResponseDto res = companyService.getById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping
-    public CreateResponseDto createCompany(@RequestBody CompanyRequestDto company) {
-        return null;
+    public ResponseEntity<CreateResponseDto> createCompany(@RequestBody CompanyRequestDto company) {
+        CreateResponseDto res = companyService.insert(company);
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public UpdateResponseDto updateCompany(@PathVariable String id, @RequestBody CompanyRequestDto company) {
-        return null;
+    @PutMapping("{id}")
+    public ResponseEntity<UpdateResponseDto> updateCompany(@PathVariable String id, @RequestBody UpdateCompanyRequestDto company) {
+        UpdateResponseDto res = companyService.update(id, company);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public DeleteResponseDto deleteCompany(@PathVariable String id) {
-        return null;
+    @DeleteMapping("{id}")
+    public ResponseEntity<DeleteResponseDto> deleteCompany(@PathVariable String id) {
+        DeleteResponseDto res = companyService.deleteById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
 }

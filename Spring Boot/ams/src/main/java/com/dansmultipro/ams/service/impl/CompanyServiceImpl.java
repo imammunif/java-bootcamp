@@ -34,11 +34,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyResponseDto getById(UUID id) {
-        Company company = companyDao.getById(id).orElseThrow(
+    public CompanyResponseDto getById(String id) {
+        Company company = companyDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
-        return new CompanyResponseDto(id, company.getName());
+        return new CompanyResponseDto(company.getId(), company.getName());
     }
 
     @Transactional
@@ -57,8 +57,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Transactional
     @Override
-    public UpdateResponseDto update(UUID id, UpdateCompanyRequestDto data) {
-        Company companyUpdate = companyDao.getById(id).orElseThrow(
+    public UpdateResponseDto update(String id, UpdateCompanyRequestDto data) {
+        Company companyUpdate = companyDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
         companyUpdate.setName(data.getName());
@@ -72,8 +72,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Transactional
     @Override
-    public DeleteResponseDto deleteById(UUID id) {
-        Company company = companyDao.getById(id).orElseThrow(
+    public DeleteResponseDto deleteById(String id) {
+        Company company = companyDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
 
