@@ -1,13 +1,18 @@
 package com.dansmultipro.ams.service.impl;
 
+import com.dansmultipro.ams.dao.CompanyDao;
 import com.dansmultipro.ams.dao.EmployeeDao;
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
+import com.dansmultipro.ams.dto.employee.UpdateEmployeeRequestDto;
+import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.service.EmployeeService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +24,14 @@ import java.util.UUID;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeDao employeeDao;
+    private final CompanyDao companyDao;
 
-    public EmployeeServiceImpl(EmployeeDao employeeDao) {
+    @PersistenceContext
+    private EntityManager em;
+
+    public EmployeeServiceImpl(EmployeeDao employeeDao, CompanyDao companyDao) {
         this.employeeDao = employeeDao;
+        this.companyDao = companyDao;
     }
 
     @Override
@@ -29,30 +39,33 @@ public class EmployeeServiceImpl implements EmployeeService {
         // id, fullName, phone, address, code, dateOfBirth
         List<EmployeeResponseDto> result = employeeDao.getAll().stream()
                 .map(v -> new EmployeeResponseDto(
-                        v.getId(), v.getName(), v.getPhone(),
-                        v.getAddress(), v.getCode(), v.getDateOfBirth()
+                        v.getId(), v.getName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()
                 ))
                 .toList();
         return result;
     }
 
     @Override
-    public EmployeeResponseDto getById(UUID id) {
-        Employee employee = employeeDao.getById(id).orElseThrow(
+    public EmployeeResponseDto getById(String id) {
+        Employee employee = employeeDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
-        return new EmployeeResponseDto(id, employee.getName(),
-                employee.getPhone(), employee.getAddress(), employee.getCode(), employee.getDateOfBirth());
+        return new EmployeeResponseDto(employee.getId(), employee.getName(), employee.getPhone(), employee.getAddress(), employee.getCode(), employee.getCompany().getName(), employee.getDateOfBirth());
     }
 
     @Transactional
     @Override
     public CreateResponseDto insert(EmployeeRequestDto data) {
+        Company company = companyDao.getById(UUID.fromString(data.getCompanyId())).orElseThrow(
+                () -> new RuntimeException("Company not found")
+        );
         Employee employeeInsert = new Employee();
         employeeInsert.setId(UUID.randomUUID());
         employeeInsert.setCreatedBy(UUID.randomUUID().toString());
         employeeInsert.setCreatedAt(LocalDateTime.now());
         employeeInsert.setName(data.getFullName());
+        employeeInsert.setCode(data.getCode());
+        employeeInsert.setCompany(company);
         employeeInsert.setPhone(data.getPhone());
         employeeInsert.setAddress(data.getAddress());
         employeeInsert.setDateOfBirth(data.getDateOfBirth());
@@ -64,8 +77,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
-    public UpdateResponseDto update(UUID id, EmployeeRequestDto data) {
-        Employee employeeUpdate = employeeDao.getById(id).orElseThrow(
+    public UpdateResponseDto update(String id, UpdateEmployeeRequestDto data) {
+        Employee employeeUpdate = employeeDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
         employeeUpdate.setName(data.getFullName());
@@ -76,14 +89,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeUpdate.setUpdatedAt(LocalDateTime.now());
 
         employeeDao.update(employeeUpdate);
+        em.flush();
 
         return new UpdateResponseDto(employeeUpdate.getVersion(), "Updated");
     }
 
     @Transactional
     @Override
-    public DeleteResponseDto deleteById(UUID id) {
-        Employee employee = employeeDao.getById(id).orElseThrow(
+    public DeleteResponseDto deleteById(String id) {
+        Employee employee = employeeDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
 

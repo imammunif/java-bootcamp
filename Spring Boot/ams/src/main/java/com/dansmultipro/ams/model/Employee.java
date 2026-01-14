@@ -71,4 +71,8 @@ public class Employee extends BaseModel {
         return company;
     }
 
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
 }
