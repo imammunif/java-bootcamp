@@ -23,7 +23,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleResponseDto> getAll() {
         List<RoleResponseDto> result = roleDao.getAll().stream()
-                .map(v -> new RoleResponseDto(v.getId(), v.getRoleName(), v.getRoleCode()))
+                .map(v -> new RoleResponseDto(v.getId(), v.getName(), v.getCode()))
                 .toList();
         return result;
     }
@@ -33,7 +33,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Role not found")
         );
-        return new RoleResponseDto(role.getId(), role.getRoleName(), role.getRoleCode());
+        return new RoleResponseDto(role.getId(), role.getName(), role.getCode());
     }
 
 }

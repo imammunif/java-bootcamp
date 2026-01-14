@@ -39,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // id, fullName, phone, address, code, dateOfBirth
         List<EmployeeResponseDto> result = employeeDao.getAll().stream()
                 .map(v -> new EmployeeResponseDto(
-                        v.getId(), v.getName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()
+                        v.getId(), v.getFullName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()
                 ))
                 .toList();
         return result;
@@ -50,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
-        return new EmployeeResponseDto(employee.getId(), employee.getName(), employee.getPhone(), employee.getAddress(), employee.getCode(), employee.getCompany().getName(), employee.getDateOfBirth());
+        return new EmployeeResponseDto(employee.getId(), employee.getFullName(), employee.getPhone(), employee.getAddress(), employee.getCode(), employee.getCompany().getName(), employee.getDateOfBirth());
     }
 
     @Transactional
@@ -63,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeInsert.setId(UUID.randomUUID());
         employeeInsert.setCreatedBy(UUID.randomUUID().toString());
         employeeInsert.setCreatedAt(LocalDateTime.now());
-        employeeInsert.setName(data.getFullName());
+        employeeInsert.setFullName(data.getFullName());
         employeeInsert.setCode(data.getCode());
         employeeInsert.setCompany(company);
         employeeInsert.setPhone(data.getPhone());
@@ -81,7 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employeeUpdate = employeeDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
-        employeeUpdate.setName(data.getFullName());
+        employeeUpdate.setFullName(data.getFullName());
         employeeUpdate.setPhone(data.getPhone());
         employeeUpdate.setAddress(data.getAddress());
         employeeUpdate.setDateOfBirth(data.getDateOfBirth());

@@ -9,7 +9,7 @@ import java.util.Date;
 public class Employee extends BaseModel {
 
     @Column(nullable = false, length = 45)
-    private String name;
+    private String fullName;
 
     @Column(nullable = false)
     private Date dateOfBirth;
@@ -27,12 +27,12 @@ public class Employee extends BaseModel {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String name) {
+        this.fullName = fullName;
     }
 
     public Date getDateOfBirth() {
