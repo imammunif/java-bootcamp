@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl;
+package com.dansmultipro.ams.service.impl.hibernate;
 
 import com.dansmultipro.ams.dao.CompanyDao;
 import com.dansmultipro.ams.dao.EmployeeDao;

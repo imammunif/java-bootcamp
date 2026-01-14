@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.model;
+    package com.dansmultipro.ams.model;
 
 import jakarta.persistence.*;
 
@@ -31,7 +31,7 @@ public class Employee extends BaseModel {
         return fullName;
     }
 
-    public void setFullName(String name) {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 

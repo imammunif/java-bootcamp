@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl;
+package com.dansmultipro.ams.service.impl.hibernate;
 
 import com.dansmultipro.ams.dao.EmployeeDao;
 import com.dansmultipro.ams.dao.RoleDao;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Service
+//@Service
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;

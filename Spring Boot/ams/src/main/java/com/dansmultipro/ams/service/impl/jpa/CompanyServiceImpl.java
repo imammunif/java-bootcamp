@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl;
+package com.dansmultipro.ams.service.impl.jpa;
 
 import com.dansmultipro.ams.dao.CompanyDao;
 import com.dansmultipro.ams.dto.CreateResponseDto;

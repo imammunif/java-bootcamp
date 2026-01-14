@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl;
+package com.dansmultipro.ams.service.impl.hibernate;
 
 import com.dansmultipro.ams.dao.AssetCategoryDao;
 import com.dansmultipro.ams.dto.asset.AssetCategoryResponseDto;
