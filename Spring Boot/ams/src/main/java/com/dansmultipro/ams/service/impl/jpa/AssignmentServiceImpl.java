@@ -71,7 +71,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     public AssignmentCreateResponseDto insert(AssignmentRequestDto data) {
         Assignment assignmentInsert = new Assignment();
         assignmentInsert.setId(UUID.randomUUID());
-        assignmentInsert.setCreatedBy(UUID.randomUUID().toString());
+        assignmentInsert.setCreatedBy(UUID.randomUUID());
         assignmentInsert.setCreatedAt(LocalDateTime.now());
         assignmentInsert.setCode(randomizeCode(20));
         assignmentInsert.setAssignDate(LocalDate.now());
@@ -106,7 +106,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     () -> new RuntimeException("Asset not found")
             );
             assignmentDetail.setId(UUID.randomUUID());
-            assignmentDetail.setCreatedBy(UUID.randomUUID().toString());
+            assignmentDetail.setCreatedBy(UUID.randomUUID());
             assignmentDetail.setCreatedAt(LocalDateTime.now());
             assignmentDetail.setAsset(asset);
             assignmentDetail.setAssignment(assignment);
@@ -128,11 +128,11 @@ public class AssignmentServiceImpl implements AssignmentService {
                     () -> new RuntimeException("Detail not found")
             );
             assignmentDetail.setReturnDate(LocalDateTime.now());
-            assignmentDetail.setUpdatedBy(UUID.randomUUID().toString());
+            assignmentDetail.setUpdatedBy(UUID.randomUUID());
             assignmentDetail.setUpdatedAt(LocalDateTime.now());
             assignmentDetailDao.update(assignmentDetail);
         }
-        assignmentUpdate.setUpdatedBy(UUID.randomUUID().toString());
+        assignmentUpdate.setUpdatedBy(UUID.randomUUID());
         assignmentUpdate.setUpdatedAt(LocalDateTime.now());
         em.flush();
 

@@ -20,13 +20,13 @@ public abstract class BaseModel {
     private Integer version;
 
     @Column(nullable = false, length = 36)
-    private String createdBy;
+    private UUID createdBy;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Column(length = 36)
-    private String updatedBy;
+    private UUID updatedBy;
 
     @Column
     private LocalDateTime updatedAt;
@@ -47,11 +47,11 @@ public abstract class BaseModel {
         this.version = version;
     }
 
-    public String getCreatedBy() {
+    public UUID getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
+    public void setCreatedBy(UUID createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -63,11 +63,11 @@ public abstract class BaseModel {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedBy() {
+    public UUID getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(String updatedBy) {
+    public void setUpdatedBy(UUID updatedBy) {
         this.updatedBy = updatedBy;
     }
 

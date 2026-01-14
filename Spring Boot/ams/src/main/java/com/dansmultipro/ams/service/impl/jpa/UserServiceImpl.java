@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
         );
         User userInsert = new User();
         userInsert.setId(UUID.randomUUID());
-        userInsert.setCreatedBy(UUID.randomUUID().toString());
+        userInsert.setCreatedBy(UUID.randomUUID());
         userInsert.setCreatedAt(LocalDateTime.now());
         userInsert.setEmail(data.getEmail());
         userInsert.setPassword(data.getPassword());
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
                 () -> new RuntimeException("User not found")
         );
         userUpdate.setEmail(data.getEmail());
-        userUpdate.setUpdatedBy(UUID.randomUUID().toString());
+        userUpdate.setUpdatedBy(UUID.randomUUID());
         userUpdate.setUpdatedAt(LocalDateTime.now());
 
         userDao.update(userUpdate);

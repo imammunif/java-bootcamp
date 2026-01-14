@@ -51,7 +51,7 @@ public class LocationServiceImpl implements LocationService {
     public CreateResponseDto insert(LocationRequestDto data) {
         Location locationInsert = new Location();
         locationInsert.setId(UUID.randomUUID());
-        locationInsert.setCreatedBy(UUID.randomUUID().toString());
+        locationInsert.setCreatedBy(UUID.randomUUID());
         locationInsert.setCreatedAt(LocalDateTime.now());
         locationInsert.setName(data.getName());
 
@@ -67,7 +67,7 @@ public class LocationServiceImpl implements LocationService {
                 () -> new RuntimeException("Location not found")
         );
         locationUpdate.setName(data.getName());
-        locationUpdate.setUpdatedBy(UUID.randomUUID().toString());
+        locationUpdate.setUpdatedBy(UUID.randomUUID());
         locationUpdate.setUpdatedAt(LocalDateTime.now());
 
         locationDao.update(locationUpdate);

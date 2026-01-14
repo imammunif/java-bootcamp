@@ -86,7 +86,7 @@ public class AssetServiceImpl implements AssetService {
 
         Asset assetInsert = new Asset();
         assetInsert.setId(UUID.randomUUID());
-        assetInsert.setCreatedBy(UUID.randomUUID().toString());
+        assetInsert.setCreatedBy(UUID.randomUUID());
         assetInsert.setCreatedAt(LocalDateTime.now());
         assetInsert.setName(data.getName());
         assetInsert.setAssetCompany(assetCompany);
@@ -118,7 +118,7 @@ public class AssetServiceImpl implements AssetService {
             LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
             assetUpdate.setExpiredDate(expiredDate);
         }
-        assetUpdate.setUpdatedBy(UUID.randomUUID().toString());
+        assetUpdate.setUpdatedBy(UUID.randomUUID());
         assetUpdate.setUpdatedAt(LocalDateTime.now());
 
         assetDao.update(assetUpdate);

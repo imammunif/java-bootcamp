@@ -51,7 +51,7 @@ public class CompanyServiceImpl implements CompanyService {
     public CreateResponseDto insert(CompanyRequestDto data) {
         Company companyInsert = new Company();
         companyInsert.setId(UUID.randomUUID());
-        companyInsert.setCreatedBy(UUID.randomUUID().toString());
+        companyInsert.setCreatedBy(UUID.randomUUID());
         companyInsert.setCreatedAt(LocalDateTime.now());
         companyInsert.setName(data.getName());
 
@@ -67,7 +67,7 @@ public class CompanyServiceImpl implements CompanyService {
                 () -> new RuntimeException("Company not found")
         );
         companyUpdate.setName(data.getName());
-        companyUpdate.setUpdatedBy(UUID.randomUUID().toString());
+        companyUpdate.setUpdatedBy(UUID.randomUUID());
         companyUpdate.setUpdatedAt(LocalDateTime.now());
 
         companyDao.update(companyUpdate);

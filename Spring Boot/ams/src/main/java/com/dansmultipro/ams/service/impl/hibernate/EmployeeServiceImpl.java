@@ -61,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         );
         Employee employeeInsert = new Employee();
         employeeInsert.setId(UUID.randomUUID());
-        employeeInsert.setCreatedBy(UUID.randomUUID().toString());
+        employeeInsert.setCreatedBy(UUID.randomUUID());
         employeeInsert.setCreatedAt(LocalDateTime.now());
         employeeInsert.setFullName(data.getFullName());
         employeeInsert.setCode(data.getCode());
@@ -85,7 +85,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeUpdate.setPhone(data.getPhone());
         employeeUpdate.setAddress(data.getAddress());
         employeeUpdate.setDateOfBirth(data.getDateOfBirth());
-        employeeUpdate.setUpdatedBy(UUID.randomUUID().toString());
+        employeeUpdate.setUpdatedBy(UUID.randomUUID());
         employeeUpdate.setUpdatedAt(LocalDateTime.now());
 
         employeeDao.update(employeeUpdate);
