@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl.hibernate;
+package com.dansmultipro.ams.service.impl.jpa;
 
 import com.dansmultipro.ams.dao.AssetStatusDao;
 import com.dansmultipro.ams.dto.asset.AssetStatusResponseDto;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-//@Service
+@Service
 public class AssetStatusServiceImpl implements AssetStatusService {
 
     private final AssetStatusDao assetStatusDao;
