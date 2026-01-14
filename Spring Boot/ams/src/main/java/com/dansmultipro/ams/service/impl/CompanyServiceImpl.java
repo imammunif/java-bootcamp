@@ -9,6 +9,8 @@ import com.dansmultipro.ams.dto.company.CompanyResponseDto;
 import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.service.CompanyService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ import java.util.UUID;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyDao companyDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     public CompanyServiceImpl(CompanyDao companyDao) {
         this.companyDao = companyDao;
@@ -66,6 +71,7 @@ public class CompanyServiceImpl implements CompanyService {
         companyUpdate.setUpdatedAt(LocalDateTime.now());
 
         companyDao.update(companyUpdate);
+        em.flush();
 
         return new UpdateResponseDto(companyUpdate.getVersion(), "Updated");
     }
