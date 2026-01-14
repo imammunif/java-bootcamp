@@ -6,6 +6,7 @@ import com.dansmultipro.ams.dao.UserDao;
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
+import com.dansmultipro.ams.dto.user.ResetPassRequestDto;
 import com.dansmultipro.ams.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
 import com.dansmultipro.ams.dto.user.UserResponseDto;
@@ -44,11 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getById(UUID id) {
-        User user = userDao.getById(id).orElseThrow(
+    public UserResponseDto getById(String id) {
+        User user = userDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
-        return new UserResponseDto(id, user.getEmployee().getName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getRoleName());
+        return new UserResponseDto(user.getId(), user.getEmployee().getName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getRoleName());
     }
 
     @Transactional
@@ -79,8 +80,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UpdateResponseDto update(UUID id, UpdateUserRequestDto data) {
-        User userUpdate = userDao.getById(id).orElseThrow(
+    public UpdateResponseDto update(String id, UpdateUserRequestDto data) {
+        User userUpdate = userDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
         userUpdate.setEmail(data.getEmail());
@@ -94,8 +95,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public DeleteResponseDto deleteById(UUID id) {
-        User user = userDao.getById(id).orElseThrow(
+    public DeleteResponseDto deleteById(String id) {
+        User user = userDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
 
