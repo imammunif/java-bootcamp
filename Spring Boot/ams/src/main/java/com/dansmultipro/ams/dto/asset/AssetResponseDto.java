@@ -1,9 +1,6 @@
 package com.dansmultipro.ams.dto.asset;
 
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 public class AssetResponseDto {
@@ -15,7 +12,6 @@ public class AssetResponseDto {
     private String companyName;
     private LocalDate expiredDate;
     private String code;
-    private Integer version;
 
     public AssetResponseDto(UUID id, String name, String categoryName, String statusName, String companyName, LocalDate expiredDate, String code) {
         this.id = id;
@@ -53,10 +49,6 @@ public class AssetResponseDto {
 
     public String getCode() {
         return code;
-    }
-
-    public Integer getVersion() {
-        return version;
     }
 
 }

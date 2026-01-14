@@ -14,12 +14,12 @@ public interface AssetService {
 
     List<AssetResponseDto> getAll();
 
-    AssetResponseDto getById(UUID id);
+    AssetResponseDto getById(String id);
 
     CreateResponseDto insert(AssetRequestDto data);
 
-    UpdateResponseDto update(UUID id, UpdateAssetRequestDto data);
+    UpdateResponseDto update(String id, UpdateAssetRequestDto data);
 
-    DeleteResponseDto deleteById(UUID id);
+    DeleteResponseDto deleteById(String id);
 
 }

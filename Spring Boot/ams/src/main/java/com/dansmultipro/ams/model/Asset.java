@@ -41,7 +41,7 @@ public class Asset extends BaseModel {
         return company;
     }
 
-    public void setCompany(Company company) {
+    public void setAssetCompany(Company company) {
         this.company = company;
     }
 
