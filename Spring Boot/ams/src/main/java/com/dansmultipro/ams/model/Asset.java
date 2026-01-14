@@ -3,7 +3,6 @@ package com.dansmultipro.ams.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "t_asset")
@@ -14,17 +13,14 @@ public class Asset extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
-    @Column(length = 36)
     private Company company;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    @Column(length = 36)
     private AssetCategory assetCategory;
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
-    @Column(length = 36)
     private AssetStatus assetStatus;
 
     @Column

@@ -25,7 +25,6 @@ public class Employee extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
-    @Column(length = 36)
     private Company company;
 
     public String getName() {

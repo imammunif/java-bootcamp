@@ -14,12 +14,10 @@ public class User extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
-    @Column(length = 36)
     private Role role;
 
     @OneToOne
     @JoinColumn(name = "employee_id", nullable = false)
-    @Column(length = 36)
     private Employee employee;
 
     public String getEmail() {

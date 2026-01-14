@@ -16,17 +16,14 @@ public class Assignment extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "target_location_id")
-    @Column(length = 36)
     private Location location;
 
     @ManyToOne
     @JoinColumn(name = "target_asset_id")
-    @Column(length = 36)
     private Asset asset;
 
     @ManyToOne
     @JoinColumn(name = "target_employee_id")
-    @Column(length = 36)
     private Employee employee;
 
     public String getCode() {
