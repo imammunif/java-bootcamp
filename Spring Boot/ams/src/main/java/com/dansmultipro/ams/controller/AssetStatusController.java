@@ -1,7 +1,6 @@
 package com.dansmultipro.ams.controller;
 
 import com.dansmultipro.ams.dto.asset.AssetStatusResponseDto;
-import com.dansmultipro.ams.dto.role.RoleResponseDto;
 import com.dansmultipro.ams.service.AssetStatusService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
