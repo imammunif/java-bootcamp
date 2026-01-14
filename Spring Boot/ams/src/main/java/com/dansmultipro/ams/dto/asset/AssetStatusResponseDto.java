@@ -1,13 +1,20 @@
 package com.dansmultipro.ams.dto.asset;
 
+import java.util.UUID;
+
 public class AssetStatusResponseDto {
 
-    private String id;
+    private UUID id;
     private String name;
     private String code;
-    private Integer version;
 
-    public String getId() {
+    public AssetStatusResponseDto(UUID id, String name, String code) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+    }
+
+    public UUID getId() {
         return id;
     }
 
@@ -19,8 +26,5 @@ public class AssetStatusResponseDto {
         return code;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
 
 }

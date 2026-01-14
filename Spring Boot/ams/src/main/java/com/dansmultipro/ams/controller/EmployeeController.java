@@ -1,41 +1,56 @@
 package com.dansmultipro.ams.controller;
 
-import com.dansmultipro.ams.dto.CreateResponse;
-import com.dansmultipro.ams.dto.DeleteResponse;
-import com.dansmultipro.ams.dto.UpdateResponse;
+import com.dansmultipro.ams.dto.CreateResponseDto;
+import com.dansmultipro.ams.dto.DeleteResponseDto;
+import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
+import com.dansmultipro.ams.dto.employee.UpdateEmployeeRequestDto;
+import com.dansmultipro.ams.service.EmployeeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("companies")
+@RequestMapping("employees")
 public class EmployeeController {
 
-    @GetMapping("{companyId}/employees")
-    public List<EmployeeResponseDto> getAllEmployees(@PathVariable String companyId) {
-        return null;
+    private final EmployeeService employeeService;
+
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
-    @GetMapping("{companyId}/employees/{id}")
-    public EmployeeResponseDto getEmployeeById(@PathVariable String companyId, @PathVariable String id) {
-        return null;
+    @GetMapping
+    public ResponseEntity<List<EmployeeResponseDto>> getAllEmployees() {
+        List<EmployeeResponseDto> res = employeeService.getAll();
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PostMapping("{companyId}/employees")
-    public CreateResponse createEmployee(@PathVariable String companyId, @RequestBody EmployeeRequestDto employee) {
-        return null;
+    @GetMapping("{id}")
+    public ResponseEntity<EmployeeResponseDto> getEmployeeById(@PathVariable String id) {
+        EmployeeResponseDto res = employeeService.getById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PutMapping("{companyId}/employees/{id}")
-    public UpdateResponse updateEmployee(@PathVariable String companyId, @PathVariable String id, @RequestBody EmployeeRequestDto employee) {
-        return null;
+    @PostMapping
+    public ResponseEntity<CreateResponseDto> createEmployee(@RequestBody EmployeeRequestDto employee) {
+        CreateResponseDto res = employeeService.insert(employee);
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("{companyId}/employees/{id}")
-    public DeleteResponse deleteEmployee(@PathVariable String companyId, @PathVariable String id) {
-        return null;
+    @PutMapping("{id}")
+    public ResponseEntity<UpdateResponseDto> updateEmployee(@PathVariable String id, @RequestBody UpdateEmployeeRequestDto employee) {
+        UpdateResponseDto res = employeeService.update(id, employee);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<DeleteResponseDto> deleteEmployee(@PathVariable String id) {
+        DeleteResponseDto res = employeeService.deleteById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
 }

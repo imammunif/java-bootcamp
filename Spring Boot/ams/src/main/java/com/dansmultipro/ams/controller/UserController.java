@@ -1,11 +1,14 @@
 package com.dansmultipro.ams.controller;
 
-import com.dansmultipro.ams.dto.CreateResponse;
-import com.dansmultipro.ams.dto.DeleteResponse;
-import com.dansmultipro.ams.dto.UpdateResponse;
-import com.dansmultipro.ams.dto.user.ResetPassRequestDto;
+import com.dansmultipro.ams.dto.CreateResponseDto;
+import com.dansmultipro.ams.dto.DeleteResponseDto;
+import com.dansmultipro.ams.dto.UpdateResponseDto;
+import com.dansmultipro.ams.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
 import com.dansmultipro.ams.dto.user.UserResponseDto;
+import com.dansmultipro.ams.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,34 +17,40 @@ import java.util.List;
 @RequestMapping("users")
 public class UserController {
 
-    @GetMapping
-    public List<UserResponseDto> getAllUsers() {
-        return null;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public UserResponseDto getUserById(@PathVariable String id) {
-        return null;
+    @GetMapping
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> res = userService.getAll();
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable String id) {
+        UserResponseDto res = userService.getById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping
-    public CreateResponse createUser(@RequestBody UserRequestDto user) {
-        return null;
+    public ResponseEntity<CreateResponseDto> createUser(@RequestBody UserRequestDto user) {
+        CreateResponseDto res = userService.insert(user);
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public UpdateResponse updateUser(@PathVariable String id, @RequestBody UserRequestDto user) {
-        return null;
+    @PutMapping("{id}")
+    public ResponseEntity<UpdateResponseDto> updateUser(@PathVariable String id, @RequestBody UpdateUserRequestDto user) {
+        UpdateResponseDto res = userService.update(id, user);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public DeleteResponse deleteUser(@PathVariable String id) {
-        return null;
-    }
-
-    @PatchMapping("/change-password")
-    public UpdateResponse changePassword(@RequestBody ResetPassRequestDto reset) {
-        return null;
+    @DeleteMapping("{id}")
+    public ResponseEntity<DeleteResponseDto> deleteUser(@PathVariable String id) {
+        DeleteResponseDto res = userService.deleteById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
 }

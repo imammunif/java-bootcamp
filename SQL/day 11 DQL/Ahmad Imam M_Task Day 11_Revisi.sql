@@ -65,7 +65,7 @@ CREATE TABLE t_m_location (
 
 CREATE TABLE t_employee (
     id VARCHAR(36) PRIMARY KEY,
-	fullname VARCHAR(45) NOT NULL,
+	full_name VARCHAR(45) NOT NULL,
 	company_id VARCHAR(36) NOT NULL REFERENCES t_m_company(id),
 	date_of_birth DATE NOT NULL,
 	address VARCHAR(100) NOT NULL,
@@ -168,7 +168,7 @@ INSERT INTO t_m_location (version, created_by, created_at, id, name) VALUES
 (0, uuid_generate_v4(), NOW(), uuid_generate_v4(), 'Data Center'),
 (0, uuid_generate_v4(), NOW(), uuid_generate_v4(), 'Remote Work Hub');
 
-INSERT INTO t_employee (version, created_by, created_at, id, fullname, company_id, date_of_birth, address, phone, code) VALUES
+INSERT INTO t_employee (version, created_by, created_at, id, full_name, company_id, date_of_birth, address, phone, code) VALUES
 (0, uuid_generate_v4(), NOW(), uuid_generate_v4(), 'John Doe', (SELECT id FROM t_m_company LIMIT 1), '1990-05-15', 'Jl. Sudirman No. 1', '08123456789', 'EMP001'),
 (0, uuid_generate_v4(), NOW(), uuid_generate_v4(), 'Jane Smith', (SELECT id FROM t_m_company OFFSET 1 LIMIT 1), '1992-08-20', 'Jl. Thamrin No. 5', '08123456780', 'EMP002'),
 (0, uuid_generate_v4(), NOW(), uuid_generate_v4(), 'Alice Johnson', (SELECT id FROM t_m_company OFFSET 2 LIMIT 1), '1985-12-10', 'Jl. Gatot Subroto No. 10', '08123456781', 'EMP003'),
