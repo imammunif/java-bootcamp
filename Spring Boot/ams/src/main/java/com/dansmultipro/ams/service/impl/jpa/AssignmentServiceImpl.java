@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl.hibernate;
+package com.dansmultipro.ams.service.impl.jpa;
 
 import com.dansmultipro.ams.dao.*;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-//@Service
+@Service
 public class AssignmentServiceImpl implements AssignmentService {
 
     private final LocationDao locationDao;
