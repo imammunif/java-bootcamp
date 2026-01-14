@@ -18,5 +18,4 @@ public interface AssetDao {
 
     void deleteById(UUID id);
 
-    void upa();
 }
