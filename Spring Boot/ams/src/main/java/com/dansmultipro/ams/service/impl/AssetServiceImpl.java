@@ -72,7 +72,6 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public CreateResponseDto insert(AssetRequestDto data) {
         String assetCompanyId = data.getCompanyId();
-        System.out.println("DEBUG : " + assetCompanyId);
         Company assetCompany = companyDao.getById(UUID.fromString(assetCompanyId)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );

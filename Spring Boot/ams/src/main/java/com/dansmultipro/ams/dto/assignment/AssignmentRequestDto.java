@@ -4,21 +4,25 @@ import java.util.List;
 
 public class AssignmentRequestDto {
 
-    private String targetLocationName;
-    private String targetAssetName;
-    private String targetEmployeeName;
-    private List<String> assignmentList;
+    private String targetLocationId;
+    private String targetAssetId;
+    private String targetEmployeeId;
+    private List<String> assignmentDetialIdList;
 
-    public String getTargetLocationName() {
-        return targetLocationName;
+    public String getTargetLocationId() {
+        return targetLocationId;
     }
 
-    public String getTargetAssetName() {
-        return targetAssetName;
+    public String getTargetAssetId() {
+        return targetAssetId;
     }
 
-    public String getTargetEmployeeName() {
-        return targetEmployeeName;
+    public String getTargetEmployeeId() {
+        return targetEmployeeId;
+    }
+
+    public List<String> getAssignmentDetialIdList() {
+        return assignmentDetialIdList;
     }
 
 }

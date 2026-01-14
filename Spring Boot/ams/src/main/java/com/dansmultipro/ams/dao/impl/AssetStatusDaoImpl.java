@@ -18,7 +18,7 @@ public class AssetStatusDaoImpl implements AssetStatusDao {
 
     @Override
     public List<AssetStatus> getAll() {
-        String hql = "SELECT as FROM AssetStatus as";
+        String hql = "SELECT ast FROM AssetStatus ast";
         List<AssetStatus> result = em.createQuery(hql, AssetStatus.class)
                 .getResultList();
         return result;
