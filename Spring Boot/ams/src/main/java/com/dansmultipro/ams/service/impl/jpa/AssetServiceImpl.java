@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl.hibernate;
+package com.dansmultipro.ams.service.impl.jpa;
 
 import com.dansmultipro.ams.dao.AssetCategoryDao;
 import com.dansmultipro.ams.dao.AssetDao;
@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-//@Service
+@Service
 public class AssetServiceImpl implements AssetService {
 
     private final AssetDao assetDao;
