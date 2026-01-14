@@ -9,4 +9,16 @@ public class AssignmentRequestDto {
     private String targetEmployeeName;
     private List<String> assignmentList;
 
+    public String getTargetLocationName() {
+        return targetLocationName;
+    }
+
+    public String getTargetAssetName() {
+        return targetAssetName;
+    }
+
+    public String getTargetEmployeeName() {
+        return targetEmployeeName;
+    }
+
 }

@@ -2,7 +2,7 @@ package com.dansmultipro.ams.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "t_assignment")
@@ -12,7 +12,7 @@ public class Assignment extends BaseModel {
     private String code;
 
     @Column(nullable = false)
-    private Date expiredDate;
+    private LocalDate assignDate;
 
     @ManyToOne
     @JoinColumn(name = "target_location_id")
@@ -37,12 +37,12 @@ public class Assignment extends BaseModel {
         this.code = code;
     }
 
-    public Date getExpiredDate() {
-        return expiredDate;
+    public LocalDate getAssignDate() {
+        return assignDate;
     }
 
-    public void setExpiredDate(Date expiredDate) {
-        this.expiredDate = expiredDate;
+    public void setAssignDate(LocalDate assignDate) {
+        this.assignDate = assignDate;
     }
 
     public Location getLocation() {

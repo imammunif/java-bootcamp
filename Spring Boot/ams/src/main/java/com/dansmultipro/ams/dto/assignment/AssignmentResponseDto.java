@@ -1,17 +1,26 @@
 package com.dansmultipro.ams.dto.assignment;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class AssignmentResponseDto {
 
-    private String id;
+    private UUID id;
     private String code;
-    private String assignDate;
+    private LocalDate assignDate;
     private String targetName;
     private List<String> assignmentList;
     private Integer version;
 
-    public String getId() {
+    public AssignmentResponseDto(UUID id, String code, LocalDate assignDate) {
+        this.id = id;
+        this.code = code;
+        this.assignDate = assignDate;
+    }
+
+    public UUID getId() {
         return id;
     }
 
@@ -19,7 +28,7 @@ public class AssignmentResponseDto {
         return code;
     }
 
-    public String getAssignDate() {
+    public LocalDate getAssignDate() {
         return assignDate;
     }
 

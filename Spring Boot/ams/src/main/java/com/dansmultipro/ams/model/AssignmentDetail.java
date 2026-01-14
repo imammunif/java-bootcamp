@@ -2,14 +2,14 @@ package com.dansmultipro.ams.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "t_assignment_detail")
 public class AssignmentDetail extends BaseModel {
 
     @Column
-    private Date returnDate;
+    private LocalDateTime returnDate;
 
     @ManyToOne
     @JoinColumn(name = "assignment_id", nullable = false)
@@ -35,11 +35,11 @@ public class AssignmentDetail extends BaseModel {
         this.assignment = assignment;
     }
 
-    public Date getReturnDate() {
+    public LocalDateTime getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(LocalDateTime returnDate) {
         this.returnDate = returnDate;
     }
 
