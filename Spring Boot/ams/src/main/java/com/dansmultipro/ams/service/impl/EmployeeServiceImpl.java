@@ -8,6 +8,7 @@ import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.service.EmployeeService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,6 +45,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee.getPhone(), employee.getAddress(), employee.getCode(), employee.getDateOfBirth());
     }
 
+    @Transactional
     @Override
     public CreateResponseDto insert(EmployeeRequestDto data) {
         Employee employeeInsert = new Employee();
@@ -60,6 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new CreateResponseDto(employee.getId(), "Saved");
     }
 
+    @Transactional
     @Override
     public UpdateResponseDto update(UUID id, EmployeeRequestDto data) {
         Employee employeeUpdate = employeeDao.getById(id).orElseThrow(
@@ -77,6 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new UpdateResponseDto(employeeUpdate.getVersion(), "Updated");
     }
 
+    @Transactional
     @Override
     public DeleteResponseDto deleteById(UUID id) {
         Employee employee = employeeDao.getById(id).orElseThrow(

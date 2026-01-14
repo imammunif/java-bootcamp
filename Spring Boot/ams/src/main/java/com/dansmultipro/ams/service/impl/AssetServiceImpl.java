@@ -9,6 +9,7 @@ import com.dansmultipro.ams.dto.asset.AssetResponseDto;
 import com.dansmultipro.ams.dto.asset.UpdateAssetRequestDto;
 import com.dansmultipro.ams.model.Asset;
 import com.dansmultipro.ams.service.AssetService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -49,6 +50,7 @@ public class AssetServiceImpl implements AssetService {
                 .getName(), asset.getExpiredDate(), asset.getCode());
     }
 
+    @Transactional
     @Override
     public CreateResponseDto insert(AssetRequestDto data) {
         Asset assetInsert = new Asset();
@@ -65,6 +67,7 @@ public class AssetServiceImpl implements AssetService {
         return new CreateResponseDto(asset.getId(), "Saved");
     }
 
+    @Transactional
     @Override
     public UpdateResponseDto update(UUID id, UpdateAssetRequestDto data) {
         Asset assetUpdate = assetDao.getById(id).orElseThrow(
@@ -81,6 +84,7 @@ public class AssetServiceImpl implements AssetService {
         return new UpdateResponseDto(assetUpdate.getVersion(), "Updated");
     }
 
+    @Transactional
     @Override
     public DeleteResponseDto deleteById(UUID id) {
         Asset asset = assetDao.getById(id).orElseThrow(

@@ -9,6 +9,7 @@ import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
 import com.dansmultipro.ams.model.Assignment;
 import com.dansmultipro.ams.model.AssignmentDetail;
 import com.dansmultipro.ams.service.AssignmentService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -57,6 +58,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         return new AssignmentResponseDto(assignment.getId(), assignment.getCode(), assignment.getAssignDate());
     }
 
+    @Transactional
     @Override
     public CreateResponseDto insert(AssignmentRequestDto data) {
         Assignment assignmentInsert = new Assignment();
@@ -77,6 +79,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         return new CreateResponseDto(assignment.getId(), "Saved");
     }
 
+    @Transactional
     @Override
     public UpdateResponseDto update(UUID id, List<String> detailIdList) {
         Assignment assignmentUpdate = assignmentDao.getById(id).orElseThrow(

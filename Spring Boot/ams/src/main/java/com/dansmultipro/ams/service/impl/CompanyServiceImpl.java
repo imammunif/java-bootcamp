@@ -9,6 +9,7 @@ import com.dansmultipro.ams.dto.company.CompanyResponseDto;
 import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.service.CompanyService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class CompanyServiceImpl implements CompanyService {
         return new CompanyResponseDto(id, company.getName());
     }
 
+    @Transactional
     @Override
     public CreateResponseDto insert(CompanyRequestDto data) {
         Company companyInsert = new Company();
@@ -53,6 +55,7 @@ public class CompanyServiceImpl implements CompanyService {
         return new CreateResponseDto(company.getId(), "Saved");
     }
 
+    @Transactional
     @Override
     public UpdateResponseDto update(UUID id, UpdateCompanyRequestDto data) {
         Company companyUpdate = companyDao.getById(id).orElseThrow(
@@ -67,6 +70,7 @@ public class CompanyServiceImpl implements CompanyService {
         return new UpdateResponseDto(companyUpdate.getVersion(), "Updated");
     }
 
+    @Transactional
     @Override
     public DeleteResponseDto deleteById(UUID id) {
         Company company = companyDao.getById(id).orElseThrow(

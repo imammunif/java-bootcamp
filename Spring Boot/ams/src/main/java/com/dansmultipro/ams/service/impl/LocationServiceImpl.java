@@ -9,6 +9,7 @@ import com.dansmultipro.ams.dto.location.LocationResponseDto;
 import com.dansmultipro.ams.dto.location.UpdateLocationRequestDto;
 import com.dansmultipro.ams.model.Location;
 import com.dansmultipro.ams.service.LocationService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class LocationServiceImpl implements LocationService {
         return new LocationResponseDto(id, location.getName());
     }
 
+    @Transactional
     @Override
     public CreateResponseDto insert(LocationRequestDto data) {
         Location locationInsert = new Location();
@@ -53,6 +55,7 @@ public class LocationServiceImpl implements LocationService {
         return new CreateResponseDto(location.getId(), "Saved");
     }
 
+    @Transactional
     @Override
     public UpdateResponseDto update(UUID id, UpdateLocationRequestDto data) {
         Location locationUpdate = locationDao.getById(id).orElseThrow(
@@ -67,6 +70,7 @@ public class LocationServiceImpl implements LocationService {
         return new UpdateResponseDto(locationUpdate.getVersion(), "Updated");
     }
 
+    @Transactional
     @Override
     public DeleteResponseDto deleteById(UUID id) {
         Location location = locationDao.getById(id).orElseThrow(

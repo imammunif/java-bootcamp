@@ -13,6 +13,7 @@ import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.model.Role;
 import com.dansmultipro.ams.model.User;
 import com.dansmultipro.ams.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UserService {
         return new UserResponseDto(id, user.getEmployee().getName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getRoleName());
     }
 
+    @Transactional
     @Override
     public CreateResponseDto insert(UserRequestDto data) {
         String userRoleId = data.getRoleId();
@@ -75,6 +77,7 @@ public class UserServiceImpl implements UserService {
         return new CreateResponseDto(user.getId(), "Saved");
     }
 
+    @Transactional
     @Override
     public UpdateResponseDto update(UUID id, UpdateUserRequestDto data) {
         User userUpdate = userDao.getById(id).orElseThrow(
@@ -89,6 +92,7 @@ public class UserServiceImpl implements UserService {
         return new UpdateResponseDto(userUpdate.getVersion(), "Updated");
     }
 
+    @Transactional
     @Override
     public DeleteResponseDto deleteById(UUID id) {
         User user = userDao.getById(id).orElseThrow(
