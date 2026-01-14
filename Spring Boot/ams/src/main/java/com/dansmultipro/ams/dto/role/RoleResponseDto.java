@@ -8,10 +8,10 @@ public class RoleResponseDto {
     private String name;
     private String code;
 
-    public RoleResponseDto(UUID id, String code, String name) {
+    public RoleResponseDto(UUID id, String name, String code) {
         this.id = id;
-        this.code = code;
         this.name = name;
+        this.code = code;
     }
 
     public UUID getId() {
