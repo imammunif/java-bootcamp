@@ -110,9 +110,15 @@ public class AssetServiceImpl implements AssetService {
         Asset assetUpdate = assetDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Asset not found")
         );
-        assetUpdate.setName(data.getStatusName());
-        LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
-        assetUpdate.setExpiredDate(expiredDate);
+        String assetStatusId = data.getStatusId();
+        AssetStatus assetStatus = assetStatusDao.getById(UUID.fromString(assetStatusId)).orElseThrow(
+                () -> new RuntimeException("Status not found")
+        );
+        assetUpdate.setAssetStatus(assetStatus);
+        if (data.getExpiredDate() != null) {
+            LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
+            assetUpdate.setExpiredDate(expiredDate);
+        }
         assetUpdate.setUpdatedBy(UUID.randomUUID().toString());
         assetUpdate.setUpdatedAt(LocalDateTime.now());
 

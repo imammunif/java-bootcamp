@@ -2,11 +2,11 @@ package com.dansmultipro.ams.dto.asset;
 
 public class UpdateAssetRequestDto {
 
-    private String statusName;
+    private String statusId;
     private String expiredDate;
 
-    public String getStatusName() {
-        return statusName;
+    public String getStatusId() {
+        return statusId;
     }
 
     public String getExpiredDate() {
