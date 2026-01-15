@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "t_assignment_detail")
+@Table(
+        name = "t_assignment_detail",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"assignment_id", "asset_id"})
+)
 public class AssignmentDetail extends BaseModel {
 
     @Column
