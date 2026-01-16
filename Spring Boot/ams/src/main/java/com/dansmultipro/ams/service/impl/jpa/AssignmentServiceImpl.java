@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
 import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
 import com.dansmultipro.ams.model.*;
+import com.dansmultipro.ams.repository.*;
 import com.dansmultipro.ams.service.AssignmentService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,21 +22,21 @@ import java.util.UUID;
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
 
-    private final LocationDao locationDao;
-    private final AssetDao assetDao;
-    private final EmployeeDao employeeDao;
-    private final AssignmentDao assignmentDao;
-    private final AssignmentDetailDao assignmentDetailDao;
+    private final LocationRepo locationRepo;
+    private final AssetRepo assetRepo;
+    private final EmployeeRepo employeeRepo;
+    private final AssignmentRepo assignmentRepo;
+    private final AssignmentDetailRepo assignmentDetailRepo;
 
     @PersistenceContext
     private EntityManager em;
 
-    public AssignmentServiceImpl(LocationDao locationDao, AssetDao assetDao, EmployeeDao employeeDao, AssignmentDao assignmentDao, AssignmentDetailDao assignmentDetailDao) {
-        this.locationDao = locationDao;
-        this.assetDao = assetDao;
-        this.employeeDao = employeeDao;
-        this.assignmentDao = assignmentDao;
-        this.assignmentDetailDao = assignmentDetailDao;
+    public AssignmentServiceImpl(LocationRepo locationRepo, AssetRepo assetRepo, EmployeeRepo employeeRepo, AssignmentRepo assignmentRepo, AssignmentDetailRepo assignmentDetailRepo) {
+        this.locationRepo = locationRepo;
+        this.assetRepo = assetRepo;
+        this.employeeRepo = employeeRepo;
+        this.assignmentRepo = assignmentRepo;
+        this.assignmentDetailRepo = assignmentDetailRepo;
     }
 
     private String randomizeCode(int length) {
@@ -53,14 +54,14 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public List<AssignmentResponseDto> getAll() {
-        List<AssignmentResponseDto> result = assignmentDao.getAll().stream()
+        List<AssignmentResponseDto> result = assignmentRepo.findAll().stream()
                 .map(v -> new AssignmentResponseDto(v.getId(), v.getCode(), v.getAssignDate())).toList();
         return result;
     }
 
     @Override
     public AssignmentResponseDto getById(String id) {
-        Assignment assignment = assignmentDao.getById(UUID.fromString(id)).orElseThrow(
+        Assignment assignment = assignmentRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Assignment not found")
         );
         return new AssignmentResponseDto(assignment.getId(), assignment.getCode(), assignment.getAssignDate());
@@ -78,31 +79,31 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         if (data.getTargetAssetId() == null && data.getTargetEmployeeId() == null) {
             String targetLocationId = data.getTargetLocationId();
-            Location targetLocation = locationDao.getById(UUID.fromString(targetLocationId)).orElseThrow(
+            Location targetLocation = locationRepo.findById(UUID.fromString(targetLocationId)).orElseThrow(
                     () -> new RuntimeException("Target location not found")
             );
             assignmentInsert.setLocation(targetLocation);
         }
         if (data.getTargetLocationId() == null && data.getTargetEmployeeId() == null) {
             String targetAssetId = data.getTargetAssetId();
-            Asset targetAsset = assetDao.getById(UUID.fromString(targetAssetId)).orElseThrow(
+            Asset targetAsset = assetRepo.findById(UUID.fromString(targetAssetId)).orElseThrow(
                     () -> new RuntimeException("Target asset not found")
             );
             assignmentInsert.setAsset(targetAsset);
         }
         if (data.getTargetLocationId() == null && data.getTargetAssetId() == null) {
             String targetEmployeeId = data.getTargetEmployeeId();
-            Employee targetEmployee = employeeDao.getById(UUID.fromString(targetEmployeeId)).orElseThrow(
+            Employee targetEmployee = employeeRepo.findById(UUID.fromString(targetEmployeeId)).orElseThrow(
                     () -> new RuntimeException("Target employee not found")
             );
             assignmentInsert.setEmployee(targetEmployee);
         }
-        Assignment assignment = assignmentDao.insert(assignmentInsert);
+        Assignment assignment = assignmentRepo.save(assignmentInsert);
 
         List<String> detailIdList = data.getAssignmentDetialIdList();
         for (String detailId : detailIdList) {
             AssignmentDetail assignmentDetail = new AssignmentDetail();
-            Asset asset = assetDao.getById(UUID.fromString(detailId)).orElseThrow(
+            Asset asset = assetRepo.findById(UUID.fromString(detailId)).orElseThrow(
                     () -> new RuntimeException("Asset not found")
             );
             assignmentDetail.setId(UUID.randomUUID());
@@ -110,7 +111,7 @@ public class AssignmentServiceImpl implements AssignmentService {
             assignmentDetail.setCreatedAt(LocalDateTime.now());
             assignmentDetail.setAsset(asset);
             assignmentDetail.setAssignment(assignment);
-            assignmentDetailDao.insert(assignmentDetail);
+            assignmentDetailRepo.save(assignmentDetail);
         }
 
         return new AssignmentCreateResponseDto(assignment.getId());
@@ -119,18 +120,18 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateAssignmentRequestDto data) {
-        Assignment assignmentUpdate = assignmentDao.getById(UUID.fromString(id)).orElseThrow(
+        Assignment assignmentUpdate = assignmentRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Assignment not found")
         );
         List<String> assignmentDetailIdList = data.getAssignmentDetailIdList();
         for (String detailId : assignmentDetailIdList) {
-            AssignmentDetail assignmentDetail = assignmentDetailDao.getById(UUID.fromString(detailId)).orElseThrow(
+            AssignmentDetail assignmentDetail = assignmentDetailRepo.findById(UUID.fromString(detailId)).orElseThrow(
                     () -> new RuntimeException("Detail not found")
             );
             assignmentDetail.setReturnDate(LocalDateTime.now());
             assignmentDetail.setUpdatedBy(UUID.randomUUID());
             assignmentDetail.setUpdatedAt(LocalDateTime.now());
-            assignmentDetailDao.update(assignmentDetail);
+            assignmentDetailRepo.save(assignmentDetail);
         }
         assignmentUpdate.setUpdatedBy(UUID.randomUUID());
         assignmentUpdate.setUpdatedAt(LocalDateTime.now());

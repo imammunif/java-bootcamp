@@ -1,7 +1,5 @@
 package com.dansmultipro.ams.service.impl.jpa;
 
-import com.dansmultipro.ams.dao.CompanyDao;
-import com.dansmultipro.ams.dao.EmployeeDao;
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
@@ -10,6 +8,8 @@ import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
 import com.dansmultipro.ams.dto.employee.UpdateEmployeeRequestDto;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.model.Employee;
+import com.dansmultipro.ams.repository.CompanyRepo;
+import com.dansmultipro.ams.repository.EmployeeRepo;
 import com.dansmultipro.ams.service.EmployeeService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -23,21 +23,21 @@ import java.util.UUID;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeDao employeeDao;
-    private final CompanyDao companyDao;
+    private final EmployeeRepo employeeRepo;
+    private final CompanyRepo companyRepo;
 
     @PersistenceContext
     private EntityManager em;
 
-    public EmployeeServiceImpl(EmployeeDao employeeDao, CompanyDao companyDao) {
-        this.employeeDao = employeeDao;
-        this.companyDao = companyDao;
+    public EmployeeServiceImpl(EmployeeRepo employeeRepo, CompanyRepo companyRepo) {
+        this.employeeRepo = employeeRepo;
+        this.companyRepo = companyRepo;
     }
 
     @Override
     public List<EmployeeResponseDto> getAll() {
         // id, fullName, phone, address, code, dateOfBirth
-        List<EmployeeResponseDto> result = employeeDao.getAll().stream()
+        List<EmployeeResponseDto> result = employeeRepo.findAll().stream()
                 .map(v -> new EmployeeResponseDto(
                         v.getId(), v.getFullName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()
                 ))
@@ -47,7 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponseDto getById(String id) {
-        Employee employee = employeeDao.getById(UUID.fromString(id)).orElseThrow(
+        Employee employee = employeeRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
         return new EmployeeResponseDto(employee.getId(), employee.getFullName(), employee.getPhone(), employee.getAddress(), employee.getCode(), employee.getCompany().getName(), employee.getDateOfBirth());
@@ -56,7 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(EmployeeRequestDto data) {
-        Company company = companyDao.getById(UUID.fromString(data.getCompanyId())).orElseThrow(
+        Company company = companyRepo.findById(UUID.fromString(data.getCompanyId())).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
         Employee employeeInsert = new Employee();
@@ -70,7 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeInsert.setAddress(data.getAddress());
         employeeInsert.setDateOfBirth(data.getDateOfBirth());
 
-        Employee employee = employeeDao.insert(employeeInsert);
+        Employee employee = employeeRepo.save(employeeInsert);
 
         return new CreateResponseDto(employee.getId(), "Saved");
     }
@@ -78,7 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateEmployeeRequestDto data) {
-        Employee employeeUpdate = employeeDao.getById(UUID.fromString(id)).orElseThrow(
+        Employee employeeUpdate = employeeRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
         employeeUpdate.setFullName(data.getFullName());
@@ -88,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeUpdate.setUpdatedBy(UUID.randomUUID());
         employeeUpdate.setUpdatedAt(LocalDateTime.now());
 
-        employeeDao.update(employeeUpdate);
+        employeeRepo.save(employeeUpdate);
         em.flush();
 
         return new UpdateResponseDto(employeeUpdate.getVersion(), "Updated");
@@ -97,11 +97,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
-        Employee employee = employeeDao.getById(UUID.fromString(id)).orElseThrow(
+        Employee employee = employeeRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
 
-        employeeDao.deleteById(employee.getId());
+        employeeRepo.deleteById(employee.getId());
 
         return new DeleteResponseDto("Deleted");
     }

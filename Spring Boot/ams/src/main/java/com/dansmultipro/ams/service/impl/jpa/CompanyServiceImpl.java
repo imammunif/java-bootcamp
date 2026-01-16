@@ -1,6 +1,5 @@
 package com.dansmultipro.ams.service.impl.jpa;
 
-import com.dansmultipro.ams.dao.CompanyDao;
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
@@ -8,6 +7,7 @@ import com.dansmultipro.ams.dto.company.CompanyRequestDto;
 import com.dansmultipro.ams.dto.company.CompanyResponseDto;
 import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
 import com.dansmultipro.ams.model.Company;
+import com.dansmultipro.ams.repository.CompanyRepo;
 import com.dansmultipro.ams.service.CompanyService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,18 +21,18 @@ import java.util.UUID;
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
-    private final CompanyDao companyDao;
+    private final CompanyRepo companyRepo;
 
     @PersistenceContext
     private EntityManager em;
 
-    public CompanyServiceImpl(CompanyDao companyDao) {
-        this.companyDao = companyDao;
+    public CompanyServiceImpl(CompanyRepo companyRepo) {
+        this.companyRepo = companyRepo;
     }
 
     @Override
     public List<CompanyResponseDto> getAll() {
-        List<CompanyResponseDto> result = companyDao.getAll().stream()
+        List<CompanyResponseDto> result = companyRepo.findAll().stream()
                 .map(v -> new CompanyResponseDto(v.getId(), v.getName()))
                 .toList();
         return result;
@@ -40,7 +40,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyResponseDto getById(String id) {
-        Company company = companyDao.getById(UUID.fromString(id)).orElseThrow(
+        Company company = companyRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
         return new CompanyResponseDto(company.getId(), company.getName());
@@ -55,7 +55,7 @@ public class CompanyServiceImpl implements CompanyService {
         companyInsert.setCreatedAt(LocalDateTime.now());
         companyInsert.setName(data.getName());
 
-        Company company = companyDao.insert(companyInsert);
+        Company company = companyRepo.save(companyInsert);
 
         return new CreateResponseDto(company.getId(), "Saved");
     }
@@ -63,14 +63,14 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateCompanyRequestDto data) {
-        Company companyUpdate = companyDao.getById(UUID.fromString(id)).orElseThrow(
+        Company companyUpdate = companyRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
         companyUpdate.setName(data.getName());
         companyUpdate.setUpdatedBy(UUID.randomUUID());
         companyUpdate.setUpdatedAt(LocalDateTime.now());
 
-        companyDao.update(companyUpdate);
+        companyRepo.save(companyUpdate);
         em.flush();
 
         return new UpdateResponseDto(companyUpdate.getVersion(), "Updated");
@@ -79,11 +79,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
-        Company company = companyDao.getById(UUID.fromString(id)).orElseThrow(
+        Company company = companyRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
 
-        companyDao.deleteById(company.getId());
+        companyRepo.deleteById(company.getId());
 
         return new DeleteResponseDto("Deleted");
     }

@@ -1,8 +1,5 @@
 package com.dansmultipro.ams.service.impl.jpa;
 
-import com.dansmultipro.ams.dao.EmployeeDao;
-import com.dansmultipro.ams.dao.RoleDao;
-import com.dansmultipro.ams.dao.UserDao;
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
@@ -12,6 +9,9 @@ import com.dansmultipro.ams.dto.user.UserResponseDto;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.model.Role;
 import com.dansmultipro.ams.model.User;
+import com.dansmultipro.ams.repository.EmployeeRepo;
+import com.dansmultipro.ams.repository.RoleRepo;
+import com.dansmultipro.ams.repository.UserRepo;
 import com.dansmultipro.ams.service.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,23 +26,23 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao;
-    private final RoleDao roleDao;
-    private final EmployeeDao employeeDao;
+    private final UserRepo userRepo;
+    private final RoleRepo roleDao;
+    private final EmployeeRepo employeeRepo;
 
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao, EmployeeDao employeeDao) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepo userRepo, RoleRepo roleDao, EmployeeRepo employeeRepo) {
+        this.userRepo = userRepo;
         this.roleDao = roleDao;
-        this.employeeDao = employeeDao;
+        this.employeeRepo = employeeRepo;
     }
 
     @Override
     public List<UserResponseDto> getAll() {
-        List<UserResponseDto> result = userDao.getAll().stream()
+        List<UserResponseDto> result = userRepo.findAll().stream()
                 .map(v -> new UserResponseDto(v.getId(), v.getEmployee().getFullName(), v.getEmployee().getPhone(), v.getEmployee().getAddress(), v.getRole().getName()))
                 .toList();
         return result;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getById(String id) {
-        User user = userDao.getById(UUID.fromString(id)).orElseThrow(
+        User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
         return new UserResponseDto(user.getId(), user.getEmployee().getFullName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getName());
@@ -60,12 +60,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public CreateResponseDto insert(UserRequestDto data) {
         String userRoleId = data.getRoleId();
-        Role userRole = roleDao.getById(UUID.fromString(userRoleId)).orElseThrow(
+        Role userRole = roleDao.findById(UUID.fromString(userRoleId)).orElseThrow(
                 () -> new RuntimeException("Role not found")
         );
 
         String userEmployeeId = data.getEmployeeId();
-        Employee userEmployee = employeeDao.getById(UUID.fromString(userEmployeeId)).orElseThrow(
+        Employee userEmployee = employeeRepo.findById(UUID.fromString(userEmployeeId)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
         User userInsert = new User();
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         userInsert.setRole(userRole);
         userInsert.setEmployee(userEmployee);
 
-        User user = userDao.insert(userInsert);
+        User user = userRepo.save(userInsert);
 
         return new CreateResponseDto(user.getId(), "Saved");
     }
@@ -85,14 +85,14 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateUserRequestDto data) {
-        User userUpdate = userDao.getById(UUID.fromString(id)).orElseThrow(
+        User userUpdate = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
         userUpdate.setEmail(data.getEmail());
         userUpdate.setUpdatedBy(UUID.randomUUID());
         userUpdate.setUpdatedAt(LocalDateTime.now());
 
-        userDao.update(userUpdate);
+        userRepo.save(userUpdate);
         em.flush();
 
         return new UpdateResponseDto(userUpdate.getVersion(), "Updated");
@@ -101,11 +101,11 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
-        User user = userDao.getById(UUID.fromString(id)).orElseThrow(
+        User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
 
-        userDao.deleteById(user.getId());
+        userRepo.deleteById(user.getId());
 
         return new DeleteResponseDto("Deleted");
     }

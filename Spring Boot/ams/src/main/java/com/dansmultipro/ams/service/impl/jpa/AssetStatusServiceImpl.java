@@ -1,8 +1,8 @@
 package com.dansmultipro.ams.service.impl.jpa;
 
-import com.dansmultipro.ams.dao.AssetStatusDao;
 import com.dansmultipro.ams.dto.asset.AssetStatusResponseDto;
 import com.dansmultipro.ams.model.AssetStatus;
+import com.dansmultipro.ams.repository.AssetStatusRepo;
 import com.dansmultipro.ams.service.AssetStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +13,16 @@ import java.util.UUID;
 @Service
 public class AssetStatusServiceImpl implements AssetStatusService {
 
-    private final AssetStatusDao assetStatusDao;
+    private final AssetStatusRepo assetStatusRepo;
 
     @Autowired
-    public AssetStatusServiceImpl(AssetStatusDao assetStatusDao) {
-        this.assetStatusDao = assetStatusDao;
+    public AssetStatusServiceImpl(AssetStatusRepo assetStatusRepo) {
+        this.assetStatusRepo = assetStatusRepo;
     }
 
     @Override
     public List<AssetStatusResponseDto> getAll() {
-        List<AssetStatusResponseDto> result = assetStatusDao.getAll().stream()
+        List<AssetStatusResponseDto> result = assetStatusRepo.findAll().stream()
                 .map(v -> new AssetStatusResponseDto(v.getId(), v.getName(), v.getCode()))
                 .toList();
         return result;
@@ -30,7 +30,7 @@ public class AssetStatusServiceImpl implements AssetStatusService {
 
     @Override
     public AssetStatusResponseDto getById(String id) {
-        AssetStatus assetStatus = assetStatusDao.getById(UUID.fromString(id)).orElseThrow(
+        AssetStatus assetStatus = assetStatusRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Status not found")
         );
         return new AssetStatusResponseDto(assetStatus.getId(), assetStatus.getName(), assetStatus.getCode());
