@@ -5,12 +5,14 @@ import com.dansmultipro.ams.dto.asset.AssetStatusResponseDto;
 import com.dansmultipro.ams.model.AssetStatus;
 import com.dansmultipro.ams.service.AssetStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-//@Service
+@Profile("hibernate")
+@Service
 public class AssetStatusServiceImpl implements AssetStatusService {
 
     private final AssetStatusDao assetStatusDao;

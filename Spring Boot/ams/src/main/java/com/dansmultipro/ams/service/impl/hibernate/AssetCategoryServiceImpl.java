@@ -5,12 +5,14 @@ import com.dansmultipro.ams.dto.asset.AssetCategoryResponseDto;
 import com.dansmultipro.ams.model.AssetCategory;
 import com.dansmultipro.ams.service.AssetCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-//@Service
+@Profile("hibernate")
+@Service
 public class AssetCategoryServiceImpl implements AssetCategoryService {
 
     private final AssetCategoryDao assetCategoryDao;

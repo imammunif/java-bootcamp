@@ -12,13 +12,15 @@ import com.dansmultipro.ams.service.LocationService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-//@Service
+@Profile("hibernate")
+@Service
 public class LocationServiceImpl implements LocationService {
 
     private final LocationDao locationDao;

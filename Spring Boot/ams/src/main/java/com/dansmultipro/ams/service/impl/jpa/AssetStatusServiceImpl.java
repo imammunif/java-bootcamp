@@ -5,11 +5,13 @@ import com.dansmultipro.ams.model.AssetStatus;
 import com.dansmultipro.ams.repository.AssetStatusRepo;
 import com.dansmultipro.ams.service.AssetStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Profile("jpa")
 @Service
 public class AssetStatusServiceImpl implements AssetStatusService {
 
