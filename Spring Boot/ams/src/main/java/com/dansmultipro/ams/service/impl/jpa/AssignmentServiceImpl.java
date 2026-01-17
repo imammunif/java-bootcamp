@@ -79,21 +79,19 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentInsert.setCode(randomizeCode(20));
         assignmentInsert.setAssignDate(LocalDate.now());
 
-        if (data.getTargetAssetId() == null && data.getTargetEmployeeId() == null) {
+        if (data.getTargetLocationId() != null) {
             String targetLocationId = data.getTargetLocationId();
             Location targetLocation = locationRepo.findById(UUID.fromString(targetLocationId)).orElseThrow(
                     () -> new RuntimeException("Target location not found")
             );
             assignmentInsert.setLocation(targetLocation);
-        }
-        if (data.getTargetLocationId() == null && data.getTargetEmployeeId() == null) {
+        } else if (data.getTargetAssetId() != null) {
             String targetAssetId = data.getTargetAssetId();
             Asset targetAsset = assetRepo.findById(UUID.fromString(targetAssetId)).orElseThrow(
                     () -> new RuntimeException("Target asset not found")
             );
             assignmentInsert.setAsset(targetAsset);
-        }
-        if (data.getTargetLocationId() == null && data.getTargetAssetId() == null) {
+        } else if (data.getTargetEmployeeId() != null) {
             String targetEmployeeId = data.getTargetEmployeeId();
             Employee targetEmployee = employeeRepo.findById(UUID.fromString(targetEmployeeId)).orElseThrow(
                     () -> new RuntimeException("Target employee not found")

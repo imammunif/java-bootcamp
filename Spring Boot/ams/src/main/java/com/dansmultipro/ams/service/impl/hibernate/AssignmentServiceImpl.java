@@ -78,21 +78,19 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentInsert.setCode(randomizeCode(20));
         assignmentInsert.setAssignDate(LocalDate.now());
 
-        if (data.getTargetAssetId() == null && data.getTargetEmployeeId() == null) {
+        if (data.getTargetLocationId() != null) {
             String targetLocationId = data.getTargetLocationId();
             Location targetLocation = locationDao.getById(UUID.fromString(targetLocationId)).orElseThrow(
                     () -> new RuntimeException("Target location not found")
             );
             assignmentInsert.setLocation(targetLocation);
-        }
-        if (data.getTargetLocationId() == null && data.getTargetEmployeeId() == null) {
+        } else if (data.getTargetAssetId() != null) {
             String targetAssetId = data.getTargetAssetId();
             Asset targetAsset = assetDao.getById(UUID.fromString(targetAssetId)).orElseThrow(
                     () -> new RuntimeException("Target asset not found")
             );
             assignmentInsert.setAsset(targetAsset);
-        }
-        if (data.getTargetLocationId() == null && data.getTargetAssetId() == null) {
+        } else if (data.getTargetEmployeeId() != null) {
             String targetEmployeeId = data.getTargetEmployeeId();
             Employee targetEmployee = employeeDao.getById(UUID.fromString(targetEmployeeId)).orElseThrow(
                     () -> new RuntimeException("Target employee not found")
