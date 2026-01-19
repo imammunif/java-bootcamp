@@ -5,13 +5,15 @@ import java.util.UUID;
 public class UserResponseDto {
 
     private UUID id;
+    private String email;
     private String fullName;
     private String phone;
     private String address;
     private String roleName;
 
-    public UserResponseDto(UUID id, String fullName, String phone, String address, String roleName) {
+    public UserResponseDto(UUID id, String email, String fullName, String phone, String address, String roleName) {
         this.id = id;
+        this.email = email;
         this.fullName = fullName;
         this.phone = phone;
         this.address = address;
@@ -20,6 +22,10 @@ public class UserResponseDto {
 
     public UUID getId() {
         return id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getFullName() {

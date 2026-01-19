@@ -6,6 +6,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
 import com.dansmultipro.ams.dto.user.UserResponseDto;
+import com.dansmultipro.ams.exception.DataIntegrityException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.model.Role;
@@ -41,7 +42,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public List<UserResponseDto> getAll() {
         List<UserResponseDto> result = userRepo.findAll().stream()
-                .map(v -> new UserResponseDto(v.getId(), v.getEmployee().getFullName(), v.getEmployee().getPhone(), v.getEmployee().getAddress(), v.getRole().getName()))
+                .map(v -> new UserResponseDto(v.getId(), v.getEmail(), v.getEmployee().getFullName(), v.getEmployee().getPhone(), v.getEmployee().getAddress(), v.getRole().getName()))
                 .toList();
         return result;
     }
@@ -51,7 +52,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
-        return new UserResponseDto(user.getId(), user.getEmployee().getFullName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getName());
+        return new UserResponseDto(user.getId(), user.getEmail(), user.getEmployee().getFullName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getName());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -68,6 +69,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         );
         User userNew = new User();
         User userInsert = prepareForInsert(userNew);
+        String userEmail = data.getEmail();
+        if (userRepo.findByEmail(userEmail).isPresent()) {
+            throw new DataIntegrityException("Email already exist");
+        }
+
         userInsert.setEmail(data.getEmail());
         userInsert.setPassword(data.getPassword());
         userInsert.setRole(userRole);
@@ -85,6 +91,13 @@ public class UserServiceImpl extends BaseService implements UserService {
                 () -> new NotFoundException("User not found")
         );
         User userUpdate = prepareForUpdate(user);
+        String requestEmail = data.getEmail();
+        if (!user.getEmail().equals(requestEmail)) {
+            if (userRepo.findByEmail(requestEmail).isPresent()) {
+                throw new DataIntegrityException("Email already exist");
+            }
+        }
+
         userUpdate.setEmail(data.getEmail());
 
         userRepo.save(userUpdate);

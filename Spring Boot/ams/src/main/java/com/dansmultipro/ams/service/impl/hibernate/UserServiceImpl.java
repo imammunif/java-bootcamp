@@ -41,7 +41,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public List<UserResponseDto> getAll() {
         List<UserResponseDto> result = userDao.getAll().stream()
-                .map(v -> new UserResponseDto(v.getId(), v.getEmployee().getFullName(), v.getEmployee().getPhone(), v.getEmployee().getAddress(), v.getRole().getName()))
+                .map(v -> new UserResponseDto(v.getId(), v.getEmail(), v.getEmployee().getFullName(), v.getEmployee().getPhone(), v.getEmployee().getAddress(), v.getRole().getName()))
                 .toList();
         return result;
     }
@@ -51,7 +51,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         User user = userDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
-        return new UserResponseDto(user.getId(), user.getEmployee().getFullName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getName());
+        return new UserResponseDto(user.getId(), user.getEmail(), user.getEmployee().getFullName(), user.getEmployee().getPhone(), user.getEmployee().getAddress(), user.getRole().getName());
     }
 
     @Transactional(rollbackOn = Exception.class)
