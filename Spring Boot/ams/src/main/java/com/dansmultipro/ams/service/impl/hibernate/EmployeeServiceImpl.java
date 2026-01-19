@@ -8,6 +8,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
 import com.dansmultipro.ams.dto.employee.UpdateEmployeeRequestDto;
+import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.service.EmployeeService;
@@ -54,7 +55,7 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
     @Override
     public CreateResponseDto insert(EmployeeRequestDto data) {
         Company company = companyDao.getById(UUID.fromString(data.getCompanyId())).orElseThrow(
-                () -> new RuntimeException("Company not found")
+                () -> new NotFoundException("Company not found")
         );
         Employee employeeNew = new Employee();
         Employee employeeInsert = prepareForInsert(employeeNew);
@@ -74,7 +75,7 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
     @Override
     public UpdateResponseDto update(String id, UpdateEmployeeRequestDto data) {
         Employee employee = employeeDao.getById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Employee not found")
+                () -> new NotFoundException("Employee not found")
         );
         Employee employeeUpdate = prepareForUpdate(employee);
         employeeUpdate.setFullName(data.getFullName());

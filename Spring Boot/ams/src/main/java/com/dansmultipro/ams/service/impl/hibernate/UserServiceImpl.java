@@ -9,6 +9,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
 import com.dansmultipro.ams.dto.user.UserResponseDto;
+import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.model.Role;
 import com.dansmultipro.ams.model.User;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,12 +59,12 @@ public class UserServiceImpl extends BaseService implements UserService {
     public CreateResponseDto insert(UserRequestDto data) {
         String userRoleId = data.getRoleId();
         Role userRole = roleDao.getById(UUID.fromString(userRoleId)).orElseThrow(
-                () -> new RuntimeException("Role not found")
+                () -> new NotFoundException("Role not found")
         );
 
         String userEmployeeId = data.getEmployeeId();
         Employee userEmployee = employeeDao.getById(UUID.fromString(userEmployeeId)).orElseThrow(
-                () -> new RuntimeException("Employee not found")
+                () -> new NotFoundException("Employee not found")
         );
         User userNew = new User();
         User userInsert = prepareForInsert(userNew);
@@ -83,7 +83,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public UpdateResponseDto update(String id, UpdateUserRequestDto data) {
         User user = userDao.getById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("User not found")
+                () -> new NotFoundException("User not found")
         );
         User userUpdate = prepareForUpdate(user);
 

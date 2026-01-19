@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.company.CompanyRequestDto;
 import com.dansmultipro.ams.dto.company.CompanyResponseDto;
 import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
 import com.dansmultipro.ams.service.CompanyService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +37,13 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponseDto> createCompany(@RequestBody CompanyRequestDto company) {
+    public ResponseEntity<CreateResponseDto> createCompany(@RequestBody @Valid CompanyRequestDto company) {
         CreateResponseDto res = companyService.insert(company);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UpdateResponseDto> updateCompany(@PathVariable String id, @RequestBody UpdateCompanyRequestDto company) {
+    public ResponseEntity<UpdateResponseDto> updateCompany(@PathVariable String id, @RequestBody @Valid UpdateCompanyRequestDto company) {
         UpdateResponseDto res = companyService.update(id, company);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

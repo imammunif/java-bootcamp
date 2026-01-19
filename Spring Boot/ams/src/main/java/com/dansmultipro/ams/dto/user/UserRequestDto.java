@@ -1,16 +1,27 @@
 package com.dansmultipro.ams.dto.user;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserRequestDto {
 
     private String fullName;
-    private String roleId;
-    private String employeeId;
-    private String email;
-    private String password;
 
-    public String getFullName() {
-        return fullName;
-    }
+    @NotBlank(message = "User role id is required")
+    private String roleId;
+
+    @NotBlank(message = "User employee id is required")
+    private String employeeId;
+
+    @Email(message = "Email format is not valid")
+    @NotBlank(message = "User email is required")
+    @Size(max = 50, message = "Email length exceeds limit")
+    private String email;
+
+    @NotBlank(message = "Password is required")
+    @Size(max = 200, message = "Password length exceeds limit")
+    private String password;
 
     public String getRoleId() {
         return roleId;
@@ -26,10 +37,6 @@ public class UserRequestDto {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public void setRoleId(String roleId) {

@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
 import com.dansmultipro.ams.dto.employee.UpdateEmployeeRequestDto;
 import com.dansmultipro.ams.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +37,13 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponseDto> createEmployee(@RequestBody EmployeeRequestDto employee) {
+    public ResponseEntity<CreateResponseDto> createEmployee(@RequestBody @Valid EmployeeRequestDto employee) {
         CreateResponseDto res = employeeService.insert(employee);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UpdateResponseDto> updateEmployee(@PathVariable String id, @RequestBody UpdateEmployeeRequestDto employee) {
+    public ResponseEntity<UpdateResponseDto> updateEmployee(@PathVariable String id, @RequestBody @Valid UpdateEmployeeRequestDto employee) {
         UpdateResponseDto res = employeeService.update(id, employee);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

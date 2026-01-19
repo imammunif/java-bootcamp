@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.asset.AssetRequestDto;
 import com.dansmultipro.ams.dto.asset.AssetResponseDto;
 import com.dansmultipro.ams.dto.asset.UpdateAssetRequestDto;
 import com.dansmultipro.ams.service.AssetService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +37,13 @@ public class AssetController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponseDto> createAsset(@RequestBody AssetRequestDto asset) {
+    public ResponseEntity<CreateResponseDto> createAsset(@RequestBody @Valid AssetRequestDto asset) {
         CreateResponseDto res = assetService.insert(asset);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UpdateResponseDto> updateAsset(@PathVariable String id, @RequestBody UpdateAssetRequestDto asset) {
+    public ResponseEntity<UpdateResponseDto> updateAsset(@PathVariable String id, @RequestBody @Valid UpdateAssetRequestDto asset) {
         UpdateResponseDto res = assetService.update(id, asset);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

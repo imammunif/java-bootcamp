@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
 import com.dansmultipro.ams.dto.user.UserResponseDto;
 import com.dansmultipro.ams.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +37,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponseDto> createUser(@RequestBody UserRequestDto user) {
+    public ResponseEntity<CreateResponseDto> createUser(@RequestBody @Valid UserRequestDto user) {
         CreateResponseDto res = userService.insert(user);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UpdateResponseDto> updateUser(@PathVariable String id, @RequestBody UpdateUserRequestDto user) {
+    public ResponseEntity<UpdateResponseDto> updateUser(@PathVariable String id, @RequestBody @Valid UpdateUserRequestDto user) {
         UpdateResponseDto res = userService.update(id, user);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

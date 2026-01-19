@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.location.LocationRequestDto;
 import com.dansmultipro.ams.dto.location.LocationResponseDto;
 import com.dansmultipro.ams.dto.location.UpdateLocationRequestDto;
 import com.dansmultipro.ams.service.LocationService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +37,13 @@ public class LocationController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponseDto> createLocation(@RequestBody LocationRequestDto location) {
+    public ResponseEntity<CreateResponseDto> createLocation(@RequestBody @Valid LocationRequestDto location) {
         CreateResponseDto res = locationService.insert(location);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UpdateResponseDto> updateLocation(@PathVariable String id, @RequestBody UpdateLocationRequestDto location) {
+    public ResponseEntity<UpdateResponseDto> updateLocation(@PathVariable String id, @RequestBody @Valid UpdateLocationRequestDto location) {
         UpdateResponseDto res = locationService.update(id, location);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

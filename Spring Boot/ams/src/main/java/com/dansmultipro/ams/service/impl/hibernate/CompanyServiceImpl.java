@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.company.CompanyRequestDto;
 import com.dansmultipro.ams.dto.company.CompanyResponseDto;
 import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
+import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.service.CompanyService;
 import com.dansmultipro.ams.service.impl.BaseService;
@@ -59,7 +60,7 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
     @Override
     public UpdateResponseDto update(String id, UpdateCompanyRequestDto data) {
         Company company = companyDao.getById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Company not found")
+                () -> new NotFoundException("Company not found")
         );
         Company companyUpdate = prepareForUpdate(company);
         companyUpdate.setName(data.getName());

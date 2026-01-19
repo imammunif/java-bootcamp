@@ -10,6 +10,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.asset.AssetRequestDto;
 import com.dansmultipro.ams.dto.asset.AssetResponseDto;
 import com.dansmultipro.ams.dto.asset.UpdateAssetRequestDto;
+import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Asset;
 import com.dansmultipro.ams.model.AssetCategory;
 import com.dansmultipro.ams.model.AssetStatus;
@@ -70,15 +71,15 @@ public class AssetServiceImpl extends BaseService implements AssetService {
     public CreateResponseDto insert(AssetRequestDto data) {
         String assetCompanyId = data.getCompanyId();
         Company assetCompany = companyDao.getById(UUID.fromString(assetCompanyId)).orElseThrow(
-                () -> new RuntimeException("Company not found")
+                () -> new NotFoundException("Company not found")
         );
         String assetCategoryId = data.getCategoryId();
         AssetCategory assetCategory = assetCategoryDao.getById(UUID.fromString(assetCategoryId)).orElseThrow(
-                () -> new RuntimeException("Category not found")
+                () -> new NotFoundException("Category not found")
         );
         String assetStatusId = data.getStatusId();
         AssetStatus assetStatus = assetStatusDao.getById(UUID.fromString(assetStatusId)).orElseThrow(
-                () -> new RuntimeException("Status not found")
+                () -> new NotFoundException("Status not found")
         );
 
         Asset assetNew = new Asset();
@@ -103,14 +104,15 @@ public class AssetServiceImpl extends BaseService implements AssetService {
     @Override
     public UpdateResponseDto update(String id, UpdateAssetRequestDto data) {
         Asset asset = assetDao.getById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Asset not found")
+                () -> new NotFoundException("Asset not found")
         );
         String assetStatusId = data.getStatusId();
         AssetStatus assetStatus = assetStatusDao.getById(UUID.fromString(assetStatusId)).orElseThrow(
-                () -> new RuntimeException("Status not found")
+                () -> new NotFoundException("Status not found")
         );
 
         Asset assetUpdate = prepareForUpdate(asset);
+        assetUpdate.setName(data.getName());
         assetUpdate.setAssetStatus(assetStatus);
         if (data.getExpiredDate() != null) {
             LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
