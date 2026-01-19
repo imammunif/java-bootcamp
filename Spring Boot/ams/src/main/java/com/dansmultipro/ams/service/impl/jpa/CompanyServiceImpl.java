@@ -9,24 +9,19 @@ import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.repository.CompanyRepo;
 import com.dansmultipro.ams.service.CompanyService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Profile("jpa")
 @Service
-public class CompanyServiceImpl implements CompanyService {
+public class CompanyServiceImpl extends BaseService implements CompanyService {
 
     private final CompanyRepo companyRepo;
-
-    @PersistenceContext
-    private EntityManager em;
 
     public CompanyServiceImpl(CompanyRepo companyRepo) {
         this.companyRepo = companyRepo;
@@ -51,12 +46,10 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(CompanyRequestDto data) {
-        Company companyInsert = new Company();
-        companyInsert.setId(UUID.randomUUID());
-        companyInsert.setCreatedBy(UUID.randomUUID());
-        companyInsert.setCreatedAt(LocalDateTime.now());
-        companyInsert.setName(data.getName());
+        Company companyNew = new Company();
+        Company companyInsert = prepareForInsert(companyNew);
 
+        companyInsert.setName(data.getName());
         Company company = companyRepo.save(companyInsert);
 
         return new CreateResponseDto(company.getId(), "Saved");
@@ -65,12 +58,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateCompanyRequestDto data) {
-        Company companyUpdate = companyRepo.findById(UUID.fromString(id)).orElseThrow(
+        Company company = companyRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
+        Company companyUpdate = prepareForUpdate(company);
         companyUpdate.setName(data.getName());
-        companyUpdate.setUpdatedBy(UUID.randomUUID());
-        companyUpdate.setUpdatedAt(LocalDateTime.now());
 
         companyRepo.save(companyUpdate);
         em.flush();

@@ -13,27 +13,22 @@ import com.dansmultipro.ams.repository.EmployeeRepo;
 import com.dansmultipro.ams.repository.RoleRepo;
 import com.dansmultipro.ams.repository.UserRepo;
 import com.dansmultipro.ams.service.UserService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Profile("jpa")
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseService implements UserService {
 
     private final UserRepo userRepo;
     private final RoleRepo roleDao;
     private final EmployeeRepo employeeRepo;
-
-    @PersistenceContext
-    private EntityManager em;
 
     @Autowired
     public UserServiceImpl(UserRepo userRepo, RoleRepo roleDao, EmployeeRepo employeeRepo) {
@@ -70,10 +65,8 @@ public class UserServiceImpl implements UserService {
         Employee userEmployee = employeeRepo.findById(UUID.fromString(userEmployeeId)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
-        User userInsert = new User();
-        userInsert.setId(UUID.randomUUID());
-        userInsert.setCreatedBy(UUID.randomUUID());
-        userInsert.setCreatedAt(LocalDateTime.now());
+        User userNew = new User();
+        User userInsert = prepareForInsert(userNew);
         userInsert.setEmail(data.getEmail());
         userInsert.setPassword(data.getPassword());
         userInsert.setRole(userRole);
@@ -87,12 +80,11 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateUserRequestDto data) {
-        User userUpdate = userRepo.findById(UUID.fromString(id)).orElseThrow(
+        User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
+        User userUpdate = prepareForUpdate(user);
         userUpdate.setEmail(data.getEmail());
-        userUpdate.setUpdatedBy(UUID.randomUUID());
-        userUpdate.setUpdatedAt(LocalDateTime.now());
 
         userRepo.save(userUpdate);
         em.flush();

@@ -1,6 +1,5 @@
 package com.dansmultipro.ams.service.impl.jpa;
 
-import com.dansmultipro.ams.dao.*;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
@@ -9,8 +8,7 @@ import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
 import com.dansmultipro.ams.model.*;
 import com.dansmultipro.ams.repository.*;
 import com.dansmultipro.ams.service.AssignmentService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -22,16 +20,13 @@ import java.util.UUID;
 
 @Profile("jpa")
 @Service
-public class AssignmentServiceImpl implements AssignmentService {
+public class AssignmentServiceImpl extends BaseService implements AssignmentService {
 
     private final LocationRepo locationRepo;
     private final AssetRepo assetRepo;
     private final EmployeeRepo employeeRepo;
     private final AssignmentRepo assignmentRepo;
     private final AssignmentDetailRepo assignmentDetailRepo;
-
-    @PersistenceContext
-    private EntityManager em;
 
     public AssignmentServiceImpl(LocationRepo locationRepo, AssetRepo assetRepo, EmployeeRepo employeeRepo, AssignmentRepo assignmentRepo, AssignmentDetailRepo assignmentDetailRepo) {
         this.locationRepo = locationRepo;
@@ -72,10 +67,9 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public AssignmentCreateResponseDto insert(AssignmentRequestDto data) {
-        Assignment assignmentInsert = new Assignment();
-        assignmentInsert.setId(UUID.randomUUID());
-        assignmentInsert.setCreatedBy(UUID.randomUUID());
-        assignmentInsert.setCreatedAt(LocalDateTime.now());
+        Assignment assignmentNew = new Assignment();
+        Assignment assignmentInsert = prepareForInsert(assignmentNew);
+
         assignmentInsert.setCode(randomizeCode(20));
         assignmentInsert.setAssignDate(LocalDate.now());
 
@@ -102,13 +96,12 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         List<String> detailIdList = data.getAssignmentDetialIdList();
         for (String detailId : detailIdList) {
-            AssignmentDetail assignmentDetail = new AssignmentDetail();
             Asset asset = assetRepo.findById(UUID.fromString(detailId)).orElseThrow(
                     () -> new RuntimeException("Asset not found")
             );
-            assignmentDetail.setId(UUID.randomUUID());
-            assignmentDetail.setCreatedBy(UUID.randomUUID());
-            assignmentDetail.setCreatedAt(LocalDateTime.now());
+            AssignmentDetail assignmentDetailNew = new AssignmentDetail();
+            AssignmentDetail assignmentDetail = prepareForInsert(assignmentDetailNew);
+
             assignmentDetail.setAsset(asset);
             assignmentDetail.setAssignment(assignment);
             assignmentDetailRepo.save(assignmentDetail);
@@ -120,7 +113,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateAssignmentRequestDto data) {
-        Assignment assignmentUpdate = assignmentRepo.findById(UUID.fromString(id)).orElseThrow(
+        Assignment assignment = assignmentRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Assignment not found")
         );
         List<String> assignmentDetailIdList = data.getAssignmentDetailIdList();
@@ -128,13 +121,11 @@ public class AssignmentServiceImpl implements AssignmentService {
             AssignmentDetail assignmentDetail = assignmentDetailRepo.findById(UUID.fromString(detailId)).orElseThrow(
                     () -> new RuntimeException("Detail not found")
             );
-            assignmentDetail.setReturnDate(LocalDateTime.now());
-            assignmentDetail.setUpdatedBy(UUID.randomUUID());
-            assignmentDetail.setUpdatedAt(LocalDateTime.now());
+            AssignmentDetail assignmentDetailUpdate = prepareForUpdate(assignmentDetail);
+            assignmentDetailUpdate.setReturnDate(LocalDateTime.now());
             assignmentDetailRepo.save(assignmentDetail);
         }
-        assignmentUpdate.setUpdatedBy(UUID.randomUUID());
-        assignmentUpdate.setUpdatedAt(LocalDateTime.now());
+        Assignment assignmentUpdate = prepareForUpdate(assignment);
         em.flush();
 
         return new UpdateResponseDto(assignmentUpdate.getVersion(), "Updated");

@@ -9,24 +9,19 @@ import com.dansmultipro.ams.dto.location.UpdateLocationRequestDto;
 import com.dansmultipro.ams.model.Location;
 import com.dansmultipro.ams.repository.LocationRepo;
 import com.dansmultipro.ams.service.LocationService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Profile("jpa")
 @Service
-public class LocationServiceImpl implements LocationService {
+public class LocationServiceImpl extends BaseService implements LocationService {
 
     private final LocationRepo locationRepo;
-
-    @PersistenceContext
-    private EntityManager em;
 
     public LocationServiceImpl(LocationRepo locationRepo) {
         this.locationRepo = locationRepo;
@@ -51,12 +46,10 @@ public class LocationServiceImpl implements LocationService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(LocationRequestDto data) {
-        Location locationInsert = new Location();
-        locationInsert.setId(UUID.randomUUID());
-        locationInsert.setCreatedBy(UUID.randomUUID());
-        locationInsert.setCreatedAt(LocalDateTime.now());
-        locationInsert.setName(data.getName());
+        Location locationNew = new Location();
+        Location locationInsert = prepareForInsert(locationNew);
 
+        locationInsert.setName(data.getName());
         Location location = locationRepo.save(locationInsert);
 
         return new CreateResponseDto(location.getId(), "Saved");
@@ -65,13 +58,12 @@ public class LocationServiceImpl implements LocationService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateLocationRequestDto data) {
-        Location locationUpdate = locationRepo.findById(UUID.fromString(id)).orElseThrow(
+        Location location = locationRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Location not found")
         );
-        locationUpdate.setName(data.getName());
-        locationUpdate.setUpdatedBy(UUID.randomUUID());
-        locationUpdate.setUpdatedAt(LocalDateTime.now());
+        Location locationUpdate = prepareForUpdate(location);
 
+        locationUpdate.setName(data.getName());
         locationRepo.save(locationUpdate);
         em.flush();
 
