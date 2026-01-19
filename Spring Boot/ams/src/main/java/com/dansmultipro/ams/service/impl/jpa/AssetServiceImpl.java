@@ -18,6 +18,7 @@ import com.dansmultipro.ams.repository.AssetStatusRepo;
 import com.dansmultipro.ams.repository.CompanyRepo;
 import com.dansmultipro.ams.service.AssetService;
 import com.dansmultipro.ams.service.impl.BaseService;
+import com.dansmultipro.ams.util.RandomGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -94,10 +95,10 @@ public class AssetServiceImpl extends BaseService implements AssetService {
             LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
             assetInsert.setExpiredDate(expiredDate);
         }
-        if (assetRepo.findByCode(data.getCode()).isPresent()) {
+        String assetCode = RandomGenerator.randomizeCode(5);
+        if (assetRepo.findByCode(assetCode).isPresent()) {
             throw new DataIntegrityException("Code already exist");
         }
-        assetInsert.setCode(data.getCode());
 
         Asset asset = assetRepo.save(assetInsert);
 

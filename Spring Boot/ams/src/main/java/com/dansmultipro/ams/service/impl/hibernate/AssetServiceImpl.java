@@ -93,7 +93,7 @@ public class AssetServiceImpl extends BaseService implements AssetService {
             LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
             assetInsert.setExpiredDate(expiredDate);
         }
-        assetInsert.setCode(data.getCode());
+        // assetInsert.setCode(data.getCode()); -> needs to get asset code from dao, hard implementation in hibernate
 
         Asset asset = assetDao.insert(assetInsert);
 

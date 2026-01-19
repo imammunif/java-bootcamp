@@ -9,6 +9,7 @@ import com.dansmultipro.ams.model.*;
 import com.dansmultipro.ams.repository.*;
 import com.dansmultipro.ams.service.AssignmentService;
 import com.dansmultipro.ams.service.impl.BaseService;
+import com.dansmultipro.ams.util.RandomGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -36,19 +37,6 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         this.assignmentDetailRepo = assignmentDetailRepo;
     }
 
-    private String randomizeCode(int length) {
-        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            int index
-                    = (int) (AlphaNumericString.length()
-                    * Math.random());
-            sb.append(AlphaNumericString
-                    .charAt(index));
-        }
-        return sb.toString();
-    }
-
     @Override
     public List<AssignmentResponseDto> getAll() {
         List<AssignmentResponseDto> result = assignmentRepo.findAll().stream()
@@ -70,7 +58,7 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         Assignment assignmentNew = new Assignment();
         Assignment assignmentInsert = prepareForInsert(assignmentNew);
 
-        assignmentInsert.setCode(randomizeCode(20));
+        assignmentInsert.setCode(RandomGenerator.randomizeCode(20));
         assignmentInsert.setAssignDate(LocalDate.now());
 
         if (data.getTargetLocationId() != null) {
