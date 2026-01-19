@@ -1,6 +1,7 @@
 package com.dansmultipro.ams.handler;
 
 import com.dansmultipro.ams.dto.ErrorResponseDto;
+import com.dansmultipro.ams.exception.DataIntegrityException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,14 @@ public class ErrorHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleNotFoundException(
             NotFoundException ex
+    ) {
+        var errors = ex.getMessage();
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleDataIntegrityViolationException(
+            DataIntegrityException ex
     ) {
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
