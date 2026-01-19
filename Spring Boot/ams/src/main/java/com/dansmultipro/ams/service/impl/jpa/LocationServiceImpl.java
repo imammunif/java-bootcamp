@@ -46,28 +46,23 @@ public class LocationServiceImpl extends BaseService implements LocationService 
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public CreateResponseDto insert(LocationRequestDto data) {
+    public CreateResponseDto insert(LocationRequestDto request) {
         Location locationNew = new Location();
         Location locationInsert = prepareForInsert(locationNew);
-
-        locationInsert.setName(data.getName());
+        locationInsert.setName(request.getName());
         Location location = locationRepo.save(locationInsert);
-
         return new CreateResponseDto(location.getId(), "Saved");
     }
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, UpdateLocationRequestDto data) {
+    public UpdateResponseDto update(String id, UpdateLocationRequestDto request) {
         Location location = locationRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Location not found")
         );
         Location locationUpdate = prepareForUpdate(location);
-
-        locationUpdate.setName(data.getName());
-        locationRepo.save(locationUpdate);
-        em.flush();
-
+        locationUpdate.setName(request.getName());
+        locationRepo.saveAndFlush(locationUpdate);
         return new UpdateResponseDto(locationUpdate.getVersion(), "Updated");
     }
 
@@ -77,9 +72,7 @@ public class LocationServiceImpl extends BaseService implements LocationService 
         Location location = locationRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Location not found")
         );
-
         locationRepo.deleteById(location.getId());
-
         return new DeleteResponseDto("Deleted");
     }
 

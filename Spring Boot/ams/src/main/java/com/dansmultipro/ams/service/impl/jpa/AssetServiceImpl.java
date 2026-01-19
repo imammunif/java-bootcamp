@@ -18,7 +18,6 @@ import com.dansmultipro.ams.repository.AssetStatusRepo;
 import com.dansmultipro.ams.repository.CompanyRepo;
 import com.dansmultipro.ams.service.AssetService;
 import com.dansmultipro.ams.service.impl.BaseService;
-import com.dansmultipro.ams.util.RandomGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -70,36 +69,35 @@ public class AssetServiceImpl extends BaseService implements AssetService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public CreateResponseDto insert(AssetRequestDto data) {
-        String assetCompanyId = data.getCompanyId();
+    public CreateResponseDto insert(AssetRequestDto request) {
+        String assetCompanyId = request.getCompanyId();
         Company assetCompany = companyRepo.findById(UUID.fromString(assetCompanyId)).orElseThrow(
                 () -> new NotFoundException("Company not found")
         );
-        String assetCategoryId = data.getCategoryId();
+        String assetCategoryId = request.getCategoryId();
         AssetCategory assetCategory = assetCategoryRepo.findById(UUID.fromString(assetCategoryId)).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
-        String assetStatusId = data.getStatusId();
+        String assetStatusId = request.getStatusId();
         AssetStatus assetStatus = assetStatusRepo.findById(UUID.fromString(assetStatusId)).orElseThrow(
                 () -> new NotFoundException("Status not found")
         );
-
         Asset assetNew = new Asset();
         Asset assetInsert = prepareForInsert(assetNew);
 
-        assetInsert.setName(data.getName());
+        assetInsert.setName(request.getName());
         assetInsert.setAssetCompany(assetCompany);
         assetInsert.setAssetCategory(assetCategory);
         assetInsert.setAssetStatus(assetStatus);
-        if (data.getExpiredDate() != null) {
-            LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
+        if (request.getExpiredDate() != null) {
+            LocalDate expiredDate = LocalDate.parse(request.getExpiredDate(), formatter);
             assetInsert.setExpiredDate(expiredDate);
         }
-        String assetCode = RandomGenerator.randomizeCode(5);
-        if (assetRepo.findByCode(assetCode).isPresent()) {
+        String requestCode = request.getCode();
+        if (assetRepo.findByCode(requestCode).isPresent()) {
             throw new DataIntegrityException("Code already exist");
         }
-
+        assetInsert.setCode(requestCode);
         Asset asset = assetRepo.save(assetInsert);
 
         return new CreateResponseDto(asset.getId(), "Saved");
@@ -107,22 +105,26 @@ public class AssetServiceImpl extends BaseService implements AssetService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, UpdateAssetRequestDto data) {
+    public UpdateResponseDto update(String id, UpdateAssetRequestDto request) {
         Asset asset = assetRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Asset not found")
         );
-        String assetStatusId = data.getStatusId();
+        String assetStatusId = request.getStatusId();
         AssetStatus assetStatus = assetStatusRepo.findById(UUID.fromString(assetStatusId)).orElseThrow(
                 () -> new NotFoundException("Status not found")
         );
-
         Asset assetUpdate = prepareForUpdate(asset);
         assetUpdate.setAssetStatus(assetStatus);
-        if (data.getExpiredDate() != null) {
-            LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
+        if (request.getExpiredDate() != null) {
+            LocalDate expiredDate = LocalDate.parse(request.getExpiredDate(), formatter);
             assetUpdate.setExpiredDate(expiredDate);
         }
-
+        String requestCode = request.getCode();
+        if (!asset.getCode().equals(request.getCode())) {
+            if (assetRepo.findByCode(requestCode).isPresent()) {
+                throw new DataIntegrityException("Code already exist");
+            }
+        }
         assetRepo.saveAndFlush(assetUpdate);
 
         return new UpdateResponseDto(assetUpdate.getVersion(), "Updated");
@@ -134,7 +136,6 @@ public class AssetServiceImpl extends BaseService implements AssetService {
         Asset asset = assetRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Asset not found")
         );
-
         assetRepo.deleteById(asset.getId());
 
         return new DeleteResponseDto("Deleted");

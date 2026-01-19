@@ -15,9 +15,11 @@ public class EmployeeRequestDto {
     private String companyId;
 
     @NotBlank(message = "Employee code is required")
+    @Size(max = 20, message = "Code length exceeds limit")
     private String code;
 
     @NotBlank(message = "Employee phone is required")
+    @Size(max = 20, message = "Phone length exceeds limit")
     private String phone;
 
     @NotBlank(message = "Employee address is required")

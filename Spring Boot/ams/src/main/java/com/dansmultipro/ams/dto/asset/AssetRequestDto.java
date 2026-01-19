@@ -21,6 +21,10 @@ public class AssetRequestDto {
     @Size(max = 10, message = "Expired date length exceeds limit")
     private String expiredDate;
 
+    @NotBlank(message = "Asset code code is required")
+    @Size(max = 5, message = "Code length exceeds limit")
+    private String code;
+
     public String getName() {
         return name;
     }
@@ -41,6 +45,10 @@ public class AssetRequestDto {
         return expiredDate;
     }
 
+    public String getCode() {
+        return code;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -59,6 +67,10 @@ public class AssetRequestDto {
 
     public void setExpiredDate(String expiredDate) {
         this.expiredDate = expiredDate;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
 }

@@ -55,27 +55,26 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public AssignmentCreateResponseDto insert(AssignmentRequestDto data) {
+    public AssignmentCreateResponseDto insert(AssignmentRequestDto request) {
         Assignment assignmentNew = new Assignment();
         Assignment assignmentInsert = prepareForInsert(assignmentNew);
-
         assignmentInsert.setCode(RandomGenerator.randomizeCode(20));
         assignmentInsert.setAssignDate(LocalDate.now());
 
-        if (data.getTargetLocationId() != null) {
-            String targetLocationId = data.getTargetLocationId();
+        if (request.getTargetLocationId() != null) {
+            String targetLocationId = request.getTargetLocationId();
             Location targetLocation = locationRepo.findById(UUID.fromString(targetLocationId)).orElseThrow(
                     () -> new NotFoundException("Target location not found")
             );
             assignmentInsert.setLocation(targetLocation);
-        } else if (data.getTargetAssetId() != null) {
-            String targetAssetId = data.getTargetAssetId();
+        } else if (request.getTargetAssetId() != null) {
+            String targetAssetId = request.getTargetAssetId();
             Asset targetAsset = assetRepo.findById(UUID.fromString(targetAssetId)).orElseThrow(
                     () -> new NotFoundException("Target asset not found")
             );
             assignmentInsert.setAsset(targetAsset);
-        } else if (data.getTargetEmployeeId() != null) {
-            String targetEmployeeId = data.getTargetEmployeeId();
+        } else if (request.getTargetEmployeeId() != null) {
+            String targetEmployeeId = request.getTargetEmployeeId();
             Employee targetEmployee = employeeRepo.findById(UUID.fromString(targetEmployeeId)).orElseThrow(
                     () -> new NotFoundException("Target employee not found")
             );
@@ -83,14 +82,13 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         }
         Assignment assignment = assignmentRepo.save(assignmentInsert);
 
-        List<String> detailIdList = data.getAssignmentDetialIdList();
+        List<String> detailIdList = request.getAssignmentDetialIdList();
         for (String detailId : detailIdList) {
             Asset asset = assetRepo.findById(UUID.fromString(detailId)).orElseThrow(
                     () -> new NotFoundException("Asset not found")
             );
             AssignmentDetail assignmentDetailNew = new AssignmentDetail();
             AssignmentDetail assignmentDetail = prepareForInsert(assignmentDetailNew);
-
             assignmentDetail.setAsset(asset);
             assignmentDetail.setAssignment(assignment);
             assignmentDetailRepo.save(assignmentDetail);
@@ -101,11 +99,11 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, UpdateAssignmentRequestDto data) {
+    public UpdateResponseDto update(String id, UpdateAssignmentRequestDto request) {
         Assignment assignment = assignmentRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Assignment not found")
         );
-        List<String> assignmentDetailIdList = data.getAssignmentDetailIdList();
+        List<String> assignmentDetailIdList = request.getAssignmentDetailIdList();
         for (String detailId : assignmentDetailIdList) {
             AssignmentDetail assignmentDetail = assignmentDetailRepo.findById(UUID.fromString(detailId)).orElseThrow(
                     () -> new NotFoundException("Detail not found")
