@@ -35,7 +35,6 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
 
     @Override
     public List<EmployeeResponseDto> getAll() {
-        // id, fullName, phone, address, code, dateOfBirth
         List<EmployeeResponseDto> result = employeeRepo.findAll().stream()
                 .map(v -> new EmployeeResponseDto(
                         v.getId(), v.getFullName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()

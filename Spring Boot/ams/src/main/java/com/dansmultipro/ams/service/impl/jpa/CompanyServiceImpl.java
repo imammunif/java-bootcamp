@@ -46,13 +46,11 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public CreateResponseDto insert(CompanyRequestDto data) {
+    public CreateResponseDto insert(CompanyRequestDto request) {
         Company companyNew = new Company();
         Company companyInsert = prepareForInsert(companyNew);
-
-        companyInsert.setName(data.getName());
+        companyInsert.setName(request.getName());
         Company company = companyRepo.save(companyInsert);
-
         return new CreateResponseDto(company.getId(), "Saved");
     }
 
@@ -64,10 +62,7 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
         );
         Company companyUpdate = prepareForUpdate(company);
         companyUpdate.setName(data.getName());
-
-        companyRepo.save(companyUpdate);
-        em.flush();
-
+        companyRepo.saveAndFlush(companyUpdate);
         return new UpdateResponseDto(companyUpdate.getVersion(), "Updated");
     }
 
@@ -77,9 +72,7 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
         Company company = companyRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
-
         companyRepo.deleteById(company.getId());
-
         return new DeleteResponseDto("Deleted");
     }
 
