@@ -8,8 +8,7 @@ import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
 import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
 import com.dansmultipro.ams.model.*;
 import com.dansmultipro.ams.service.AssignmentService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -21,16 +20,13 @@ import java.util.UUID;
 
 @Profile("hibernate")
 @Service
-public class AssignmentServiceImpl implements AssignmentService {
+public class AssignmentServiceImpl extends BaseService implements AssignmentService {
 
     private final LocationDao locationDao;
     private final AssetDao assetDao;
     private final EmployeeDao employeeDao;
     private final AssignmentDao assignmentDao;
     private final AssignmentDetailDao assignmentDetailDao;
-
-    @PersistenceContext
-    private EntityManager em;
 
     public AssignmentServiceImpl(LocationDao locationDao, AssetDao assetDao, EmployeeDao employeeDao, AssignmentDao assignmentDao, AssignmentDetailDao assignmentDetailDao) {
         this.locationDao = locationDao;
@@ -71,10 +67,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public AssignmentCreateResponseDto insert(AssignmentRequestDto data) {
-        Assignment assignmentInsert = new Assignment();
-        assignmentInsert.setId(UUID.randomUUID());
-        assignmentInsert.setCreatedBy(UUID.randomUUID());
-        assignmentInsert.setCreatedAt(LocalDateTime.now());
+        Assignment assignmentNew = new Assignment();
+        Assignment assignmentInsert = prepareForInsert(assignmentNew);
         assignmentInsert.setCode(randomizeCode(20));
         assignmentInsert.setAssignDate(LocalDate.now());
 
@@ -101,13 +95,11 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         List<String> detailIdList = data.getAssignmentDetialIdList();
         for (String detailId : detailIdList) {
-            AssignmentDetail assignmentDetail = new AssignmentDetail();
             Asset asset = assetDao.getById(UUID.fromString(detailId)).orElseThrow(
                     () -> new RuntimeException("Asset not found")
             );
-            assignmentDetail.setId(UUID.randomUUID());
-            assignmentDetail.setCreatedBy(UUID.randomUUID());
-            assignmentDetail.setCreatedAt(LocalDateTime.now());
+            AssignmentDetail assignmentDetailNew = new AssignmentDetail();
+            AssignmentDetail assignmentDetail = prepareForInsert(assignmentDetailNew);
             assignmentDetail.setAsset(asset);
             assignmentDetail.setAssignment(assignment);
             assignmentDetailDao.insert(assignmentDetail);
@@ -119,7 +111,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateAssignmentRequestDto data) {
-        Assignment assignmentUpdate = assignmentDao.getById(UUID.fromString(id)).orElseThrow(
+        Assignment assignment = assignmentDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Assignment not found")
         );
         List<String> assignmentDetailIdList = data.getAssignmentDetailIdList();
@@ -127,13 +119,11 @@ public class AssignmentServiceImpl implements AssignmentService {
             AssignmentDetail assignmentDetail = assignmentDetailDao.getById(UUID.fromString(detailId)).orElseThrow(
                     () -> new RuntimeException("Detail not found")
             );
-            assignmentDetail.setReturnDate(LocalDateTime.now());
-            assignmentDetail.setUpdatedBy(UUID.randomUUID());
-            assignmentDetail.setUpdatedAt(LocalDateTime.now());
-            assignmentDetailDao.update(assignmentDetail);
+            AssignmentDetail assignmentDetailUpdate = prepareForUpdate(assignmentDetail);
+            assignmentDetailUpdate.setReturnDate(LocalDateTime.now());
+            assignmentDetailDao.update(assignmentDetailUpdate);
         }
-        assignmentUpdate.setUpdatedBy(UUID.randomUUID());
-        assignmentUpdate.setUpdatedAt(LocalDateTime.now());
+        Assignment assignmentUpdate = prepareForUpdate(assignment);
         em.flush();
 
         return new UpdateResponseDto(assignmentUpdate.getVersion(), "Updated");

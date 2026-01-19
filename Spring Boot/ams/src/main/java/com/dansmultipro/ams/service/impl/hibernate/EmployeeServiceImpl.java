@@ -11,25 +11,20 @@ import com.dansmultipro.ams.dto.employee.UpdateEmployeeRequestDto;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.service.EmployeeService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Profile("hibernate")
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl extends BaseService implements EmployeeService {
 
     private final EmployeeDao employeeDao;
     private final CompanyDao companyDao;
-
-    @PersistenceContext
-    private EntityManager em;
 
     public EmployeeServiceImpl(EmployeeDao employeeDao, CompanyDao companyDao) {
         this.employeeDao = employeeDao;
@@ -61,10 +56,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         Company company = companyDao.getById(UUID.fromString(data.getCompanyId())).orElseThrow(
                 () -> new RuntimeException("Company not found")
         );
-        Employee employeeInsert = new Employee();
-        employeeInsert.setId(UUID.randomUUID());
-        employeeInsert.setCreatedBy(UUID.randomUUID());
-        employeeInsert.setCreatedAt(LocalDateTime.now());
+        Employee employeeNew = new Employee();
+        Employee employeeInsert = prepareForInsert(employeeNew);
         employeeInsert.setFullName(data.getFullName());
         employeeInsert.setCode(data.getCode());
         employeeInsert.setCompany(company);
@@ -80,15 +73,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateEmployeeRequestDto data) {
-        Employee employeeUpdate = employeeDao.getById(UUID.fromString(id)).orElseThrow(
+        Employee employee = employeeDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
+        Employee employeeUpdate = prepareForUpdate(employee);
         employeeUpdate.setFullName(data.getFullName());
         employeeUpdate.setPhone(data.getPhone());
         employeeUpdate.setAddress(data.getAddress());
         employeeUpdate.setDateOfBirth(data.getDateOfBirth());
-        employeeUpdate.setUpdatedBy(UUID.randomUUID());
-        employeeUpdate.setUpdatedAt(LocalDateTime.now());
 
         employeeDao.update(employeeUpdate);
         em.flush();

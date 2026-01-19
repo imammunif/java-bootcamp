@@ -15,21 +15,19 @@ import com.dansmultipro.ams.model.AssetCategory;
 import com.dansmultipro.ams.model.AssetStatus;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.service.AssetService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
 @Profile("hibernate")
 @Service
-public class AssetServiceImpl implements AssetService {
+public class AssetServiceImpl extends BaseService implements AssetService {
 
     private final AssetDao assetDao;
     private final CompanyDao companyDao;
@@ -37,9 +35,6 @@ public class AssetServiceImpl implements AssetService {
     private final AssetCategoryDao assetCategoryDao;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    @PersistenceContext
-    private EntityManager em;
 
     public AssetServiceImpl(AssetDao assetDao, CompanyDao companyDao, AssetStatusDao assetStatusDao, AssetCategoryDao assetCategoryDao) {
         this.assetDao = assetDao;
@@ -86,10 +81,9 @@ public class AssetServiceImpl implements AssetService {
                 () -> new RuntimeException("Status not found")
         );
 
-        Asset assetInsert = new Asset();
-        assetInsert.setId(UUID.randomUUID());
-        assetInsert.setCreatedBy(UUID.randomUUID());
-        assetInsert.setCreatedAt(LocalDateTime.now());
+        Asset assetNew = new Asset();
+        Asset assetInsert = prepareForInsert(assetNew);
+
         assetInsert.setName(data.getName());
         assetInsert.setAssetCompany(assetCompany);
         assetInsert.setAssetCategory(assetCategory);
@@ -108,20 +102,20 @@ public class AssetServiceImpl implements AssetService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateAssetRequestDto data) {
-        Asset assetUpdate = assetDao.getById(UUID.fromString(id)).orElseThrow(
+        Asset asset = assetDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Asset not found")
         );
         String assetStatusId = data.getStatusId();
         AssetStatus assetStatus = assetStatusDao.getById(UUID.fromString(assetStatusId)).orElseThrow(
                 () -> new RuntimeException("Status not found")
         );
+
+        Asset assetUpdate = prepareForUpdate(asset);
         assetUpdate.setAssetStatus(assetStatus);
         if (data.getExpiredDate() != null) {
             LocalDate expiredDate = LocalDate.parse(data.getExpiredDate(), formatter);
             assetUpdate.setExpiredDate(expiredDate);
         }
-        assetUpdate.setUpdatedBy(UUID.randomUUID());
-        assetUpdate.setUpdatedAt(LocalDateTime.now());
 
         assetDao.update(assetUpdate);
         em.flush();

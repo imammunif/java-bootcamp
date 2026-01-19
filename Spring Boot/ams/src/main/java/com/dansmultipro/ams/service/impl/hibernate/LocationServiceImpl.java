@@ -9,24 +9,19 @@ import com.dansmultipro.ams.dto.location.LocationResponseDto;
 import com.dansmultipro.ams.dto.location.UpdateLocationRequestDto;
 import com.dansmultipro.ams.model.Location;
 import com.dansmultipro.ams.service.LocationService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Profile("hibernate")
 @Service
-public class LocationServiceImpl implements LocationService {
+public class LocationServiceImpl extends BaseService implements LocationService {
 
     private final LocationDao locationDao;
-
-    @PersistenceContext
-    private EntityManager em;
 
     public LocationServiceImpl(LocationDao locationDao) {
         this.locationDao = locationDao;
@@ -51,10 +46,8 @@ public class LocationServiceImpl implements LocationService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto insert(LocationRequestDto data) {
-        Location locationInsert = new Location();
-        locationInsert.setId(UUID.randomUUID());
-        locationInsert.setCreatedBy(UUID.randomUUID());
-        locationInsert.setCreatedAt(LocalDateTime.now());
+        Location locationNew = new Location();
+        Location locationInsert = prepareForInsert(locationNew);
         locationInsert.setName(data.getName());
 
         Location location = locationDao.insert(locationInsert);
@@ -65,12 +58,11 @@ public class LocationServiceImpl implements LocationService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateLocationRequestDto data) {
-        Location locationUpdate = locationDao.getById(UUID.fromString(id)).orElseThrow(
+        Location location = locationDao.getById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Location not found")
         );
+        Location locationUpdate = prepareForUpdate(location);
         locationUpdate.setName(data.getName());
-        locationUpdate.setUpdatedBy(UUID.randomUUID());
-        locationUpdate.setUpdatedAt(LocalDateTime.now());
 
         locationDao.update(locationUpdate);
         em.flush();
