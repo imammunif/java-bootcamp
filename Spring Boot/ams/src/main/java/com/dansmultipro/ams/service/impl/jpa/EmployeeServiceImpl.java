@@ -6,6 +6,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
 import com.dansmultipro.ams.dto.employee.UpdateEmployeeRequestDto;
+import com.dansmultipro.ams.exception.DataIntegrityException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.model.Employee;
@@ -53,20 +54,27 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public CreateResponseDto insert(EmployeeRequestDto data) {
-        Company company = companyRepo.findById(UUID.fromString(data.getCompanyId())).orElseThrow(
+    public CreateResponseDto insert(EmployeeRequestDto request) {
+        Company company = companyRepo.findById(UUID.fromString(request.getCompanyId())).orElseThrow(
                 () -> new NotFoundException("Company not found")
         );
         Employee employeeNew = new Employee();
         Employee employeeInsert = prepareForInsert(employeeNew);
 
-        employeeInsert.setFullName(data.getFullName());
-        employeeInsert.setCode(data.getCode());
+        employeeInsert.setFullName(request.getFullName());
+        employeeInsert.setAddress(request.getAddress());
+        employeeInsert.setDateOfBirth(request.getDateOfBirth());
         employeeInsert.setCompany(company);
-        employeeInsert.setPhone(data.getPhone());
-        employeeInsert.setAddress(data.getAddress());
-        employeeInsert.setDateOfBirth(data.getDateOfBirth());
-
+        String requestCode = request.getCode();
+        if (employeeRepo.findByCode(requestCode).isPresent()) {
+            throw new DataIntegrityException("Code already exist");
+        }
+        employeeInsert.setCode(requestCode);
+        String requestPhone = request.getPhone();
+        if (employeeRepo.findByPhone(requestPhone).isPresent()) {
+            throw new DataIntegrityException("Phone already exist");
+        }
+        employeeInsert.setPhone(requestPhone);
         Employee employee = employeeRepo.save(employeeInsert);
 
         return new CreateResponseDto(employee.getId(), "Saved");
@@ -74,18 +82,29 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, UpdateEmployeeRequestDto data) {
+    public UpdateResponseDto update(String id, UpdateEmployeeRequestDto request) {
         Employee employee = employeeRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Employee not found")
         );
         Employee employeeUpdate = prepareForUpdate(employee);
-        employeeUpdate.setFullName(data.getFullName());
-        employeeUpdate.setPhone(data.getPhone());
-        employeeUpdate.setAddress(data.getAddress());
-        employeeUpdate.setDateOfBirth(data.getDateOfBirth());
-
-        employeeRepo.save(employeeUpdate);
-        em.flush();
+        employeeUpdate.setFullName(request.getFullName());
+        employeeUpdate.setAddress(request.getAddress());
+        employeeUpdate.setDateOfBirth(request.getDateOfBirth());
+        String requestPhone = request.getPhone();
+        if (!employee.getPhone().equals(requestPhone)) {
+            if (employeeRepo.findByPhone(requestPhone).isPresent()) {
+                throw new DataIntegrityException("Phone already exist");
+            }
+        }
+        employeeUpdate.setPhone(requestPhone);
+        String requestCode = request.getCode();
+        if (!employee.getCode().equals(requestCode)) {
+            if (employeeRepo.findByCode(requestCode).isPresent()) {
+                throw new DataIntegrityException("Code already exist");
+            }
+        }
+        employeeUpdate.setCode(requestCode);
+        employeeRepo.saveAndFlush(employeeUpdate);
 
         return new UpdateResponseDto(employeeUpdate.getVersion(), "Updated");
     }
@@ -96,7 +115,6 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
         Employee employee = employeeRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Employee not found")
         );
-
         employeeRepo.deleteById(employee.getId());
 
         return new DeleteResponseDto("Deleted");

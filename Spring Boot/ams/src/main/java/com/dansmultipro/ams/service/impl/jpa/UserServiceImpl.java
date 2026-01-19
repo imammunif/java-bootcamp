@@ -57,28 +57,25 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public CreateResponseDto insert(UserRequestDto data) {
-        String userRoleId = data.getRoleId();
+    public CreateResponseDto insert(UserRequestDto request) {
+        String userRoleId = request.getRoleId();
         Role userRole = roleDao.findById(UUID.fromString(userRoleId)).orElseThrow(
                 () -> new NotFoundException("Role not found")
         );
-
-        String userEmployeeId = data.getEmployeeId();
+        String userEmployeeId = request.getEmployeeId();
         Employee userEmployee = employeeRepo.findById(UUID.fromString(userEmployeeId)).orElseThrow(
                 () -> new NotFoundException("Employee not found")
         );
         User userNew = new User();
         User userInsert = prepareForInsert(userNew);
-        String userEmail = data.getEmail();
-        if (userRepo.findByEmail(userEmail).isPresent()) {
+        String requestEmail = request.getEmail();
+        if (userRepo.findByEmail(requestEmail).isPresent()) {
             throw new DataIntegrityException("Email already exist");
         }
-
-        userInsert.setEmail(data.getEmail());
-        userInsert.setPassword(data.getPassword());
+        userInsert.setEmail(requestEmail);
+        userInsert.setPassword(request.getPassword());
         userInsert.setRole(userRole);
         userInsert.setEmployee(userEmployee);
-
         User user = userRepo.save(userInsert);
 
         return new CreateResponseDto(user.getId(), "Saved");
@@ -86,22 +83,19 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, UpdateUserRequestDto data) {
+    public UpdateResponseDto update(String id, UpdateUserRequestDto request) {
         User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
         User userUpdate = prepareForUpdate(user);
-        String requestEmail = data.getEmail();
+        String requestEmail = request.getEmail();
         if (!user.getEmail().equals(requestEmail)) {
             if (userRepo.findByEmail(requestEmail).isPresent()) {
                 throw new DataIntegrityException("Email already exist");
             }
         }
-
-        userUpdate.setEmail(data.getEmail());
-
-        userRepo.save(userUpdate);
-        em.flush();
+        userUpdate.setEmail(requestEmail);
+        userRepo.saveAndFlush(userUpdate);
 
         return new UpdateResponseDto(userUpdate.getVersion(), "Updated");
     }
