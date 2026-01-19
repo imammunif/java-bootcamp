@@ -15,9 +15,6 @@ import java.util.List;
 public class ErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    // not null, empty, email
-    // bisa multiple
-    // bisa RuntimeException biar ga multiple (panggil parent)
     public ResponseEntity<ErrorResponseDto<List<String>>> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex
     ) {
@@ -27,7 +24,6 @@ public class ErrorHandler {
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
-    //bikin method baru
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleNotFoundException(
             NotFoundException ex
