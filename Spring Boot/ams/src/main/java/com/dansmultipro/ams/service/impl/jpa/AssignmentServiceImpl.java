@@ -5,6 +5,7 @@ import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
 import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
+import com.dansmultipro.ams.exception.DataMissMatchException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.*;
 import com.dansmultipro.ams.repository.*;
@@ -103,6 +104,9 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         Assignment assignment = assignmentRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Assignment not found")
         );
+        if (!assignment.getVersion().toString().equals(request.getVersion())) {
+            throw new DataMissMatchException("Version not match");
+        }
         List<String> assignmentDetailIdList = request.getAssignmentDetailIdList();
         for (String detailId : assignmentDetailIdList) {
             AssignmentDetail assignmentDetail = assignmentDetailRepo.findById(UUID.fromString(detailId)).orElseThrow(

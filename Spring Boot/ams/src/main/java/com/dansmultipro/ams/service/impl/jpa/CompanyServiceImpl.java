@@ -6,6 +6,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.company.CompanyRequestDto;
 import com.dansmultipro.ams.dto.company.CompanyResponseDto;
 import com.dansmultipro.ams.dto.company.UpdateCompanyRequestDto;
+import com.dansmultipro.ams.exception.DataMissMatchException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.repository.CompanyRepo;
@@ -56,12 +57,15 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, UpdateCompanyRequestDto data) {
+    public UpdateResponseDto update(String id, UpdateCompanyRequestDto request) {
         Company company = companyRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Company not found")
         );
+        if (!company.getVersion().toString().equals(request.getVersion())) {
+            throw new DataMissMatchException("Version not match");
+        }
         Company companyUpdate = prepareForUpdate(company);
-        companyUpdate.setName(data.getName());
+        companyUpdate.setName(request.getName());
         companyRepo.saveAndFlush(companyUpdate);
         return new UpdateResponseDto(companyUpdate.getVersion(), "Updated");
     }

@@ -11,8 +11,15 @@ public class UpdateUserRequestDto {
     @Size(max = 50, message = "Email length exceeds limit")
     private String email;
 
+    @NotBlank(message = "Version is required")
+    private String version;
+
     public String getEmail() {
         return email;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
 }

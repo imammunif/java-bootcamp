@@ -7,8 +7,15 @@ public class UpdateCompanyRequestDto {
     @NotBlank(message = "Company name is required")
     private String name;
 
+    @NotBlank(message = "Version is required")
+    private String version;
+
     public String getName() {
         return name;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
 }

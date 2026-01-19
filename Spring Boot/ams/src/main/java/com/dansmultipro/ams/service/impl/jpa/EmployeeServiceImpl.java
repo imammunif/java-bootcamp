@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.employee.EmployeeRequestDto;
 import com.dansmultipro.ams.dto.employee.EmployeeResponseDto;
 import com.dansmultipro.ams.dto.employee.UpdateEmployeeRequestDto;
 import com.dansmultipro.ams.exception.DataIntegrityException;
+import com.dansmultipro.ams.exception.DataMissMatchException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Company;
 import com.dansmultipro.ams.model.Employee;
@@ -85,6 +86,9 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
         Employee employee = employeeRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Employee not found")
         );
+        if (!employee.getVersion().toString().equals(request.getVersion())) {
+            throw new DataMissMatchException("Version not match");
+        }
         Employee employeeUpdate = prepareForUpdate(employee);
         employeeUpdate.setFullName(request.getFullName());
         employeeUpdate.setAddress(request.getAddress());

@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.asset.AssetRequestDto;
 import com.dansmultipro.ams.dto.asset.AssetResponseDto;
 import com.dansmultipro.ams.dto.asset.UpdateAssetRequestDto;
 import com.dansmultipro.ams.exception.DataIntegrityException;
+import com.dansmultipro.ams.exception.DataMissMatchException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Asset;
 import com.dansmultipro.ams.model.AssetCategory;
@@ -109,6 +110,9 @@ public class AssetServiceImpl extends BaseService implements AssetService {
         Asset asset = assetRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Asset not found")
         );
+        if (!asset.getVersion().toString().equals(request.getVersion())) {
+            throw new DataMissMatchException("Version not match");
+        }
         String assetStatusId = request.getStatusId();
         AssetStatus assetStatus = assetStatusRepo.findById(UUID.fromString(assetStatusId)).orElseThrow(
                 () -> new NotFoundException("Status not found")

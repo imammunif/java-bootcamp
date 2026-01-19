@@ -7,6 +7,7 @@ import com.dansmultipro.ams.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ams.dto.user.UserRequestDto;
 import com.dansmultipro.ams.dto.user.UserResponseDto;
 import com.dansmultipro.ams.exception.DataIntegrityException;
+import com.dansmultipro.ams.exception.DataMissMatchException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.model.Role;
@@ -87,6 +88,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
+        if (!user.getVersion().toString().equals(request.getVersion())) {
+            throw new DataMissMatchException("Version not match");
+        }
         User userUpdate = prepareForUpdate(user);
         String requestEmail = request.getEmail();
         if (!user.getEmail().equals(requestEmail)) {

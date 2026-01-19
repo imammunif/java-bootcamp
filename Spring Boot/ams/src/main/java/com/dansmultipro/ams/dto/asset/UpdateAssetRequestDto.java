@@ -19,6 +19,9 @@ public class UpdateAssetRequestDto {
     @Size(max = 5, message = "Code length exceeds limit")
     private String code;
 
+    @NotBlank(message = "Version is required")
+    private String version;
+
     public String getName() {
         return name;
     }
@@ -33,6 +36,10 @@ public class UpdateAssetRequestDto {
 
     public String getCode() {
         return code;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
 }
