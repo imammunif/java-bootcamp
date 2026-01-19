@@ -6,6 +6,7 @@ import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.location.LocationRequestDto;
 import com.dansmultipro.ams.dto.location.LocationResponseDto;
 import com.dansmultipro.ams.dto.location.UpdateLocationRequestDto;
+import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Location;
 import com.dansmultipro.ams.repository.LocationRepo;
 import com.dansmultipro.ams.service.LocationService;
@@ -59,7 +60,7 @@ public class LocationServiceImpl extends BaseService implements LocationService 
     @Override
     public UpdateResponseDto update(String id, UpdateLocationRequestDto data) {
         Location location = locationRepo.findById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Location not found")
+                () -> new NotFoundException("Location not found")
         );
         Location locationUpdate = prepareForUpdate(location);
 

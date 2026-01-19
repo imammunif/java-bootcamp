@@ -5,6 +5,7 @@ import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
 import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
+import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.*;
 import com.dansmultipro.ams.repository.*;
 import com.dansmultipro.ams.service.AssignmentService;
@@ -64,19 +65,19 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         if (data.getTargetLocationId() != null) {
             String targetLocationId = data.getTargetLocationId();
             Location targetLocation = locationRepo.findById(UUID.fromString(targetLocationId)).orElseThrow(
-                    () -> new RuntimeException("Target location not found")
+                    () -> new NotFoundException("Target location not found")
             );
             assignmentInsert.setLocation(targetLocation);
         } else if (data.getTargetAssetId() != null) {
             String targetAssetId = data.getTargetAssetId();
             Asset targetAsset = assetRepo.findById(UUID.fromString(targetAssetId)).orElseThrow(
-                    () -> new RuntimeException("Target asset not found")
+                    () -> new NotFoundException("Target asset not found")
             );
             assignmentInsert.setAsset(targetAsset);
         } else if (data.getTargetEmployeeId() != null) {
             String targetEmployeeId = data.getTargetEmployeeId();
             Employee targetEmployee = employeeRepo.findById(UUID.fromString(targetEmployeeId)).orElseThrow(
-                    () -> new RuntimeException("Target employee not found")
+                    () -> new NotFoundException("Target employee not found")
             );
             assignmentInsert.setEmployee(targetEmployee);
         }
@@ -85,7 +86,7 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         List<String> detailIdList = data.getAssignmentDetialIdList();
         for (String detailId : detailIdList) {
             Asset asset = assetRepo.findById(UUID.fromString(detailId)).orElseThrow(
-                    () -> new RuntimeException("Asset not found")
+                    () -> new NotFoundException("Asset not found")
             );
             AssignmentDetail assignmentDetailNew = new AssignmentDetail();
             AssignmentDetail assignmentDetail = prepareForInsert(assignmentDetailNew);
@@ -102,12 +103,12 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
     @Override
     public UpdateResponseDto update(String id, UpdateAssignmentRequestDto data) {
         Assignment assignment = assignmentRepo.findById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Assignment not found")
+                () -> new NotFoundException("Assignment not found")
         );
         List<String> assignmentDetailIdList = data.getAssignmentDetailIdList();
         for (String detailId : assignmentDetailIdList) {
             AssignmentDetail assignmentDetail = assignmentDetailRepo.findById(UUID.fromString(detailId)).orElseThrow(
-                    () -> new RuntimeException("Detail not found")
+                    () -> new NotFoundException("Detail not found")
             );
             AssignmentDetail assignmentDetailUpdate = prepareForUpdate(assignmentDetail);
             assignmentDetailUpdate.setReturnDate(LocalDateTime.now());
