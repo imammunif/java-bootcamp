@@ -19,6 +19,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +31,8 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
     private final EmployeeRepo employeeRepo;
     private final CompanyRepo companyRepo;
 
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public EmployeeServiceImpl(EmployeeRepo employeeRepo, CompanyRepo companyRepo) {
         this.employeeRepo = employeeRepo;
         this.companyRepo = companyRepo;
@@ -37,9 +41,7 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
     @Override
     public List<EmployeeResponseDto> getAll() {
         List<EmployeeResponseDto> result = employeeRepo.findAll().stream()
-                .map(v -> new EmployeeResponseDto(
-                        v.getId(), v.getFullName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()
-                ))
+                .map(v -> new EmployeeResponseDto(v.getId(), v.getFullName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()))
                 .toList();
         return result;
     }
@@ -60,11 +62,11 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
         );
         Employee employeeNew = new Employee();
         Employee employeeInsert = prepareForInsert(employeeNew);
-
+        employeeInsert.setCompany(company);
         employeeInsert.setFullName(request.getFullName());
         employeeInsert.setAddress(request.getAddress());
-        employeeInsert.setDateOfBirth(request.getDateOfBirth());
-        employeeInsert.setCompany(company);
+        LocalDate dateOfBirth = LocalDate.parse(request.getDateOfBirth(), formatter);
+        employeeInsert.setDateOfBirth(dateOfBirth);
         String requestCode = request.getCode();
         if (employeeRepo.findByCode(requestCode).isPresent()) {
             throw new DataIntegrityException("Code already exist");
@@ -92,7 +94,8 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
         Employee employeeUpdate = prepareForUpdate(employee);
         employeeUpdate.setFullName(request.getFullName());
         employeeUpdate.setAddress(request.getAddress());
-        employeeUpdate.setDateOfBirth(request.getDateOfBirth());
+        LocalDate dateOfBirth = LocalDate.parse(request.getDateOfBirth(), formatter);
+        employeeUpdate.setDateOfBirth(dateOfBirth);
         String requestPhone = request.getPhone();
         if (!employee.getPhone().equals(requestPhone)) {
             if (employeeRepo.findByPhone(requestPhone).isPresent()) {

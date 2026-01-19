@@ -1,8 +1,8 @@
-    package com.dansmultipro.ams.model;
+package com.dansmultipro.ams.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "t_employee")
@@ -12,7 +12,7 @@ public class Employee extends BaseModel {
     private String fullName;
 
     @Column(nullable = false)
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(nullable = false, length = 250)
     private String address;
@@ -35,11 +35,11 @@ public class Employee extends BaseModel {
         this.fullName = fullName;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

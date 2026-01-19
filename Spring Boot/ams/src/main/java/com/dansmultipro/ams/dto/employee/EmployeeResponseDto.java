@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.employee;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class EmployeeResponseDto {
@@ -11,9 +11,9 @@ public class EmployeeResponseDto {
     private String phone;
     private String address;
     private String code;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
-    public EmployeeResponseDto(UUID id, String fullName, String phone, String address, String code, String companyName, Date dateOfBirth) {
+    public EmployeeResponseDto(UUID id, String fullName, String phone, String address, String code, String companyName, LocalDate dateOfBirth) {
         this.id = id;
         this.fullName = fullName;
         this.phone = phone;
@@ -47,7 +47,7 @@ public class EmployeeResponseDto {
         return code;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 

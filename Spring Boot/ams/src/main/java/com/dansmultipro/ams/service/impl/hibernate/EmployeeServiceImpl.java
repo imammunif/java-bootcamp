@@ -34,11 +34,8 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
 
     @Override
     public List<EmployeeResponseDto> getAll() {
-        // id, fullName, phone, address, code, dateOfBirth
         List<EmployeeResponseDto> result = employeeDao.getAll().stream()
-                .map(v -> new EmployeeResponseDto(
-                        v.getId(), v.getFullName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()
-                ))
+                .map(v -> new EmployeeResponseDto(v.getId(), v.getFullName(), v.getPhone(), v.getAddress(), v.getCode(), v.getCompany().getName(), v.getDateOfBirth()))
                 .toList();
         return result;
     }
@@ -64,7 +61,7 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
         employeeInsert.setCompany(company);
         employeeInsert.setPhone(data.getPhone());
         employeeInsert.setAddress(data.getAddress());
-        employeeInsert.setDateOfBirth(data.getDateOfBirth());
+//        employeeInsert.setDateOfBirth(data.getDateOfBirth());
 
         Employee employee = employeeDao.insert(employeeInsert);
 
@@ -81,7 +78,7 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
         employeeUpdate.setFullName(data.getFullName());
         employeeUpdate.setPhone(data.getPhone());
         employeeUpdate.setAddress(data.getAddress());
-        employeeUpdate.setDateOfBirth(data.getDateOfBirth());
+//        employeeUpdate.setDateOfBirth(data.getDateOfBirth());
 
         employeeDao.update(employeeUpdate);
         em.flush();

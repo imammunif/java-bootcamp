@@ -3,8 +3,6 @@ package com.dansmultipro.ams.dto.employee;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.Date;
-
 public class UpdateEmployeeRequestDto {
 
     @NotBlank(message = "Employee full name is required")
@@ -15,8 +13,9 @@ public class UpdateEmployeeRequestDto {
     @Size(max = 250, message = "Address length exceeds limit")
     private String address;
 
-    //TODO: CHANGE TO STRING
-    private Date dateOfBirth;
+    @NotBlank(message = "Employee date of birth is required")
+    @Size(max = 10, message = "Date of birth length exceeds limit")
+    private String dateOfBirth;
 
     @NotBlank(message = "Employee phone is required")
     @Size(max = 20, message = "Phone length exceeds limit")
@@ -37,7 +36,7 @@ public class UpdateEmployeeRequestDto {
         return address;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
