@@ -88,28 +88,28 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
         if (!employee.getVersion().equals(request.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
-        Employee employeeUpdate = prepareForUpdate(employee);
-        employeeUpdate.setFullName(request.getFullName());
-        employeeUpdate.setAddress(request.getAddress());
+        Employee employeeUpdatePrep = prepareForUpdate(employee);
+        employeeUpdatePrep.setFullName(request.getFullName());
+        employeeUpdatePrep.setAddress(request.getAddress());
         LocalDate dateOfBirth = LocalDate.parse(request.getDateOfBirth(), formatter);
-        employeeUpdate.setDateOfBirth(dateOfBirth);
+        employeeUpdatePrep.setDateOfBirth(dateOfBirth);
         String requestPhone = request.getPhone();
         if (!employee.getPhone().equals(requestPhone)) {
             if (employeeRepo.findByPhone(requestPhone).isPresent()) {
                 throw new DataIntegrityException("Phone already exist");
             }
         }
-        employeeUpdate.setPhone(requestPhone);
+        employeeUpdatePrep.setPhone(requestPhone);
         String requestCode = request.getCode();
         if (!employee.getCode().equals(requestCode)) {
             if (employeeRepo.findByCode(requestCode).isPresent()) {
                 throw new DataIntegrityException("Code already exist");
             }
         }
-        employeeUpdate.setCode(requestCode);
-        employeeRepo.saveAndFlush(employeeUpdate);
+        employeeUpdatePrep.setCode(requestCode);
+        Employee updatedEmployee =  employeeRepo.saveAndFlush(employeeUpdatePrep);
 
-        return new UpdateResponseDto(employeeUpdate.getVersion(), "Updated");
+        return new UpdateResponseDto(updatedEmployee.getVersion(), "Updated");
     }
 
     @Transactional(rollbackOn = Exception.class)

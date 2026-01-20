@@ -1,6 +1,7 @@
 package com.dansmultipro.ams.dto.employee;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UpdateEmployeeRequestDto {
@@ -50,6 +51,30 @@ public class UpdateEmployeeRequestDto {
 
     public Integer getVersion() {
         return version;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
 }
