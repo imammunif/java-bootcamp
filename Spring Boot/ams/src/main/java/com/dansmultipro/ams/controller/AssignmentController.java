@@ -6,6 +6,7 @@ import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentResponseDto;
 import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
 import com.dansmultipro.ams.service.AssignmentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,13 +36,13 @@ public class AssignmentController {
     }
 
     @PostMapping("check-out")
-    public ResponseEntity<AssignmentCreateResponseDto> createAssignment(@RequestBody AssignmentRequestDto assignment) {
+    public ResponseEntity<AssignmentCreateResponseDto> createAssignment(@RequestBody @Valid AssignmentRequestDto assignment) {
         AssignmentCreateResponseDto res = assignmentService.insert(assignment);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PatchMapping("{id}/check-in")
-    public ResponseEntity<UpdateResponseDto> updateAssignment(@PathVariable String id, @RequestBody UpdateAssignmentRequestDto assignment) {
+    public ResponseEntity<UpdateResponseDto> updateAssignment(@PathVariable String id, @RequestBody @Valid UpdateAssignmentRequestDto assignment) {
         UpdateResponseDto res = assignmentService.update(id, assignment);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
