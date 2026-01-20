@@ -85,7 +85,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
-        if (!user.getVersion().toString().equals(request.getVersion())) {
+        if (!user.getVersion().equals(request.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
         User userUpdate = prepareForUpdate(user);

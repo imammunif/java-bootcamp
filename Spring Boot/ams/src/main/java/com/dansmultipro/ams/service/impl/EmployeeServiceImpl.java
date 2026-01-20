@@ -85,7 +85,7 @@ public class EmployeeServiceImpl extends BaseService implements EmployeeService 
         Employee employee = employeeRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Employee not found")
         );
-        if (!employee.getVersion().toString().equals(request.getVersion())) {
+        if (!employee.getVersion().equals(request.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
         Employee employeeUpdate = prepareForUpdate(employee);

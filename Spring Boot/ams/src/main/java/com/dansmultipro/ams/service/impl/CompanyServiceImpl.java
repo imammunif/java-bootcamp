@@ -58,7 +58,7 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
         Company company = companyRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Company not found")
         );
-        if (!company.getVersion().toString().equals(request.getVersion())) {
+        if (!company.getVersion().equals(request.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
         Company companyUpdate = prepareForUpdate(company);

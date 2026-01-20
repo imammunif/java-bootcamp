@@ -101,7 +101,7 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         Assignment assignment = assignmentRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Assignment not found")
         );
-        if (!assignment.getVersion().toString().equals(request.getVersion())) {
+        if (!assignment.getVersion().equals(request.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
         List<String> assignmentDetailIdList = request.getAssignmentDetailIdList();

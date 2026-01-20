@@ -58,7 +58,7 @@ public class LocationServiceImpl extends BaseService implements LocationService 
         Location location = locationRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Location not found")
         );
-        if (!location.getVersion().toString().equals(request.getVersion())) {
+        if (!location.getVersion().equals(request.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
         Location locationUpdate = prepareForUpdate(location);

@@ -1,6 +1,7 @@
 package com.dansmultipro.ams.dto.location;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UpdateLocationRequestDto {
@@ -9,8 +10,8 @@ public class UpdateLocationRequestDto {
     @Size(max = 35, message = "Name length exceeds limit, max 35 characters")
     private String name;
 
-    @NotBlank(message = "Version is required")
-    private String version;
+    @NotNull(message = "Version is required")
+    private Integer version;
 
     public UpdateLocationRequestDto(String name) {
         this.name = name;
@@ -20,7 +21,7 @@ public class UpdateLocationRequestDto {
         return name;
     }
 
-    public String getVersion() {
+    public Integer getVersion() {
         return version;
     }
 

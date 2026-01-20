@@ -25,8 +25,8 @@ public class UpdateEmployeeRequestDto {
     @Size(max = 20, message = "Code length exceeds limit, max 20 characters")
     private String code;
 
-    @NotBlank(message = "Version is required")
-    private String version;
+    @NotNull(message = "Version is required")
+    private Integer version;
 
     public String getFullName() {
         return fullName;
@@ -48,7 +48,7 @@ public class UpdateEmployeeRequestDto {
         return code;
     }
 
-    public String getVersion() {
+    public Integer getVersion() {
         return version;
     }
 

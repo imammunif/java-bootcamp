@@ -1,6 +1,6 @@
 package com.dansmultipro.ams.dto.assignment;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ public class UpdateAssignmentRequestDto {
         return assignmentDetailIdList;
     }
 
-    @NotBlank(message = "Version is required")
-    private String version;
+    @NotNull(message = "Version is required")
+    private Integer version;
 
-    public String getVersion() {
+    public Integer getVersion() {
         return version;
     }
 

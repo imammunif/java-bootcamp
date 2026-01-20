@@ -107,7 +107,7 @@ public class AssetServiceImpl extends BaseService implements AssetService {
         Asset asset = assetRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Asset not found")
         );
-        if (!asset.getVersion().toString().equals(request.getVersion())) {
+        if (!asset.getVersion().equals(request.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
         String assetStatusId = request.getStatusId();
