@@ -18,7 +18,6 @@ public class AssetRequestDto {
     @NotBlank(message = "Asset's status is required")
     private String statusId;
 
-    @Size(max = 10, message = "Expired date length exceeds limit, max 10 characters")
     private String expiredDate;
 
     @NotBlank(message = "Asset code is required")
