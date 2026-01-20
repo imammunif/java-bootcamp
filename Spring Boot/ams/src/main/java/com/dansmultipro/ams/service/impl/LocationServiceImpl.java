@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl.jpa;
+package com.dansmultipro.ams.service.impl;
 
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
@@ -11,15 +11,12 @@ import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.Location;
 import com.dansmultipro.ams.repository.LocationRepo;
 import com.dansmultipro.ams.service.LocationService;
-import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-@Profile("jpa")
 @Service
 public class LocationServiceImpl extends BaseService implements LocationService {
 

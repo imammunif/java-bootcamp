@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl.jpa;
+package com.dansmultipro.ams.service.impl;
 
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
@@ -16,16 +16,13 @@ import com.dansmultipro.ams.repository.EmployeeRepo;
 import com.dansmultipro.ams.repository.RoleRepo;
 import com.dansmultipro.ams.repository.UserRepo;
 import com.dansmultipro.ams.service.UserService;
-import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-@Profile("jpa")
 @Service
 public class UserServiceImpl extends BaseService implements UserService {
 

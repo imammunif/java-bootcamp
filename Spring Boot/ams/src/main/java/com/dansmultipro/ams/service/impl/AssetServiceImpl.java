@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl.jpa;
+package com.dansmultipro.ams.service.impl;
 
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
@@ -18,9 +18,7 @@ import com.dansmultipro.ams.repository.AssetRepo;
 import com.dansmultipro.ams.repository.AssetStatusRepo;
 import com.dansmultipro.ams.repository.CompanyRepo;
 import com.dansmultipro.ams.service.AssetService;
-import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,7 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-@Profile("jpa")
 @Service
 public class AssetServiceImpl extends BaseService implements AssetService {
 

@@ -1,17 +1,15 @@
-package com.dansmultipro.ams.service.impl.jpa;
+package com.dansmultipro.ams.service.impl;
 
 import com.dansmultipro.ams.dto.asset.AssetCategoryResponseDto;
 import com.dansmultipro.ams.model.AssetCategory;
 import com.dansmultipro.ams.repository.AssetCategoryRepo;
 import com.dansmultipro.ams.service.AssetCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-@Profile("jpa")
 @Service
 public class AssetCategoryServiceImpl implements AssetCategoryService {
 

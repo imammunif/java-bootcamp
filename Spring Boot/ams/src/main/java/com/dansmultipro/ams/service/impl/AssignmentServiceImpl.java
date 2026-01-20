@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl.jpa;
+package com.dansmultipro.ams.service.impl;
 
 import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
@@ -10,10 +10,8 @@ import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.*;
 import com.dansmultipro.ams.repository.*;
 import com.dansmultipro.ams.service.AssignmentService;
-import com.dansmultipro.ams.service.impl.BaseService;
 import com.dansmultipro.ams.util.RandomGenerator;
 import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Profile("jpa")
 @Service
 public class AssignmentServiceImpl extends BaseService implements AssignmentService {
 

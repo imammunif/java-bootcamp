@@ -1,4 +1,4 @@
-package com.dansmultipro.ams.service.impl.jpa;
+package com.dansmultipro.ams.service.impl;
 
 import com.dansmultipro.ams.dto.CreateResponseDto;
 import com.dansmultipro.ams.dto.DeleteResponseDto;
@@ -14,9 +14,7 @@ import com.dansmultipro.ams.model.Employee;
 import com.dansmultipro.ams.repository.CompanyRepo;
 import com.dansmultipro.ams.repository.EmployeeRepo;
 import com.dansmultipro.ams.service.EmployeeService;
-import com.dansmultipro.ams.service.impl.BaseService;
 import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-@Profile("jpa")
 @Service
 public class EmployeeServiceImpl extends BaseService implements EmployeeService {
 
