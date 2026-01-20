@@ -6,26 +6,26 @@ import jakarta.validation.constraints.Size;
 public class EmployeeRequestDto {
 
     @NotBlank(message = "Employee full name is required")
-    @Size(max = 45, message = "Full name length exceeds limit")
+    @Size(max = 45, message = "Full name length exceeds limit, max 45 characters")
     private String fullName;
 
-    @NotBlank(message = "Employee company id is required")
+    @NotBlank(message = "Employee's company is required")
     private String companyId;
 
     @NotBlank(message = "Employee code is required")
-    @Size(max = 20, message = "Code length exceeds limit")
+    @Size(max = 20, message = "Code length exceeds limit, max 20 characters")
     private String code;
 
     @NotBlank(message = "Employee phone is required")
-    @Size(max = 20, message = "Phone length exceeds limit")
+    @Size(max = 20, message = "Phone length exceeds limit, max 20 characters")
     private String phone;
 
     @NotBlank(message = "Employee address is required")
-    @Size(max = 250, message = "Address length exceeds limit")
+    @Size(max = 250, message = "Address length exceeds limit, max 250 characters")
     private String address;
 
     @NotBlank(message = "Employee date of birth is required")
-    @Size(max = 10, message = "Date of birth length exceeds limit")
+    @Size(max = 10, message = "Date of birth length exceeds limit, max 10 characters")
     private String dateOfBirth;
 
     public String getFullName() {

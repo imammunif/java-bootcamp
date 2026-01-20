@@ -6,21 +6,19 @@ import jakarta.validation.constraints.Size;
 
 public class UserRequestDto {
 
-    private String fullName;
-
-    @NotBlank(message = "User role id is required")
+    @NotBlank(message = "User's role is required")
     private String roleId;
 
-    @NotBlank(message = "User employee id is required")
+    @NotBlank(message = "User's employee is required")
     private String employeeId;
 
     @Email(message = "Email format is not valid")
     @NotBlank(message = "User email is required")
-    @Size(max = 50, message = "Email length exceeds limit")
+    @Size(max = 50, message = "Email length exceeds limit, max 50 characters")
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(max = 200, message = "Password length exceeds limit")
+    @Size(max = 200, message = "Password length exceeds limit, max 200 characters")
     private String password;
 
     public String getRoleId() {

@@ -6,23 +6,23 @@ import jakarta.validation.constraints.Size;
 public class AssetRequestDto {
 
     @NotBlank(message = "Asset name is required")
-    @Size(max = 50, message = "Name length exceeds limit")
+    @Size(max = 50, message = "Name length exceeds limit, max 50 characters")
     private String name;
 
-    @NotBlank(message = "Asset company id is required")
+    @NotBlank(message = "Asset's company is required")
     private String companyId;
 
-    @NotBlank(message = "Asset category id is required")
+    @NotBlank(message = "Asset's category is required")
     private String categoryId;
 
-    @NotBlank(message = "Asset status id is required")
+    @NotBlank(message = "Asset's status is required")
     private String statusId;
 
-    @Size(max = 10, message = "Expired date length exceeds limit")
+    @Size(max = 10, message = "Expired date length exceeds limit, max 10 characters")
     private String expiredDate;
 
-    @NotBlank(message = "Asset code code is required")
-    @Size(max = 5, message = "Code length exceeds limit")
+    @NotBlank(message = "Asset code is required")
+    @Size(max = 5, message = "Code length exceeds limit, max 5 characters")
     private String code;
 
     public String getName() {

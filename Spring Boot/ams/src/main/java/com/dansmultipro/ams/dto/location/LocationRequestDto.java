@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 public class LocationRequestDto {
 
     @NotBlank(message = "Location name is required")
-    @Size(max = 35, message = "Location length exceeds limit")
+    @Size(max = 35, message = "Location length exceeds limit, max 35 characters")
     private String name;
 
     public String getName() {
