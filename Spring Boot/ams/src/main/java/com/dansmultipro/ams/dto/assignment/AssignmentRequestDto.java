@@ -29,4 +29,20 @@ public class AssignmentRequestDto {
         return assignmentDetialIdList;
     }
 
+    public void setTargetLocationId(String targetLocationId) {
+        this.targetLocationId = targetLocationId;
+    }
+
+    public void setTargetAssetId(String targetAssetId) {
+        this.targetAssetId = targetAssetId;
+    }
+
+    public void setTargetEmployeeId(String targetEmployeeId) {
+        this.targetEmployeeId = targetEmployeeId;
+    }
+
+    public void setAssignmentDetialIdList(List<String> assignmentDetialIdList) {
+        this.assignmentDetialIdList = assignmentDetialIdList;
+    }
+
 }
