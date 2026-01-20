@@ -50,6 +50,7 @@ public class EmployeeService {
         var result = employeeService.insert(dto);
 
         Assertions.assertEquals(id, result.getId());
+        Mockito.verify(companyRepo, Mockito.atLeast(1)).findById(Mockito.any());
         Mockito.verify(employeeRepo, Mockito.atLeast(1)).save(Mockito.any());
     }
 
@@ -105,6 +106,7 @@ public class EmployeeService {
         var result = employeeService.update(id.toString(), dto);
 
         Assertions.assertEquals(1, result.getVersion());
+        Mockito.verify(employeeRepo, Mockito.atLeast(1)).findById(Mockito.any());
         Mockito.verify(employeeRepo, Mockito.atLeast(1)).saveAndFlush(Mockito.any());
     }
 
@@ -113,20 +115,17 @@ public class EmployeeService {
         var company = new Company();
         company.setName("Dans Academy");
 
-        List<Employee> employeeList = new ArrayList<>();
-
-        var id1 = UUID.randomUUID();
         var empl1 = new Employee();
-        empl1.setId(id1);
+        empl1.setId(UUID.randomUUID());
         empl1.setCode("EMP01");
         empl1.setCompany(company);
 
-        var id2 = UUID.randomUUID();
         var empl2 = new Employee();
-        empl2.setId(id2);
+        empl2.setId(UUID.randomUUID());
         empl2.setCode("EMP02");
         empl2.setCompany(company);
 
+        List<Employee> employeeList = new ArrayList<>();
         employeeList.add(empl1);
         employeeList.add(empl2);
 
@@ -136,7 +135,6 @@ public class EmployeeService {
 
         Assertions.assertEquals(employeeList.size(), result.size());
         Assertions.assertEquals("EMP01", result.getFirst().getCode());
-
         Mockito.verify(employeeRepo, Mockito.atLeast(1)).findAll();
     }
 
