@@ -100,7 +100,7 @@ public class EmployeeService {
         updatedEmployee.setVersion(1);
 
         Mockito.when(employeeRepo.findById(Mockito.any())).thenReturn(Optional.of(employee));
-        Mockito.when(employeeRepo.saveAndFlush(employee)).thenReturn(updatedEmployee);
+        Mockito.when(employeeRepo.saveAndFlush(Mockito.any())).thenReturn(updatedEmployee);
 
         var result = employeeService.update(id.toString(), dto);
 

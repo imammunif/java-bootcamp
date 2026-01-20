@@ -104,6 +104,7 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         if (!assignment.getVersion().equals(request.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
+        Assignment assignmentUpdatePrep = prepareForUpdate(assignment);
         List<String> assignmentDetailIdList = request.getAssignmentDetailIdList();
         for (String detailId : assignmentDetailIdList) {
             AssignmentDetail assignmentDetail = assignmentDetailRepo.findById(UUID.fromString(detailId)).orElseThrow(
@@ -113,10 +114,9 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
             assignmentDetailUpdate.setReturnDate(LocalDateTime.now());
             assignmentDetailRepo.save(assignmentDetail);
         }
-        Assignment assignmentUpdate = prepareForUpdate(assignment);
-        em.flush();
+        Assignment assignmentUpdated = assignmentRepo.saveAndFlush(assignmentUpdatePrep);
 
-        return new UpdateResponseDto(assignmentUpdate.getVersion(), "Updated");
+        return new UpdateResponseDto(assignmentUpdated.getVersion(), "Updated");
     }
 
 }

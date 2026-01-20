@@ -21,4 +21,12 @@ public class UpdateAssignmentRequestDto {
         return version;
     }
 
+    public void setAssignmentDetailIdList(List<String> assignmentDetailIdList) {
+        this.assignmentDetailIdList = assignmentDetailIdList;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
 }
