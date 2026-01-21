@@ -106,8 +106,8 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
                 assignment.getCode()
         );
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EMAIL_EX,
-                RabbitMQConfig.EMAIL_KEY,
+                RabbitMQConfig.EMAIL_EX_CO,
+                RabbitMQConfig.EMAIL_KEY_CO,
                 mailPoJo
         );
 
@@ -140,20 +140,28 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
                 assignmentUpdated.getCode()
         );
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EMAIL_EX,
-                RabbitMQConfig.EMAIL_KEY,
+                RabbitMQConfig.EMAIL_EX_CI,
+                RabbitMQConfig.EMAIL_KEY_CI,
                 mailPoJo
         );
 
         return new UpdateResponseDto(assignmentUpdated.getVersion(), "Updated");
     }
 
-    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE)
-    public void receiveEmailNotification(MailPoJo data) {
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_CO)
+    public void receiveEmailNotificationAssign(MailPoJo pojo) {
         mailUtil.send(
-                data.getEmail(),
+                pojo.getEmail(),
                 "Assignment created",
-                "Assignment " + data.getAssignmentCode() + " successfully created");
+                "Assignment " + pojo.getAssignmentCode() + " successfully created");
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_CI)
+    public void receiveEmailNotificationReturn(MailPoJo pojo) {
+        mailUtil.send(
+                pojo.getEmail(),
+                "Assignment returned",
+                "Assignment " + pojo.getAssignmentCode() + " successfully returned");
     }
 
 }

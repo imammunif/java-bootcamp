@@ -9,9 +9,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String EMAIL_EX = "email.notification.exchange";
-    public static final String EMAIL_QUEUE = "email.notification.queue";
-    public static final String EMAIL_KEY = "email.notification.key";
+    public static final String EMAIL_EX_CI = "email.notification.exchange.ci";
+    public static final String EMAIL_QUEUE_CI = "email.notification.queue.ci";
+    public static final String EMAIL_KEY_CI = "email.notification.key.ci";
+
+    public static final String EMAIL_EX_CO = "email.notification.exchange.co";
+    public static final String EMAIL_QUEUE_CO = "email.notification.queue.co";
+    public static final String EMAIL_KEY_CO = "email.notification.key.co";
 
     @Bean
     public MessageConverter jsonMessageConverter() {
@@ -19,19 +23,36 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public DirectExchange emailExchange() {
-        return new DirectExchange(EMAIL_EX);
+    public DirectExchange emailExchangeCi() {
+        return new DirectExchange(EMAIL_EX_CI);
     }
 
     @Bean
-    public Queue emailQueue() {
-        return QueueBuilder.durable(EMAIL_QUEUE).build();
+    public DirectExchange emailExchangeCo() {
+        return new DirectExchange(EMAIL_EX_CO);
     }
 
     @Bean
-    public Binding categoryBinding() {
-        return BindingBuilder.bind(emailQueue())
-                .to(emailExchange())
-                .with(EMAIL_KEY);
+    public Queue emailQueueCi() {
+        return QueueBuilder.durable(EMAIL_QUEUE_CI).build();
+    }
+
+    @Bean
+    public Queue emailQueueCo() {
+        return QueueBuilder.durable(EMAIL_QUEUE_CO).build();
+    }
+
+    @Bean
+    public Binding categoryBindingCi() {
+        return BindingBuilder.bind(emailQueueCi())
+                .to(emailExchangeCi())
+                .with(EMAIL_KEY_CI);
+    }
+
+    @Bean
+    public Binding categoryBindingCo() {
+        return BindingBuilder.bind(emailQueueCo())
+                .to(emailExchangeCo())
+                .with(EMAIL_KEY_CO);
     }
 }
