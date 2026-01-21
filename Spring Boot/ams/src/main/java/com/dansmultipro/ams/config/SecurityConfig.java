@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.ArrayList;
@@ -34,15 +34,14 @@ public class SecurityConfig {
     @Bean
     public List<RequestMatcher> getRequestMatchers() {
         var matchers = new ArrayList<RequestMatcher>();
-        matchers.add(new AntPathRequestMatcher("/login", HttpMethod.POST.name()));
+        matchers.add(PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/login"));
         return matchers;
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider(UserService userService, PasswordEncoder passwordEncoder) {
-        var provider = new DaoAuthenticationProvider();
+        var provider = new DaoAuthenticationProvider(userService);
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(userService);
         return provider;
     }
 
