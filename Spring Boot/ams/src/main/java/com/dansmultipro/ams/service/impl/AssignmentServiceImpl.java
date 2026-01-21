@@ -1,5 +1,6 @@
 package com.dansmultipro.ams.service.impl;
 
+import com.dansmultipro.ams.config.RabbitMQConfig;
 import com.dansmultipro.ams.dto.UpdateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentCreateResponseDto;
 import com.dansmultipro.ams.dto.assignment.AssignmentRequestDto;
@@ -8,10 +9,14 @@ import com.dansmultipro.ams.dto.assignment.UpdateAssignmentRequestDto;
 import com.dansmultipro.ams.exception.DataMissMatchException;
 import com.dansmultipro.ams.exception.NotFoundException;
 import com.dansmultipro.ams.model.*;
+import com.dansmultipro.ams.pojo.MailPoJo;
 import com.dansmultipro.ams.repository.*;
 import com.dansmultipro.ams.service.AssignmentService;
+import com.dansmultipro.ams.util.MailUtil;
 import com.dansmultipro.ams.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,13 +32,17 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
     private final EmployeeRepo employeeRepo;
     private final AssignmentRepo assignmentRepo;
     private final AssignmentDetailRepo assignmentDetailRepo;
+    private final MailUtil mailUtil;
+    private final RabbitTemplate rabbitTemplate;
 
-    public AssignmentServiceImpl(LocationRepo locationRepo, AssetRepo assetRepo, EmployeeRepo employeeRepo, AssignmentRepo assignmentRepo, AssignmentDetailRepo assignmentDetailRepo) {
+    public AssignmentServiceImpl(LocationRepo locationRepo, AssetRepo assetRepo, EmployeeRepo employeeRepo, AssignmentRepo assignmentRepo, AssignmentDetailRepo assignmentDetailRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
         this.locationRepo = locationRepo;
         this.assetRepo = assetRepo;
         this.employeeRepo = employeeRepo;
         this.assignmentRepo = assignmentRepo;
         this.assignmentDetailRepo = assignmentDetailRepo;
+        this.mailUtil = mailUtil;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -92,6 +101,16 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
             assignmentDetailRepo.save(assignmentDetail);
         }
 
+        MailPoJo mailPoJo = new MailPoJo(
+                "imammunif17@gmail.com",
+                assignment.getCode()
+        );
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EMAIL_EX,
+                RabbitMQConfig.EMAIL_KEY,
+                mailPoJo
+        );
+
         return new AssignmentCreateResponseDto(assignment.getId());
     }
 
@@ -116,7 +135,25 @@ public class AssignmentServiceImpl extends BaseService implements AssignmentServ
         }
         Assignment assignmentUpdated = assignmentRepo.saveAndFlush(assignmentUpdatePrep);
 
+        MailPoJo mailPoJo = new MailPoJo(
+                "imammunif17@gmail.com",
+                assignmentUpdated.getCode()
+        );
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EMAIL_EX,
+                RabbitMQConfig.EMAIL_KEY,
+                mailPoJo
+        );
+
         return new UpdateResponseDto(assignmentUpdated.getVersion(), "Updated");
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE)
+    public void receiveEmailNotification(MailPoJo data) {
+        mailUtil.send(
+                data.getEmail(),
+                "Assignment created",
+                "Assignment " + data.getAssignmentCode() + " successfully created");
     }
 
 }
