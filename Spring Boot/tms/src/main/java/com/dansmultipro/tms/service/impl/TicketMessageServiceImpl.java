@@ -1,6 +1,6 @@
 package com.dansmultipro.tms.service.impl;
 
-import com.dansmultipro.tms.constant.TicketStatus;
+import com.dansmultipro.tms.constant.StatusCode;
 import com.dansmultipro.tms.dto.CreateResponseDto;
 import com.dansmultipro.tms.dto.UpdateResponseDto;
 import com.dansmultipro.tms.dto.ticketmessage.CreateMessageRequestDto;
@@ -51,7 +51,7 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
                 () -> new NotFoundException("User not found")
         );
         String statusCode = ticket.getStatus().getCode();
-        if (statusCode.equals(TicketStatus.CLOSED.getCode()) || statusCode.equals(TicketStatus.RESOLVED.getCode())) {
+        if (statusCode.equals(StatusCode.CLOSED.getCode()) || statusCode.equals(StatusCode.RESOLVED.getCode())) {
             throw new InvalidStatusException("Ticket status is not valid");
         }
         TicketMessage newMessage = prepareForInsert(new TicketMessage());
@@ -73,7 +73,7 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
         }
         Ticket ticket = message.getTicket();
         String statusCode = ticket.getStatus().getCode();
-        if (statusCode.equals(TicketStatus.CLOSED.getCode()) || statusCode.equals(TicketStatus.RESOLVED.getCode())) {
+        if (statusCode.equals(StatusCode.CLOSED.getCode()) || statusCode.equals(StatusCode.RESOLVED.getCode())) {
             throw new InvalidStatusException("Ticket status is not valid");
         }
         TicketMessage updateMessage = prepareForUpdate(message);

@@ -1,6 +1,6 @@
 package com.dansmultipro.tms.constant;
 
-public enum TicketStatus {
+public enum StatusCode {
 
     OPEN("OPEN"),
     REOPEN("RSLV"),
@@ -9,7 +9,7 @@ public enum TicketStatus {
 
     private final String code;
 
-    TicketStatus(String code) {
+    StatusCode(String code) {
         this.code = code;
     }
 

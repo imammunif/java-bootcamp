@@ -17,6 +17,6 @@ public interface TicketService {
 
     CreateResponseDto create(CreateTicketRequestDto data);
 
-    UpdateResponseDto update(String id, UpdateTicketRequestDto data);
+    UpdateResponseDto update(String id, String statusCode, UpdateTicketRequestDto data);
 
 }

@@ -7,4 +7,8 @@ public class UpdateTicketRequestDto {
     @NotNull(message = "Version is required")
     private Integer version;
 
+    public Integer getVersion() {
+        return version;
+    }
+
 }
