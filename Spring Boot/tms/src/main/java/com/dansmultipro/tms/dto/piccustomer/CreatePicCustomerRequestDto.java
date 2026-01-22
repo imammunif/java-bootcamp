@@ -14,16 +14,8 @@ public class CreatePicCustomerRequestDto {
         return picId;
     }
 
-    public void setPicId(String picId) {
-        this.picId = picId;
-    }
-
     public String getCustomerId() {
         return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
     }
 
 }

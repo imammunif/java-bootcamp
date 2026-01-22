@@ -1,7 +1,6 @@
 package com.dansmultipro.tms.dto.ticketmessage;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 public class CreateMessageRequestDto {
 
@@ -12,7 +11,6 @@ public class CreateMessageRequestDto {
     private String ticketId;
 
     @NotBlank(message = "Message is required")
-    @Size(max = 300, message = "Message length exceeds limit, max 300 characters")
     private String description;
 
     public String getUserId() {

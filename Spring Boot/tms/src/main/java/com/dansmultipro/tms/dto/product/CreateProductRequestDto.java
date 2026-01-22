@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 public class CreateProductRequestDto {
 
     @NotBlank(message = "Product name is required")
-    @Size(max = 35, message = "Name length exceeds limit, max 35 characters")
+    @Size(max = 40, message = "Name length exceeds limit, max 40 characters")
     private String name;
 
     public String getName() {

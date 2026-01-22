@@ -6,11 +6,10 @@ import jakarta.validation.constraints.Size;
 public class CreateTicketRequestDto {
 
     @NotBlank(message = "Ticket title is required")
-    @Size(max = 100, message = "Title length exceeds limit, max 100 characters")
+    @Size(max = 50, message = "Title length exceeds limit, max 50 characters")
     private String title;
 
     @NotBlank(message = "Ticket description is required")
-    @Size(max = 300, message = "Description length exceeds limit, max 300 characters")
     private String description;
 
     @NotBlank(message = "Customer is required")
