@@ -6,8 +6,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "t_status_history")
-public class StatusHistory extends BaseModel {
+@Table(name = "t_ticket_status_history")
+public class TicketStatusHistory extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)

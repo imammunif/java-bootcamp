@@ -13,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("roles")
-public class RoleController {
+public class UserRoleController {
 
     private final UserRoleService userRoleService;
 
-    public RoleController(UserRoleService userRoleService) {
+    public UserRoleController(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;
     }
 

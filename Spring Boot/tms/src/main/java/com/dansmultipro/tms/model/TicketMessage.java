@@ -15,7 +15,7 @@ public class TicketMessage extends BaseModel {
     private User user;
 
     @Column(nullable = false)
-    private String description;
+    private String message;
 
     public Ticket getTicket() {
         return ticket;
@@ -25,8 +25,8 @@ public class TicketMessage extends BaseModel {
         return user;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMessage() {
+        return message;
     }
 
     public void setTicket(Ticket ticket) {
@@ -37,8 +37,8 @@ public class TicketMessage extends BaseModel {
         this.user = user;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

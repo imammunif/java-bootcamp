@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE t_m_role (
+CREATE TABLE t_m_user_role (
     id VARCHAR(36) PRIMARY KEY,
 	name VARCHAR(20) NOT NULL UNIQUE,
 	code VARCHAR(5) NOT NULL UNIQUE,
@@ -26,7 +26,7 @@ CREATE TABLE t_m_user (
 	full_name VARCHAR(50) NOT NULL,
 	email VARCHAR(50) NOT NULL UNIQUE,
 	password VARCHAR(200) NOT NULL,
-	role_id VARCHAR(36) NOT NULL REFERENCES t_m_role(id),
+	role_id VARCHAR(36) NOT NULL REFERENCES t_m_user_role(id),
 	company_id VARCHAR(36) NOT NULL REFERENCES t_m_company(id),
 	version INT NOT NULL,
     created_by VARCHAR(36) NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE t_ticket (
     updated_at TIMESTAMP
 );
 
-CREATE TABLE t_status_history (
+CREATE TABLE t_ticket_status_history (
     id VARCHAR(36) PRIMARY KEY,
 	status_id VARCHAR(36) NOT NULL REFERENCES t_m_ticket_status(id),
 	ticket_id VARCHAR(50) NOT NULL REFERENCES t_ticket(id),
@@ -108,9 +108,9 @@ CREATE TABLE t_status_history (
 
 CREATE TABLE t_ticket_message (
     id VARCHAR(36) PRIMARY KEY,
-    description TEXT NOT NULL,
+    message TEXT NOT NULL,
 	user_id VARCHAR(36) NOT NULL REFERENCES t_m_user(id),
-	ticket_id VARCHAR(50) NOT NULL REFERENCES t_ticket(id),
+	ticket_id VARCHAR(36) NOT NULL REFERENCES t_ticket(id),
 	version INT NOT NULL,
     created_by VARCHAR(36) NOT NULL,
     created_at TIMESTAMP NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE t_ticket_message (
     updated_at TIMESTAMP
 );
 
-INSERT INTO t_m_role (id, name, code, version, created_by, created_at) VALUES 
+INSERT INTO t_m_user_role (id, name, code, version, created_by, created_at) VALUES 
 (uuid_generate_v4(), 'Super Admin', 'SA', 0, uuid_generate_v4(), now()),
 (uuid_generate_v4(), 'Person In Charge', 'PIC', 0, uuid_generate_v4(), now()),
 (uuid_generate_v4(), 'Customer', 'CUST', 0, uuid_generate_v4(), now());
@@ -138,26 +138,26 @@ INSERT INTO t_m_ticket_status (id, name, code, version, created_by, created_at) 
 
 INSERT INTO t_m_user (id, full_name, email, password, role_id, company_id, version, created_by, created_at) VALUES 
 (uuid_generate_v4(), 'Super Admin User', 'admin@sys.com', 'pass123', 
-    (SELECT id FROM t_m_role WHERE code = 'SA' LIMIT 1), 
+    (SELECT id FROM t_m_user_role WHERE code = 'SA' LIMIT 1), 
     (SELECT id FROM t_m_company LIMIT 1), 0, uuid_generate_v4(), now()),
 
 (uuid_generate_v4(), 'PIC One', 'pic1@sys.com', 'pass123', 
-    (SELECT id FROM t_m_role WHERE code = 'PIC' LIMIT 1), 
+    (SELECT id FROM t_m_user_role WHERE code = 'PIC' LIMIT 1), 
     (SELECT id FROM t_m_company LIMIT 1), 0, uuid_generate_v4(), now()),
 (uuid_generate_v4(), 'PIC Two', 'pic2@sys.com', 'pass123', 
-    (SELECT id FROM t_m_role WHERE code = 'PIC' LIMIT 1), 
+    (SELECT id FROM t_m_user_role WHERE code = 'PIC' LIMIT 1), 
     (SELECT id FROM t_m_company LIMIT 1), 0, uuid_generate_v4(), now()),
 (uuid_generate_v4(), 'Customer One', 'cust1@client.com', 'pass123', 
-    (SELECT id FROM t_m_role WHERE code = 'CUST' LIMIT 1), 
+    (SELECT id FROM t_m_user_role WHERE code = 'CUST' LIMIT 1), 
     (SELECT id FROM t_m_company LIMIT 1), 0, uuid_generate_v4(), now()),
 (uuid_generate_v4(), 'Customer Two', 'cust2@client.com', 'pass123', 
-    (SELECT id FROM t_m_role WHERE code = 'CUST' LIMIT 1), 
+    (SELECT id FROM t_m_user_role WHERE code = 'CUST' LIMIT 1), 
     (SELECT id FROM t_m_company LIMIT 1), 0, uuid_generate_v4(), now()),
 (uuid_generate_v4(), 'Customer Three', 'cust3@client.com', 'pass123', 
-    (SELECT id FROM t_m_role WHERE code = 'CUST' LIMIT 1), 
+    (SELECT id FROM t_m_user_role WHERE code = 'CUST' LIMIT 1), 
     (SELECT id FROM t_m_company LIMIT 1), 0, uuid_generate_v4(), now()),
 (uuid_generate_v4(), 'Customer Four', 'cust4@client.com', 'pass123', 
-    (SELECT id FROM t_m_role WHERE code = 'CUST' LIMIT 1), 
+    (SELECT id FROM t_m_user_role WHERE code = 'CUST' LIMIT 1), 
     (SELECT id FROM t_m_company LIMIT 1), 0, uuid_generate_v4(), now());
 
 INSERT INTO t_pic_customer (id, pic_id, customer_id, version, created_by, created_at) VALUES 
@@ -184,7 +184,7 @@ INSERT INTO t_ticket (id, code, title, description, expired_date, status_id, cus
     (SELECT id FROM t_m_product WHERE name = 'Asset Management System' LIMIT 1), 
     0, uuid_generate_v4(), now());
 
-INSERT INTO t_status_history (id, ticket_id, status_id, version, created_by, created_at) VALUES 
+INSERT INTO t_ticket_status_history (id, ticket_id, status_id, version, created_by, created_at) VALUES
 (uuid_generate_v4(), (SELECT id FROM t_ticket WHERE code = 'T0001' LIMIT 1), (SELECT id FROM t_m_ticket_status WHERE code = 'OPEN' LIMIT 1), 0, uuid_generate_v4(), now() - INTERVAL '3 days'),
 (uuid_generate_v4(), (SELECT id FROM t_ticket WHERE code = 'T0001' LIMIT 1), (SELECT id FROM t_m_ticket_status WHERE code = 'RSLV' LIMIT 1), 0, uuid_generate_v4(), now() - INTERVAL '2 days'),
 (uuid_generate_v4(), (SELECT id FROM t_ticket WHERE code = 'T0001' LIMIT 1), (SELECT id FROM t_m_ticket_status WHERE code = 'REOP' LIMIT 1), 0, uuid_generate_v4(), now() - INTERVAL '1 hour'),
@@ -192,7 +192,7 @@ INSERT INTO t_status_history (id, ticket_id, status_id, version, created_by, cre
 (uuid_generate_v4(), (SELECT id FROM t_ticket WHERE code = 'T0002' LIMIT 1), (SELECT id FROM t_m_ticket_status WHERE code = 'RSLV' LIMIT 1), 0, uuid_generate_v4(), now() - INTERVAL '4 days'),
 (uuid_generate_v4(), (SELECT id FROM t_ticket WHERE code = 'T0002' LIMIT 1), (SELECT id FROM t_m_ticket_status WHERE code = 'CLSD' LIMIT 1), 0, uuid_generate_v4(), now() - INTERVAL '1 day');
 
-INSERT INTO t_ticket_message (id, description, user_id, ticket_id, version, created_by, created_at) VALUES 
+INSERT INTO t_ticket_message (id, message, user_id, ticket_id, version, created_by, created_at) VALUES 
 (uuid_generate_v4(), 'I am unable to login to the dashboard. It keeps spinning.', 
     (SELECT id FROM t_m_user WHERE email = 'cust1@client.com' LIMIT 1), 
     (SELECT id FROM t_ticket WHERE code = 'T0001' LIMIT 1),
