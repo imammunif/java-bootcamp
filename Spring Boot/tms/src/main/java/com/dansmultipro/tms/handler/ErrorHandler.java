@@ -3,6 +3,7 @@ package com.dansmultipro.tms.handler;
 import com.dansmultipro.tms.dto.ErrorResponseDto;
 import com.dansmultipro.tms.exception.DataIntegrityException;
 import com.dansmultipro.tms.exception.DataMissMatchException;
+import com.dansmultipro.tms.exception.InvalidStatusException;
 import com.dansmultipro.tms.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,14 @@ public class ErrorHandler {
     @ExceptionHandler(DataMissMatchException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleDataMissMatchException(
             DataMissMatchException ex
+    ) {
+        var errors = ex.getMessage();
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidStatusException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleInvalidStatusException(
+            InvalidStatusException ex
     ) {
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
