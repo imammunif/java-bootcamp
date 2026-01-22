@@ -18,11 +18,11 @@ public class PicCustomerResponseDto {
         return id;
     }
 
-    public String getFullName() {
+    public String getPicName() {
         return picName;
     }
 
-    public String getRoleName() {
+    public String getCustomerName() {
         return customerName;
     }
 

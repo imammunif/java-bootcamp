@@ -137,7 +137,7 @@ INSERT INTO t_m_ticket_status (id, name, code, version, created_by, created_at) 
 (uuid_generate_v4(), 'Re-open', 'REOP', 0, uuid_generate_v4(), now());
 
 INSERT INTO t_m_user (id, full_name, email, password, role_id, company_id, version, created_by, created_at) VALUES 
-(uuid_generate_v4(), 'Super Admin User', 'admin@sys.com', 'pass123', 
+(uuid_generate_v4(), 'Super Admin User', 'admin@mail.com', '$2a$12$8KzNOvMDxck0WPdvdpdMs.bNo1AUHsdhh0jPiFx2zt1Qt1pVc9HM.', 
     (SELECT id FROM t_m_user_role WHERE code = 'SA' LIMIT 1), 
     (SELECT id FROM t_m_company LIMIT 1), 0, uuid_generate_v4(), now()),
 

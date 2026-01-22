@@ -1,11 +1,9 @@
 package com.dansmultipro.tms.controller;
 
-import com.dansmultipro.tms.dto.CreateResponseDto;
-import com.dansmultipro.tms.dto.UpdateResponseDto;
+import com.dansmultipro.tms.dto.CommonResponseDto;
 import com.dansmultipro.tms.dto.piccustomer.CreatePicCustomerRequestDto;
 import com.dansmultipro.tms.dto.piccustomer.PicCustomerResponseDto;
 import com.dansmultipro.tms.dto.piccustomer.UpdatePicCustomerRequestDto;
-import com.dansmultipro.tms.dto.product.ProductResponseDto;
 import com.dansmultipro.tms.service.PicCustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,14 +35,14 @@ public class PicCustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponseDto> createPicCustomer(@RequestBody @Valid CreatePicCustomerRequestDto requestDto) {
-        CreateResponseDto res = picCustomerService.create(requestDto);
+    public ResponseEntity<CommonResponseDto> createPicCustomer(@RequestBody @Valid CreatePicCustomerRequestDto requestDto) {
+        CommonResponseDto res = picCustomerService.create(requestDto);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UpdateResponseDto> updatePicCustomer(@PathVariable String id, @RequestBody @Valid UpdatePicCustomerRequestDto requestDto) {
-        UpdateResponseDto res = picCustomerService.update(id, requestDto);
+    public ResponseEntity<CommonResponseDto> updatePicCustomer(@PathVariable String id, @RequestBody @Valid UpdatePicCustomerRequestDto requestDto) {
+        CommonResponseDto res = picCustomerService.update(id, requestDto);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

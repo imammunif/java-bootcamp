@@ -1,8 +1,7 @@
 package com.dansmultipro.tms.service;
 
 
-import com.dansmultipro.tms.dto.CreateResponseDto;
-import com.dansmultipro.tms.dto.UpdateResponseDto;
+import com.dansmultipro.tms.dto.CommonResponseDto;
 import com.dansmultipro.tms.dto.piccustomer.CreatePicCustomerRequestDto;
 import com.dansmultipro.tms.dto.piccustomer.PicCustomerResponseDto;
 import com.dansmultipro.tms.dto.piccustomer.UpdatePicCustomerRequestDto;
@@ -15,8 +14,8 @@ public interface PicCustomerService {
 
     PicCustomerResponseDto getById(String id);
 
-    CreateResponseDto create(CreatePicCustomerRequestDto data);
+    CommonResponseDto create(CreatePicCustomerRequestDto data);
 
-    UpdateResponseDto update(String id, UpdatePicCustomerRequestDto data);
+    CommonResponseDto update(String id, UpdatePicCustomerRequestDto data);
 
 }

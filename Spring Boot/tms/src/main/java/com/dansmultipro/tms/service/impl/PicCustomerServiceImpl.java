@@ -1,13 +1,14 @@
 package com.dansmultipro.tms.service.impl;
 
-import com.dansmultipro.tms.dto.CreateResponseDto;
-import com.dansmultipro.tms.dto.UpdateResponseDto;
+import com.dansmultipro.tms.dto.CommonResponseDto;
 import com.dansmultipro.tms.dto.piccustomer.CreatePicCustomerRequestDto;
 import com.dansmultipro.tms.dto.piccustomer.PicCustomerResponseDto;
 import com.dansmultipro.tms.dto.piccustomer.UpdatePicCustomerRequestDto;
 import com.dansmultipro.tms.exception.NotFoundException;
 import com.dansmultipro.tms.model.PicCustomer;
+import com.dansmultipro.tms.model.User;
 import com.dansmultipro.tms.repository.PicCustomerRepo;
+import com.dansmultipro.tms.repository.UserRepo;
 import com.dansmultipro.tms.service.PicCustomerService;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +19,17 @@ import java.util.UUID;
 public class PicCustomerServiceImpl extends BaseService implements PicCustomerService {
 
     private final PicCustomerRepo picCustomerRepo;
+    private final UserRepo userRepo;
 
-    public PicCustomerServiceImpl(PicCustomerRepo picCustomerRepo) {
+    public PicCustomerServiceImpl(PicCustomerRepo picCustomerRepo, UserRepo userRepo) {
         this.picCustomerRepo = picCustomerRepo;
+        this.userRepo = userRepo;
     }
 
     @Override
     public List<PicCustomerResponseDto> getAll() {
         List<PicCustomerResponseDto> result = picCustomerRepo.findAll().stream()
-                .map(v -> new PicCustomerResponseDto(v.getId(), v.getUserPIC().getFullName(), v.getUserCustomer().getFullName()))
+                .map(v -> new PicCustomerResponseDto(v.getId(), v.getPic().getFullName(), v.getCustomer().getFullName()))
                 .toList();
         return result;
     }
@@ -36,17 +39,54 @@ public class PicCustomerServiceImpl extends BaseService implements PicCustomerSe
         PicCustomer picCustomer = picCustomerRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("PIC-Customer not found")
         );
-        return new PicCustomerResponseDto(picCustomer.getId(), picCustomer.getUserPIC().getFullName(), picCustomer.getUserCustomer().getFullName());
+        return new PicCustomerResponseDto(picCustomer.getId(), picCustomer.getPic().getFullName(), picCustomer.getCustomer().getFullName());
     }
 
     @Override
-    public CreateResponseDto create(CreatePicCustomerRequestDto data) {
-        return null;
+    public CommonResponseDto create(CreatePicCustomerRequestDto data) {
+        User userPic = userRepo.findById(UUID.fromString(data.getPicId())).orElseThrow(
+                () -> new NotFoundException("PIC not found")
+        );
+        List<String> customerIdList = data.getCustomerIdList();
+        for (String customerId : customerIdList) {
+            User customer = userRepo.findById(UUID.fromString(customerId)).orElseThrow(
+                    () -> new NotFoundException("Customer not found")
+            );
+            PicCustomer picCustomerNew = new PicCustomer();
+            PicCustomer picCustomerInsert = prepareForInsert(picCustomerNew);
+            picCustomerInsert.setPic(userPic);
+            picCustomerInsert.setCustomer(customer);
+            picCustomerRepo.save(picCustomerInsert);
+        }
+        return new CommonResponseDto("Created");
     }
 
     @Override
-    public UpdateResponseDto update(String id, UpdatePicCustomerRequestDto data) {
-        return null;
+    public CommonResponseDto update(String id, UpdatePicCustomerRequestDto data) {
+        UUID userPicId = UUID.fromString(data.getPicId());
+        User userPic = userRepo.findById(userPicId).orElseThrow(
+                () -> new NotFoundException("PIC not found")
+        );
+
+        List<String> customerIdList = data.getCustomerIdList();
+        List<UUID> customerUUIDlist = customerIdList.stream()
+                .map(v -> UUID.fromString(v))
+                .toList();
+        List<PicCustomer> customerToDelete = picCustomerRepo.findByPicIdAndCustomerIdNotIn(userPicId, customerUUIDlist);
+        picCustomerRepo.deleteAll(customerToDelete);
+
+        for (UUID customerID : customerUUIDlist) {
+            User customer = userRepo.findById(customerID).orElseThrow(
+                    () -> new NotFoundException("Customer not found")
+            );
+            PicCustomer picCustomer = picCustomerRepo.findByCustomerId(customerID).orElse(new PicCustomer());
+            picCustomer.setPic(userPic);
+            picCustomer.setCustomer(customer);
+
+            picCustomerRepo.save(picCustomer.getId() != null ? prepareForUpdate(picCustomer) : prepareForInsert(picCustomer));
+        }
+
+        return new CommonResponseDto("Updated");
     }
 
 }
