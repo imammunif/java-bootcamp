@@ -84,21 +84,20 @@ public class UserServiceImpl extends BaseService implements UserService {
         Company userCompany = companyRepo.findById(UUID.fromString(userCompanyId)).orElseThrow(
                 () -> new NotFoundException("Company not found")
         );
-        User userNew = new User();
-        User userInsert = prepareForInsert(userNew);
+        User newUser = prepareForInsert(new User());
         String requestEmail = data.getEmail();
         if (userRepo.findByEmail(requestEmail).isPresent()) {
             throw new DataIntegrityException("Email already exist");
         }
-        userInsert.setEmail(requestEmail);
+        newUser.setEmail(requestEmail);
         String encodedPassword = passwordEncoder.encode(data.getPassword());
-        userInsert.setPassword(encodedPassword);
-        userInsert.setFullName(data.getFullName());
-        userInsert.setUserRole(userRole);
-        userInsert.setCompany(userCompany);
-        User user = userRepo.save(userInsert);
+        newUser.setPassword(encodedPassword);
+        newUser.setFullName(data.getFullName());
+        newUser.setUserRole(userRole);
+        newUser.setCompany(userCompany);
+        User createdUser = userRepo.save(newUser);
 
-        return new CreateResponseDto(user.getId(), "Saved");
+        return new CreateResponseDto(createdUser.getId(), "Saved");
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -118,9 +117,9 @@ public class UserServiceImpl extends BaseService implements UserService {
             }
         }
         userUpdate.setEmail(requestEmail);
-        userRepo.saveAndFlush(userUpdate);
+        User updatedUser = userRepo.saveAndFlush(userUpdate);
 
-        return new UpdateResponseDto(userUpdate.getVersion(), "Updated");
+        return new UpdateResponseDto(updatedUser.getVersion(), "Updated");
     }
 
     @Transactional(rollbackOn = Exception.class)

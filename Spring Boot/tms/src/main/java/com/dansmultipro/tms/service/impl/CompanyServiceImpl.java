@@ -49,8 +49,8 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
         Company companyNew = new Company();
         Company companyInsert = prepareForInsert(companyNew);
         companyInsert.setName(request.getName());
-        Company company = companyRepo.save(companyInsert);
-        return new CreateResponseDto(company.getId(), "Saved");
+        Company createdCompany = companyRepo.save(companyInsert);
+        return new CreateResponseDto(createdCompany.getId(), "Saved");
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -64,8 +64,8 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
         }
         Company companyUpdate = prepareForUpdate(company);
         companyUpdate.setName(request.getName());
-        companyRepo.saveAndFlush(companyUpdate);
-        return new UpdateResponseDto(companyUpdate.getVersion(), "Updated");
+        Company updatedCompany = companyRepo.saveAndFlush(companyUpdate);
+        return new UpdateResponseDto(updatedCompany.getVersion(), "Updated");
     }
 
     @Transactional(rollbackOn = Exception.class)

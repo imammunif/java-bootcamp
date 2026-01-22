@@ -58,9 +58,9 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
         newMessage.setTicket(ticket);
         newMessage.setUser(user);
         newMessage.setMessage(data.getMessage());
-        TicketMessage message = ticketMessageRepo.save(newMessage);
+        TicketMessage createdMessage = ticketMessageRepo.save(newMessage);
 
-        return new CreateResponseDto(message.getId(), "Saved");
+        return new CreateResponseDto(createdMessage.getId(), "Saved");
     }
 
     @Override

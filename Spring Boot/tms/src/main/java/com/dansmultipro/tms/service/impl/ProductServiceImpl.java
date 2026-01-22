@@ -45,8 +45,8 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     public CreateResponseDto create(CreateProductRequestDto data) {
         Product newProduct = prepareForInsert(new Product());
         newProduct.setName(data.getName());
-        Product product = productRepo.save(newProduct);
-        return new CreateResponseDto(product.getId(), "Saved");
+        Product createdProduct = productRepo.save(newProduct);
+        return new CreateResponseDto(createdProduct.getId(), "Saved");
     }
 
     @Override
@@ -59,8 +59,8 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         }
         Product productUpdate = prepareForUpdate(product);
         productUpdate.setName(data.getName());
-        productRepo.saveAndFlush(productUpdate);
-        return new UpdateResponseDto(productUpdate.getVersion(), "Updated");
+        Product updatedProduct = productRepo.saveAndFlush(productUpdate);
+        return new UpdateResponseDto(updatedProduct.getVersion(), "Updated");
     }
 
     @Override
