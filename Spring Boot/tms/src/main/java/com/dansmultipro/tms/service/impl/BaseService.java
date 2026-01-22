@@ -25,7 +25,7 @@ public abstract class BaseService {
     }
 
     @Autowired
-    private void setPrincipalService(PrincipalService principalService) {
+    public void setPrincipalService(PrincipalService principalService) {
         this.principalService = principalService;
     }
 
