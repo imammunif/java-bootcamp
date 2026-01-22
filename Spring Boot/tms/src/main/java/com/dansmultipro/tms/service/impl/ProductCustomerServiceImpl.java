@@ -12,6 +12,7 @@ import com.dansmultipro.tms.repository.ProductCustomerRepo;
 import com.dansmultipro.tms.repository.ProductRepo;
 import com.dansmultipro.tms.repository.UserRepo;
 import com.dansmultipro.tms.service.ProductCustomerService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class ProductCustomerServiceImpl extends BaseService implements ProductCu
         return new ProductCustomerResponseDto(productCustomer.getId(), productCustomer.getCustomer().getFullName(), productCustomer.getProduct().getName());
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CommonResponseDto create(CreateProductCustomerRequestDto data) {
         User customer = userRepo.findById(UUID.fromString(data.getCustomerId())).orElseThrow(
@@ -65,6 +67,7 @@ public class ProductCustomerServiceImpl extends BaseService implements ProductCu
         return new CommonResponseDto("Created");
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CommonResponseDto update(String id, UpdateProductCustomerRequestDto data) {
         UUID customerId = UUID.fromString(data.getCustomerId());

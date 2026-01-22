@@ -18,6 +18,7 @@ import com.dansmultipro.tms.repository.TicketStatusRepo;
 import com.dansmultipro.tms.repository.UserRepo;
 import com.dansmultipro.tms.service.TicketService;
 import com.dansmultipro.tms.util.RandomGenerator;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -69,7 +70,7 @@ public class TicketServiceImpl extends BaseService implements TicketService {
                 t.getProduct().getName());
     }
 
-
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateTicketRequestDto data) {
         User customer = userRepo.findById(UUID.fromString(data.getCustomerId())).orElseThrow(
@@ -94,6 +95,7 @@ public class TicketServiceImpl extends BaseService implements TicketService {
         return new CreateResponseDto(createdTicket.getId(), "Saved");
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, String statusCode, UpdateTicketRequestDto data) {
         Ticket ticket = ticketRepo.findById(UUID.fromString(id)).orElseThrow(

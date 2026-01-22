@@ -16,6 +16,7 @@ import com.dansmultipro.tms.repository.TicketMessageRepo;
 import com.dansmultipro.tms.repository.TicketRepo;
 import com.dansmultipro.tms.repository.UserRepo;
 import com.dansmultipro.tms.service.TicketMessageService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,6 +64,7 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
         return new CreateResponseDto(createdMessage.getId(), "Saved");
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateMessageRequestDto data) {
         TicketMessage message = ticketMessageRepo.findById(UUID.fromString(id)).orElseThrow(

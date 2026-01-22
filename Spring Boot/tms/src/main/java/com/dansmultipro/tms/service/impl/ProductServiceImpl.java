@@ -11,6 +11,7 @@ import com.dansmultipro.tms.exception.NotFoundException;
 import com.dansmultipro.tms.model.Product;
 import com.dansmultipro.tms.repository.ProductRepo;
 import com.dansmultipro.tms.service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         return new ProductResponseDto(product.getId(), product.getName());
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateProductRequestDto data) {
         Product newProduct = prepareForInsert(new Product());
@@ -49,6 +51,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         return new CreateResponseDto(createdProduct.getId(), "Saved");
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateProductRequestDto data) {
         Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(
@@ -63,6 +66,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         return new UpdateResponseDto(updatedProduct.getVersion(), "Updated");
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
         Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(

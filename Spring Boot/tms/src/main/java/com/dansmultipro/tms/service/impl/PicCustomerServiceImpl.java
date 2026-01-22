@@ -10,6 +10,7 @@ import com.dansmultipro.tms.model.User;
 import com.dansmultipro.tms.repository.PicCustomerRepo;
 import com.dansmultipro.tms.repository.UserRepo;
 import com.dansmultipro.tms.service.PicCustomerService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class PicCustomerServiceImpl extends BaseService implements PicCustomerSe
         return new PicCustomerResponseDto(picCustomer.getId(), picCustomer.getPic().getFullName(), picCustomer.getCustomer().getFullName());
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CommonResponseDto create(CreatePicCustomerRequestDto data) {
         User userPic = userRepo.findById(UUID.fromString(data.getPicId())).orElseThrow(
@@ -60,6 +62,7 @@ public class PicCustomerServiceImpl extends BaseService implements PicCustomerSe
         return new CommonResponseDto("Created");
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CommonResponseDto update(String id, UpdatePicCustomerRequestDto data) {
         UUID userPicId = UUID.fromString(data.getPicId());
