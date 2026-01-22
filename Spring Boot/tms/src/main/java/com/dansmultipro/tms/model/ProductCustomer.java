@@ -22,4 +22,12 @@ public class ProductCustomer extends BaseModel {
         return product;
     }
 
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
 }

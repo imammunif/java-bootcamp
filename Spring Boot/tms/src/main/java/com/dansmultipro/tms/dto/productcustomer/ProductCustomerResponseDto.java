@@ -5,25 +5,25 @@ import java.util.UUID;
 public class ProductCustomerResponseDto {
 
     private UUID id;
-    private String productName;
     private String customerName;
+    private String productName;
 
-    public ProductCustomerResponseDto(UUID id, String productName, String customerName) {
+    public ProductCustomerResponseDto(UUID id, String customerName, String productName) {
         this.id = id;
-        this.productName = productName;
         this.customerName = customerName;
+        this.productName = productName;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public String getFullName() {
-        return productName;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public String getRoleName() {
-        return customerName;
+    public String getProductName() {
+        return productName;
     }
 
 }

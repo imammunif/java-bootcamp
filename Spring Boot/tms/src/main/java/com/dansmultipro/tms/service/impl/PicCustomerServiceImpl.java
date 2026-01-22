@@ -52,11 +52,10 @@ public class PicCustomerServiceImpl extends BaseService implements PicCustomerSe
             User customer = userRepo.findById(UUID.fromString(customerId)).orElseThrow(
                     () -> new NotFoundException("Customer not found")
             );
-            PicCustomer picCustomerNew = new PicCustomer();
-            PicCustomer picCustomerInsert = prepareForInsert(picCustomerNew);
-            picCustomerInsert.setPic(userPic);
-            picCustomerInsert.setCustomer(customer);
-            picCustomerRepo.save(picCustomerInsert);
+            PicCustomer newPicCustomer = prepareForInsert(new PicCustomer());
+            newPicCustomer.setPic(userPic);
+            newPicCustomer.setCustomer(customer);
+            picCustomerRepo.save(newPicCustomer);
         }
         return new CommonResponseDto("Created");
     }
@@ -67,7 +66,6 @@ public class PicCustomerServiceImpl extends BaseService implements PicCustomerSe
         User userPic = userRepo.findById(userPicId).orElseThrow(
                 () -> new NotFoundException("PIC not found")
         );
-
         List<String> customerIdList = data.getCustomerIdList();
         List<UUID> customerUUIDlist = customerIdList.stream()
                 .map(v -> UUID.fromString(v))
@@ -75,11 +73,11 @@ public class PicCustomerServiceImpl extends BaseService implements PicCustomerSe
         List<PicCustomer> customerToDelete = picCustomerRepo.findByPicIdAndCustomerIdNotIn(userPicId, customerUUIDlist);
         picCustomerRepo.deleteAll(customerToDelete);
 
-        for (UUID customerID : customerUUIDlist) {
-            User customer = userRepo.findById(customerID).orElseThrow(
+        for (UUID customerId : customerUUIDlist) {
+            User customer = userRepo.findById(customerId).orElseThrow(
                     () -> new NotFoundException("Customer not found")
             );
-            PicCustomer picCustomer = picCustomerRepo.findByCustomerId(customerID).orElse(new PicCustomer());
+            PicCustomer picCustomer = picCustomerRepo.findByCustomerId(customerId).orElse(new PicCustomer());
             picCustomer.setPic(userPic);
             picCustomer.setCustomer(customer);
 
