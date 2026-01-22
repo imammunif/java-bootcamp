@@ -11,7 +11,7 @@ public class CreateMessageRequestDto {
     private String ticketId;
 
     @NotBlank(message = "Message is required")
-    private String description;
+    private String message;
 
     public String getUserId() {
         return userId;
@@ -21,8 +21,8 @@ public class CreateMessageRequestDto {
         return ticketId;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMessage() {
+        return message;
     }
 
 }

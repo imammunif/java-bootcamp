@@ -8,13 +8,13 @@ public class UpdateMessageRequestDto {
 
     @NotBlank(message = "Message is required")
     @Size(max = 300, message = "Message length exceeds limit, max 300 characters")
-    private String description;
+    private String message;
 
     @NotNull(message = "Version is required")
     private Integer version;
 
-    public String getDescription() {
-        return description;
+    public String getMessage() {
+        return message;
     }
 
     public Integer getVersion() {
