@@ -17,8 +17,12 @@ import com.dansmultipro.tms.repository.UserRepo;
 import com.dansmultipro.tms.repository.UserRoleRepo;
 import com.dansmultipro.tms.service.UserService;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,11 +32,29 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final UserRoleRepo userRoleRepo;
     private final UserRepo userRepo;
     private final CompanyRepo companyRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRoleRepo userRoleRepo, UserRepo userRepo, CompanyRepo companyRepo) {
+    public UserServiceImpl(UserRoleRepo userRoleRepo, UserRepo userRepo, CompanyRepo companyRepo, PasswordEncoder passwordEncoder) {
         this.userRoleRepo = userRoleRepo;
         this.userRepo = userRepo;
         this.companyRepo = companyRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepo.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("User not found")
+        );
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        var userDb = userRepo.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException(email));
+        return new org.springframework.security.core.userdetails.User(
+                email, userDb.getPassword(), new ArrayList<>()
+        );
     }
 
     @Override
@@ -69,7 +91,8 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new DataIntegrityException("Email already exist");
         }
         userInsert.setEmail(requestEmail);
-        userInsert.setPassword(data.getPassword());
+        String encodedPassword = passwordEncoder.encode(data.getPassword());
+        userInsert.setPassword(encodedPassword);
         userInsert.setFullName(data.getFullName());
         userInsert.setUserRole(userRole);
         userInsert.setCompany(userCompany);
