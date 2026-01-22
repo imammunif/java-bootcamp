@@ -22,7 +22,10 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
 
     @Override
     public List<MessageResponseDto> getAll() {
-        return List.of();
+        List<MessageResponseDto> result = ticketMessageRepo.findAll().stream()
+                .map(v -> new MessageResponseDto(v.getId(), v.getUser().getFullName(), v.getMessage()))
+                .toList();
+        return result;
     }
 
     @Override

@@ -6,12 +6,12 @@ public class MessageResponseDto {
 
     private UUID id;
     private String userName;
-    private String description;
+    private String message;
 
-    public MessageResponseDto(UUID id, String userName, String description) {
+    public MessageResponseDto(UUID id, String userName, String message) {
         this.id = id;
         this.userName = userName;
-        this.description = description;
+        this.message = message;
     }
 
     public UUID getId() {
@@ -23,7 +23,7 @@ public class MessageResponseDto {
     }
 
     public String getDescription() {
-        return description;
+        return message;
     }
 
 }

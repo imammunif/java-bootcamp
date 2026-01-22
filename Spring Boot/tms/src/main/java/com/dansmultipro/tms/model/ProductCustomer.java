@@ -14,4 +14,12 @@ public class ProductCustomer extends BaseModel {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    public User getCustomer() {
+        return customer;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
 }
