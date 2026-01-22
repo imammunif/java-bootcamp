@@ -1,4 +1,4 @@
-package com.dansmultipro.tms.dto.role;
+package com.dansmultipro.tms.dto.userrole;
 
 import java.util.UUID;
 

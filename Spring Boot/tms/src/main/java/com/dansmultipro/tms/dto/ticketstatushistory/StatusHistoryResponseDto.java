@@ -1,4 +1,4 @@
-package com.dansmultipro.tms.dto.statushistory;
+package com.dansmultipro.tms.dto.ticketstatushistory;
 
 import java.util.UUID;
 

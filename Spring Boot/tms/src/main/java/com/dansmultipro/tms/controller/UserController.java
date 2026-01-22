@@ -1,0 +1,57 @@
+package com.dansmultipro.tms.controller;
+
+import com.dansmultipro.tms.dto.CreateResponseDto;
+import com.dansmultipro.tms.dto.DeleteResponseDto;
+import com.dansmultipro.tms.dto.UpdateResponseDto;
+import com.dansmultipro.tms.dto.user.CreateUserRequestDto;
+import com.dansmultipro.tms.dto.user.UpdateUserRequestDto;
+import com.dansmultipro.tms.dto.user.UserResponseDto;
+import com.dansmultipro.tms.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("users")
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> res = userService.getAll();
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable String id) {
+        UserResponseDto res = userService.getById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<CreateResponseDto> createUser(@RequestBody @Valid CreateUserRequestDto requestDto) {
+        CreateResponseDto res = userService.create(requestDto);
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<UpdateResponseDto> updateUser(@PathVariable String id, @RequestBody @Valid UpdateUserRequestDto requestDto) {
+        UpdateResponseDto res = userService.update(id, requestDto);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<DeleteResponseDto> deleteUser(@PathVariable String id) {
+        DeleteResponseDto res = userService.deleteById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+}

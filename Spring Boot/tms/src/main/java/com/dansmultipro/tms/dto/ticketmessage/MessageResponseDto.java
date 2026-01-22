@@ -1,4 +1,4 @@
-package com.dansmultipro.tms.dto.message;
+package com.dansmultipro.tms.dto.ticketmessage;
 
 import java.util.UUID;
 

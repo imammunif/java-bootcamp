@@ -1,11 +1,11 @@
 package com.dansmultipro.tms.service;
 
 
-import com.dansmultipro.tms.dto.statushistory.StatusHistoryResponseDto;
+import com.dansmultipro.tms.dto.ticketstatushistory.StatusHistoryResponseDto;
 
 import java.util.List;
 
-public interface StatusHistoryService {
+public interface TicketStatusHistoryService {
 
     List<StatusHistoryResponseDto> getAll();
 
