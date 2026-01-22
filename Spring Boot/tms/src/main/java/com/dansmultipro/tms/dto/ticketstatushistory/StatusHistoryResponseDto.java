@@ -18,11 +18,11 @@ public class StatusHistoryResponseDto {
         return id;
     }
 
-    public String getFullName() {
+    public String getStatusName() {
         return statusName;
     }
 
-    public String getRoleName() {
+    public String getTicketCode() {
         return ticketCode;
     }
 
