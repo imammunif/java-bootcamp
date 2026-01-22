@@ -1,19 +1,19 @@
 package com.dansmultipro.ams.dto.asset;
 
-import java.time.LocalDate;
-import java.util.UUID;
 
 public class AssetResponseDto {
 
-    private UUID id;
+    private String id;
     private String name;
     private String categoryName;
     private String statusName;
     private String companyName;
-    private LocalDate expiredDate;
+    private String expiredDate;
     private String code;
 
-    public AssetResponseDto(UUID id, String name, String categoryName, String statusName, String companyName, LocalDate expiredDate, String code) {
+    public AssetResponseDto() { }
+
+    public AssetResponseDto(String id, String name, String categoryName, String statusName, String companyName, String expiredDate, String code) {
         this.id = id;
         this.name = name;
         this.categoryName = categoryName;
@@ -23,7 +23,7 @@ public class AssetResponseDto {
         this.code = code;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -43,7 +43,7 @@ public class AssetResponseDto {
         return companyName;
     }
 
-    public LocalDate getExpiredDate() {
+    public String getExpiredDate() {
         return expiredDate;
     }
 

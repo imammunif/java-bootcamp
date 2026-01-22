@@ -19,10 +19,13 @@ import com.dansmultipro.ams.repository.AssetStatusRepo;
 import com.dansmultipro.ams.repository.CompanyRepo;
 import com.dansmultipro.ams.service.AssetService;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,29 +47,35 @@ public class AssetServiceImpl extends BaseService implements AssetService {
     }
 
     @Override
+    @Cacheable(value = "assets", key = "'all'")
     public List<AssetResponseDto> getAll() {
-        List<AssetResponseDto> result = assetRepo.findAll().stream()
-                .map(v -> new AssetResponseDto(v.getId(),
-                        v.getName(), v.getAssetCategory().getName(),
-                        v.getAssetStatus().getName(), v.getCompany()
-                        .getName(), v.getExpiredDate(), v.getCode()))
-                .toList();
-        return result;
+        List<Asset> assetList = assetRepo.findAll();
+        List<AssetResponseDto> assetResponseDtoList = new ArrayList<>();
+        for (Asset asset : assetList) {
+            AssetResponseDto responseDto = new AssetResponseDto(asset.getId().toString(),
+                    asset.getName(), asset.getAssetCategory().getName(),
+                    asset.getAssetStatus().getName(), asset.getCompany()
+                    .getName(), asset.getExpiredDate() != null ? asset.getExpiredDate().toString() : "", asset.getCode());
+            assetResponseDtoList.add(responseDto);
+        }
+        return assetResponseDtoList;
     }
 
     @Override
+    @Cacheable(value = "assets", key = "#id")
     public AssetResponseDto getById(String id) {
         Asset asset = assetRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Asset not found")
         );
-        return new AssetResponseDto(asset.getId(),
+        return new AssetResponseDto(asset.getId().toString(),
                 asset.getName(), asset.getAssetCategory().getName(),
                 asset.getAssetStatus().getName(), asset.getCompany()
-                .getName(), asset.getExpiredDate(), asset.getCode());
+                .getName(), asset.getExpiredDate().toString(), asset.getCode());
     }
 
     @Transactional(rollbackOn = Exception.class)
     @Override
+    @CacheEvict(value = "assets", allEntries = true)
     public CreateResponseDto insert(AssetRequestDto request) {
         String assetCompanyId = request.getCompanyId();
         Company assetCompany = companyRepo.findById(UUID.fromString(assetCompanyId)).orElseThrow(
