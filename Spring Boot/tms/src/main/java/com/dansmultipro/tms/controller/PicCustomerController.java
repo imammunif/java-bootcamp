@@ -5,20 +5,29 @@ import com.dansmultipro.tms.dto.UpdateResponseDto;
 import com.dansmultipro.tms.dto.piccustomer.CreatePicCustomerRequestDto;
 import com.dansmultipro.tms.dto.piccustomer.PicCustomerResponseDto;
 import com.dansmultipro.tms.dto.piccustomer.UpdatePicCustomerRequestDto;
+import com.dansmultipro.tms.dto.product.ProductResponseDto;
 import com.dansmultipro.tms.service.PicCustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//@RestController
-//@RequestMapping("pic-customers")
+import java.util.List;
+
+@RestController
+@RequestMapping("pic-customers")
 public class PicCustomerController {
 
     private final PicCustomerService picCustomerService;
 
     public PicCustomerController(PicCustomerService picCustomerService) {
         this.picCustomerService = picCustomerService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PicCustomerResponseDto>> getAllPicCustomers() {
+        List<PicCustomerResponseDto> res = picCustomerService.getAll();
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("{id}")

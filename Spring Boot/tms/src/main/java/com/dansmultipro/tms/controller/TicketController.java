@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
-//@RequestMapping("tickets")
+@RestController
+@RequestMapping("tickets")
 public class TicketController {
 
     private final TicketService ticketService;

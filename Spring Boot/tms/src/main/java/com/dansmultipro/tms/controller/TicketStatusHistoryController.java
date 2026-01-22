@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-//@RestController
-//@RequestMapping("status-histories")
+@RestController
+@RequestMapping("status-histories")
 public class TicketStatusHistoryController {
 
     private final TicketStatusHistoryService statusHistoryService;
