@@ -6,6 +6,7 @@ import com.dansmultipro.tms.dto.UpdateResponseDto;
 import com.dansmultipro.tms.dto.product.CreateProductRequestDto;
 import com.dansmultipro.tms.dto.product.ProductResponseDto;
 import com.dansmultipro.tms.dto.product.UpdateProductRequestDto;
+import com.dansmultipro.tms.exception.DataMissMatchException;
 import com.dansmultipro.tms.exception.NotFoundException;
 import com.dansmultipro.tms.model.Product;
 import com.dansmultipro.tms.repository.ProductRepo;
@@ -42,17 +43,33 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Override
     public CreateResponseDto create(CreateProductRequestDto data) {
-        return null;
+        Product newProduct = prepareForInsert(new Product());
+        newProduct.setName(data.getName());
+        Product product = productRepo.save(newProduct);
+        return new CreateResponseDto(product.getId(), "Saved");
     }
 
     @Override
     public UpdateResponseDto update(String id, UpdateProductRequestDto data) {
-        return null;
+        Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(
+                () -> new NotFoundException("Product not found")
+        );
+        if (!product.getVersion().equals(data.getVersion())) {
+            throw new DataMissMatchException("Version not match");
+        }
+        Product productUpdate = prepareForUpdate(product);
+        productUpdate.setName(data.getName());
+        productRepo.saveAndFlush(productUpdate);
+        return new UpdateResponseDto(productUpdate.getVersion(), "Updated");
     }
 
     @Override
     public DeleteResponseDto deleteById(String id) {
-        return null;
+        Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(
+                () -> new NotFoundException("Product not found")
+        );
+        productRepo.deleteById(product.getId());
+        return new DeleteResponseDto("Deleted");
     }
 
 }
