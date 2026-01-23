@@ -11,10 +11,10 @@ import java.util.List;
 
 public interface TicketMessageService {
 
-    List<MessageResponseDto> getAll();
+    List<MessageResponseDto> getAll(String ticketId);
 
-    CreateResponseDto create(CreateMessageRequestDto data);
+    CreateResponseDto create(String ticketId, CreateMessageRequestDto data);
 
-    UpdateResponseDto update(String id, UpdateMessageRequestDto data);
+    UpdateResponseDto update(String ticketId, String id, UpdateMessageRequestDto data);
 
 }

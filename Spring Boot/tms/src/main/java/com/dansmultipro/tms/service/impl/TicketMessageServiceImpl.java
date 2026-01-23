@@ -45,19 +45,19 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
     }
 
     @Override
-    public List<MessageResponseDto> getAll() {
-        List<MessageResponseDto> result = ticketMessageRepo.findAll().stream()
+    public List<MessageResponseDto> getAll(String ticketId) {
+        List<MessageResponseDto> result = ticketMessageRepo.findByTicketId(UUID.fromString(ticketId)).stream()
                 .map(v -> new MessageResponseDto(v.getId(), v.getUser().getFullName(), v.getMessage()))
                 .toList();
         return result;
     }
 
     @Override
-    public CreateResponseDto create(CreateMessageRequestDto data) {
-        Ticket ticket = ticketRepo.findById(UUID.fromString(data.getTicketId())).orElseThrow(
+    public CreateResponseDto create(String ticketId, CreateMessageRequestDto data) {
+        Ticket ticket = ticketRepo.findById(UUID.fromString(ticketId)).orElseThrow(
                 () -> new NotFoundException("Ticket not found")
         );
-        User user = userRepo.findById(UUID.fromString(data.getUserId())).orElseThrow(
+        User user = userRepo.findById(principalService.getPrincipal().getId()).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
         String statusCode = ticket.getStatus().getCode();
@@ -85,14 +85,16 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, UpdateMessageRequestDto data) {
+    public UpdateResponseDto update(String ticketId, String id, UpdateMessageRequestDto data) {
+        Ticket ticket = ticketRepo.findById(UUID.fromString(ticketId)).orElseThrow(
+                () -> new NotFoundException("Ticket not found")
+        );
         TicketMessage message = ticketMessageRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Message not found")
         );
         if (!message.getVersion().equals(data.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
-        Ticket ticket = message.getTicket();
         String statusCode = ticket.getStatus().getCode();
         if (statusCode.equals(StatusCode.CLOSED.getCode()) || statusCode.equals(StatusCode.RESOLVED.getCode())) {
             throw new InvalidStatusException("Ticket status is not valid");
