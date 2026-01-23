@@ -19,6 +19,8 @@ import com.dansmultipro.tms.repository.UserRepo;
 import com.dansmultipro.tms.service.TicketService;
 import com.dansmultipro.tms.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -43,12 +45,13 @@ public class TicketServiceImpl extends BaseService implements TicketService {
     }
 
     @Override
+    @Cacheable(value = "tickets", key = "'all'")
     public List<TicketResponseDto> getAll() {
         List<Ticket> ticketList = ticketRepo.findAll();
         List<TicketResponseDto> ticketResponseDtoList = new ArrayList<>();
         for (Ticket v : ticketList) {
             TicketResponseDto responseDto = new TicketResponseDto(
-                    v.getId(), v.getCode(), v.getTitle(), v.getDescription(),
+                    v.getId().toString(), v.getCode(), v.getTitle(), v.getDescription(),
                     v.getExpiredDate(), v.getStatus().getName(),
                     v.getCustomer().getFullName(),
                     v.getProduct().getName());
@@ -58,13 +61,14 @@ public class TicketServiceImpl extends BaseService implements TicketService {
     }
 
     @Override
+    @Cacheable(value = "tickets", key = "#id")
     public TicketResponseDto getById(String id) {
 
         Ticket t = ticketRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Ticket not found")
         );
         return new TicketResponseDto(
-                t.getId(), t.getCode(), t.getTitle(), t.getDescription(),
+                t.getId().toString(), t.getCode(), t.getTitle(), t.getDescription(),
                 t.getExpiredDate(), t.getStatus().getName(),
                 t.getCustomer().getFullName(),
                 t.getProduct().getName());
@@ -72,6 +76,7 @@ public class TicketServiceImpl extends BaseService implements TicketService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
+    @CacheEvict(value = "tickets", allEntries = true)
     public CreateResponseDto create(CreateTicketRequestDto data) {
         User customer = userRepo.findById(UUID.fromString(data.getCustomerId())).orElseThrow(
                 () -> new NotFoundException("Customer not found")

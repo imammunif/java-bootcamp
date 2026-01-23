@@ -1,11 +1,10 @@
 package com.dansmultipro.tms.dto.ticket;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class TicketResponseDto {
 
-    private UUID id;
+    private String id;
     private String code;
     private String title;
     private String description;
@@ -14,7 +13,7 @@ public class TicketResponseDto {
     private String customerName;
     private String productName;
 
-    public TicketResponseDto(UUID id, String code, String title, String description, LocalDate expiredDate, String statusName, String customerName, String productName) {
+    public TicketResponseDto(String id, String code, String title, String description, LocalDate expiredDate, String statusName, String customerName, String productName) {
         this.id = id;
         this.code = code;
         this.title = title;
@@ -25,7 +24,7 @@ public class TicketResponseDto {
         this.productName = productName;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
