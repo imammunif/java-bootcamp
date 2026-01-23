@@ -91,6 +91,10 @@ public class TicketServiceImpl extends BaseService implements TicketService {
         TicketStatus status = ticketStatusRepo.findByCode(StatusCode.OPEN.getCode()).orElseThrow(
                 () -> new NotFoundException("Ticket status not found")
         );
+        PicCustomer picCustomer = picCustomerRepo.findByCustomerId(customer.getId()).orElseThrow(
+                () -> new NotFoundException("No PIC-Customer relation found")
+        );
+
         Ticket newTicket = prepareForInsert(new Ticket());
         newTicket.setCode(RandomGenerator.randomizeCode(5));
         newTicket.setStatus(status);
@@ -101,9 +105,6 @@ public class TicketServiceImpl extends BaseService implements TicketService {
         newTicket.setDescription(data.getDescription());
         Ticket createdTicket = ticketRepo.save(newTicket);
 
-        PicCustomer picCustomer = picCustomerRepo.findByCustomerId(createdTicket.getCreatedBy()).orElseThrow(
-                () -> new NotFoundException("No PIC-Customer relation found")
-        );
         MailPoJo mailPoJo = new MailPoJo(
                 picCustomer.getPic().getEmail(),
                 createdTicket.getCode()
