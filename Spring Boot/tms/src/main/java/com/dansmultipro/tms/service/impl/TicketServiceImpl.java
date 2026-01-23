@@ -108,6 +108,11 @@ public class TicketServiceImpl extends BaseService implements TicketService {
         newTicket.setDescription(data.getDescription());
         Ticket createdTicket = ticketRepo.save(newTicket);
 
+        TicketStatusHistory newStatusHistory = prepareForInsert(new TicketStatusHistory());
+        newStatusHistory.setStatus(status);
+        newStatusHistory.setTicket(createdTicket);
+        ticketStatusHistoryRepo.save(newStatusHistory);
+
         MailPoJo mailPoJo = new MailPoJo(
                 picCustomer.getPic().getEmail(),
                 createdTicket.getCode()
