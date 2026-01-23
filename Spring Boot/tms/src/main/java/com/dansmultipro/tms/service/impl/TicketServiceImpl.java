@@ -56,7 +56,7 @@ public class TicketServiceImpl extends BaseService implements TicketService {
         for (Ticket v : ticketList) {
             TicketResponseDto responseDto = new TicketResponseDto(
                     v.getId().toString(), v.getCode(), v.getTitle(), v.getDescription(),
-                    v.getExpiredDate(), v.getStatus().getName(),
+                    v.getExpiredDate().toString(), v.getStatus().getName(),
                     v.getCustomer().getFullName(),
                     v.getProduct().getName());
             ticketResponseDtoList.add(responseDto);
@@ -73,7 +73,7 @@ public class TicketServiceImpl extends BaseService implements TicketService {
         );
         return new TicketResponseDto(
                 t.getId().toString(), t.getCode(), t.getTitle(), t.getDescription(),
-                t.getExpiredDate(), t.getStatus().getName(),
+                t.getExpiredDate().toString(), t.getStatus().getName(),
                 t.getCustomer().getFullName(),
                 t.getProduct().getName());
     }
