@@ -154,7 +154,7 @@ public class TicketServiceImpl extends BaseService implements TicketService {
             }
         }
         if (newStatus.equals(StatusCode.CLOSED.getCode())) {
-            if (!currentStatus.equals(StatusCode.RESOLVED.getCode())){
+            if (!currentStatus.equals(StatusCode.RESOLVED.getCode())) {
                 throw new InvalidStatusException("Only resolved ticket can be closed");
             } else {
                 updateTicket.setStatus(ticketStatus);
@@ -173,9 +173,9 @@ public class TicketServiceImpl extends BaseService implements TicketService {
     @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_TICKET)
     public void receiveEmailNotificationAssign(MailPoJo pojo) {
         mailUtil.send(
-                pojo.getEmail(),
+                pojo.getEmailAddress(),
                 "New Ticket Created",
-                "Ticket " + pojo.getTicketCode() + " successfully created");
+                "Ticket " + pojo.getEmailBody() + " successfully created");
     }
 
 }

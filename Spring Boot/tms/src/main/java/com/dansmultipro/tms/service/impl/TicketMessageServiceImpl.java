@@ -1,5 +1,6 @@
 package com.dansmultipro.tms.service.impl;
 
+import com.dansmultipro.tms.config.RabbitMQConfig;
 import com.dansmultipro.tms.constant.StatusCode;
 import com.dansmultipro.tms.dto.CreateResponseDto;
 import com.dansmultipro.tms.dto.UpdateResponseDto;
@@ -12,11 +13,15 @@ import com.dansmultipro.tms.exception.NotFoundException;
 import com.dansmultipro.tms.model.Ticket;
 import com.dansmultipro.tms.model.TicketMessage;
 import com.dansmultipro.tms.model.User;
+import com.dansmultipro.tms.pojo.MailPoJo;
 import com.dansmultipro.tms.repository.TicketMessageRepo;
 import com.dansmultipro.tms.repository.TicketRepo;
 import com.dansmultipro.tms.repository.UserRepo;
 import com.dansmultipro.tms.service.TicketMessageService;
+import com.dansmultipro.tms.util.MailUtil;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +33,15 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
     private final TicketMessageRepo ticketMessageRepo;
     private final TicketRepo ticketRepo;
     private final UserRepo userRepo;
+    private final MailUtil mailUtil;
+    private final RabbitTemplate rabbitTemplate;
 
-    public TicketMessageServiceImpl(TicketMessageRepo ticketMessageRepo, TicketRepo ticketRepo, UserRepo userRepo) {
+    public TicketMessageServiceImpl(TicketMessageRepo ticketMessageRepo, TicketRepo ticketRepo, UserRepo userRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
         this.ticketMessageRepo = ticketMessageRepo;
         this.ticketRepo = ticketRepo;
         this.userRepo = userRepo;
+        this.mailUtil = mailUtil;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -61,6 +70,16 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
         newMessage.setMessage(data.getMessage());
         TicketMessage createdMessage = ticketMessageRepo.save(newMessage);
 
+        MailPoJo mailPoJo = new MailPoJo(
+                user.getEmail(),
+                createdMessage.getMessage()
+        );
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EMAIL_EX_MESSAGE,
+                RabbitMQConfig.EMAIL_KEY_MESSAGE,
+                mailPoJo
+        );
+
         return new CreateResponseDto(createdMessage.getId(), "Saved");
     }
 
@@ -83,6 +102,14 @@ public class TicketMessageServiceImpl extends BaseService implements TicketMessa
         TicketMessage updatedMessage = ticketMessageRepo.saveAndFlush(updateMessage);
 
         return new UpdateResponseDto(updatedMessage.getVersion(), "Updated");
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_MESSAGE)
+    public void receiveEmailNotificationAssign(MailPoJo pojo) {
+        mailUtil.send(
+                pojo.getEmailAddress(),
+                "Ticket has been replied",
+                "Message :" + pojo.getEmailBody());
     }
 
 }

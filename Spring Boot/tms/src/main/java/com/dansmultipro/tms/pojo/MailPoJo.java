@@ -2,20 +2,20 @@ package com.dansmultipro.tms.pojo;
 
 public class MailPoJo {
 
-    private String email;
-    private String ticketCode;
+    private String emailAddress;
+    private String emailBody;
 
-    public MailPoJo(String email, String ticketCode) {
-        this.email = email;
-        this.ticketCode = ticketCode;
+    public MailPoJo(String emailAddress, String emailBody) {
+        this.emailAddress = emailAddress;
+        this.emailBody = emailBody;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public String getTicketCode() {
-        return ticketCode;
+    public String getEmailBody() {
+        return emailBody;
     }
-
+    
 }
