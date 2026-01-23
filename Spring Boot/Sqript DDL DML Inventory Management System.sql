@@ -18,7 +18,7 @@ CREATE TABLE t_m_agent (
 
 CREATE TABLE t_m_product_category (
     id VARCHAR(36) PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(40) NOT NULL UNIQUE,
     version INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
@@ -26,7 +26,7 @@ CREATE TABLE t_m_product_category (
 
 CREATE TABLE t_history_status (
     id VARCHAR(36) PRIMARY KEY,
-    code VARCHAR(10) NOT NULL UNIQUE,
+    code VARCHAR(5) NOT NULL UNIQUE,
     version INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
@@ -35,7 +35,7 @@ CREATE TABLE t_history_status (
 
 CREATE TABLE t_product (
     id VARCHAR(36) PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(40) NOT NULL,
     quantity INT NOT NULL,
     category_id VARCHAR(36) NOT NULL REFERENCES t_m_product_category(id),
     version INT NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE t_product (
 );
 
 
-CREATE TABLE t_supply (
+CREATE TABLE t_move_in (
     id VARCHAR(36) PRIMARY KEY,
     code VARCHAR(20) NOT NULL UNIQUE,
     date TIMESTAMP NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE t_supply (
     updated_at TIMESTAMP
 );
 
-CREATE TABLE t_checkout (
+CREATE TABLE t_move_out (
     id VARCHAR(36) PRIMARY KEY,
     code VARCHAR(20) NOT NULL UNIQUE,
     date TIMESTAMP NOT NULL,
@@ -64,23 +64,21 @@ CREATE TABLE t_checkout (
     updated_at TIMESTAMP
 );
 
-CREATE TABLE t_supply_detail (
+CREATE TABLE t_move_in_detail (
     id VARCHAR(36) PRIMARY KEY,
-    date TIMESTAMP NOT NULL,
     quantity INT NOT NULL,
     product_id VARCHAR(36) NOT NULL REFERENCES t_product(id),
-    supply_id VARCHAR(36) NOT NULL REFERENCES t_supply(id),
+    movein_id VARCHAR(36) NOT NULL REFERENCES t_move_in(id),
     version INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
 );
 
-CREATE TABLE t_checkout_detail (
+CREATE TABLE t_move_out_detail (
     id VARCHAR(36) PRIMARY KEY,
-    date TIMESTAMP NOT NULL,
     quantity INT NOT NULL,
     product_id VARCHAR(36) NOT NULL REFERENCES t_product(id),
-    checkout_id VARCHAR(36) NOT NULL REFERENCES t_checkout(id),
+    moveout_id VARCHAR(36) NOT NULL REFERENCES t_move_out(id),
     version INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
@@ -124,18 +122,18 @@ INSERT INTO t_product (id, name, quantity, category_id, version, created_at) VAL
 (uuid_generate_v4(), 'Indomie Goreng', 200, (SELECT id FROM t_m_product_category WHERE name = 'Instant Noodle' LIMIT 1), 0, now()),
 (uuid_generate_v4(), 'Daia Clean Shirt', 50, (SELECT id FROM t_m_product_category WHERE name = 'Household' LIMIT 1), 0, now());
 
-INSERT INTO t_supply (id, code, date, supplier_id, version, created_at) VALUES 
+INSERT INTO t_move_in (id, code, date, supplier_id, version, created_at) VALUES 
 (uuid_generate_v4(), 'SUP-001', now(), (SELECT id FROM t_m_supplier WHERE name = 'Indo Citra' LIMIT 1), 0, now());
 
-INSERT INTO t_supply_detail (id, date, quantity, product_id, supply_id, version, created_at) VALUES 
-(uuid_generate_v4(), now(), 50, (SELECT id FROM t_product WHERE name = 'Chitato Box' LIMIT 1), (SELECT id FROM t_supply WHERE code = 'SUP-001' LIMIT 1), 0, now()),
-(uuid_generate_v4(), now(), 100, (SELECT id FROM t_product WHERE name = 'Indomie Goreng' LIMIT 1), (SELECT id FROM t_supply WHERE code = 'SUP-001' LIMIT 1), 0, now());
+INSERT INTO t_move_in_detail (id, quantity, product_id, movein_id, version, created_at) VALUES 
+(uuid_generate_v4(), 50, (SELECT id FROM t_product WHERE name = 'Chitato Box' LIMIT 1), (SELECT id FROM t_move_in WHERE code = 'SUP-001' LIMIT 1), 0, now()),
+(uuid_generate_v4(), 100, (SELECT id FROM t_product WHERE name = 'Indomie Goreng' LIMIT 1), (SELECT id FROM t_move_in WHERE code = 'SUP-001' LIMIT 1), 0, now());
 
-INSERT INTO t_checkout (id, code, date, agent_id, version, created_at) VALUES 
+INSERT INTO t_move_out (id, code, date, agent_id, version, created_at) VALUES 
 (uuid_generate_v4(), 'TRX-001', now(), (SELECT id FROM t_m_agent WHERE name = 'Super Mart A' LIMIT 1), 0, now());
 
-INSERT INTO t_checkout_detail (id, date, quantity, product_id, checkout_id, version, created_at) VALUES 
-(uuid_generate_v4(), now(), 10, (SELECT id FROM t_product WHERE name = 'Chitato Box' LIMIT 1), (SELECT id FROM t_checkout WHERE code = 'TRX-001' LIMIT 1), 0, now());
+INSERT INTO t_move_out_detail (id, quantity, product_id, moveout_id, version, created_at) VALUES 
+(uuid_generate_v4(), 10, (SELECT id FROM t_product WHERE name = 'Chitato Box' LIMIT 1), (SELECT id FROM t_move_out WHERE code = 'TRX-001' LIMIT 1), 0, now());
 
 INSERT INTO t_stock_history (id, date, quantity, new_quantity, product_id, status_id, version, created_at) VALUES 
 (uuid_generate_v4(), now(), 50, 150, (SELECT id FROM t_product WHERE name = 'Chitato Box' LIMIT 1), (SELECT id FROM t_history_status WHERE code = 'IN' LIMIT 1), 0, now()),
