@@ -3,9 +3,9 @@ package com.dansmultipro.tms.constant;
 public enum StatusCode {
 
     OPEN("OPEN"),
-    REOPEN("RSLV"),
-    RESOLVED("CLSD"),
-    CLOSED("REOP");
+    REOPEN("REOP"),
+    RESOLVED("RSLV"),
+    CLOSED("CLSD");
 
     private final String code;
 

@@ -8,6 +8,7 @@ import com.dansmultipro.tms.dto.ticket.CreateTicketRequestDto;
 import com.dansmultipro.tms.dto.ticket.TicketResponseDto;
 import com.dansmultipro.tms.dto.ticket.UpdateTicketRequestDto;
 import com.dansmultipro.tms.exception.DataMissMatchException;
+import com.dansmultipro.tms.exception.InvalidStatusException;
 import com.dansmultipro.tms.exception.NotFoundException;
 import com.dansmultipro.tms.model.*;
 import com.dansmultipro.tms.pojo.MailPoJo;
@@ -32,14 +33,16 @@ public class TicketServiceImpl extends BaseService implements TicketService {
 
     private final TicketRepo ticketRepo;
     private final TicketStatusRepo ticketStatusRepo;
+    private final TicketStatusHistoryRepo ticketStatusHistoryRepo;
     private final UserRepo userRepo;
     private final ProductRepo productRepo;
     private final PicCustomerRepo picCustomerRepo;
     private final MailUtil mailUtil;
     private final RabbitTemplate rabbitTemplate;
 
-    public TicketServiceImpl(TicketRepo ticketRepo, UserRepo userRepo, TicketStatusRepo ticketStatusRepo, ProductRepo productRepo, PicCustomerRepo picCustomerRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
+    public TicketServiceImpl(TicketRepo ticketRepo, TicketStatusHistoryRepo ticketStatusHistoryRepo, UserRepo userRepo, TicketStatusRepo ticketStatusRepo, ProductRepo productRepo, PicCustomerRepo picCustomerRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
         this.ticketRepo = ticketRepo;
+        this.ticketStatusHistoryRepo = ticketStatusHistoryRepo;
         this.userRepo = userRepo;
         this.ticketStatusRepo = ticketStatusRepo;
         this.productRepo = productRepo;
@@ -120,23 +123,51 @@ public class TicketServiceImpl extends BaseService implements TicketService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, String statusCode, UpdateTicketRequestDto data) {
+    public UpdateResponseDto update(String id, String newStatus, UpdateTicketRequestDto data) {
         Ticket ticket = ticketRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Ticket not found")
         );
         if (!ticket.getVersion().equals(data.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
+        TicketStatus ticketStatus = ticketStatusRepo.findByCode(newStatus).orElseThrow(
+                () -> new InvalidStatusException("Status is not valid")
+        );
+
         Ticket updateTicket = prepareForUpdate(ticket);
         String currentStatus = ticket.getStatus().getCode();
 
-        //        if (statusCode.equals(StatusCode.OPEN) || statusCode.equals(StatusCode.REOPEN)) {
-        //            if (currentStatus.equals(StatusCode.OPEN.getCode()) || currentStatus.equals(StatusCode.REOPEN.getCode())) {
-        //                throw new InvalidStatusException("Ticket is already open");
-        //            }
-        //            updateTicket.setStatus(StatusCode.OPEN.getCode());
-        //        }
-        return null;
+        if (newStatus.equals(StatusCode.OPEN.getCode()) || newStatus.equals(StatusCode.REOPEN.getCode())) {
+            if (currentStatus.equals(StatusCode.OPEN.getCode()) || currentStatus.equals(StatusCode.REOPEN.getCode())) {
+                throw new InvalidStatusException("Ticket is already open");
+            } else {
+                updateTicket.setStatus(ticketStatus);
+            }
+        }
+        if (newStatus.equals(StatusCode.RESOLVED.getCode())) {
+            if (currentStatus.equals(StatusCode.RESOLVED.getCode())) {
+                throw new InvalidStatusException("Ticket is already resolved");
+            } else if (currentStatus.equals(StatusCode.CLOSED.getCode())) {
+                throw new InvalidStatusException("Ticket can't be resolved, already closed");
+            } else {
+                updateTicket.setStatus(ticketStatus);
+            }
+        }
+        if (newStatus.equals(StatusCode.CLOSED.getCode())) {
+            if (!currentStatus.equals(StatusCode.RESOLVED.getCode())){
+                throw new InvalidStatusException("Only resolved ticket can be closed");
+            } else {
+                updateTicket.setStatus(ticketStatus);
+            }
+        }
+        Ticket updatedTicket = ticketRepo.saveAndFlush(updateTicket);
+
+        TicketStatusHistory newStatusHistory = prepareForInsert(new TicketStatusHistory());
+        newStatusHistory.setStatus(ticketStatus);
+        newStatusHistory.setTicket(ticket);
+        ticketStatusHistoryRepo.save(newStatusHistory);
+
+        return new UpdateResponseDto(updatedTicket.getVersion(), "Updated");
     }
 
     @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_TICKET)
