@@ -16,6 +16,7 @@ import com.dansmultipro.tms.service.TicketService;
 import com.dansmultipro.tms.util.MailUtil;
 import com.dansmultipro.tms.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -135,6 +136,14 @@ public class TicketServiceImpl extends BaseService implements TicketService {
         //            updateTicket.setStatus(StatusCode.OPEN.getCode());
         //        }
         return null;
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_TICKET)
+    public void receiveEmailNotificationAssign(MailPoJo pojo) {
+        mailUtil.send(
+                pojo.getEmail(),
+                "New Ticket Created",
+                "Ticket " + pojo.getTicketCode() + " successfully created");
     }
 
 }

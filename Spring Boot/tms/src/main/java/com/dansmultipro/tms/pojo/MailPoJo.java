@@ -3,19 +3,19 @@ package com.dansmultipro.tms.pojo;
 public class MailPoJo {
 
     private String email;
-    private String assignmentCode;
+    private String ticketCode;
 
-    public MailPoJo(String email, String assignmentCode) {
+    public MailPoJo(String email, String ticketCode) {
         this.email = email;
-        this.assignmentCode = assignmentCode;
+        this.ticketCode = ticketCode;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getAssignmentCode() {
-        return assignmentCode;
+    public String getTicketCode() {
+        return ticketCode;
     }
 
 }
