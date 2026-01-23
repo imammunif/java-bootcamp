@@ -1,5 +1,6 @@
 package com.dansmultipro.tms.service.impl;
 
+import com.dansmultipro.tms.config.RabbitMQConfig;
 import com.dansmultipro.tms.constant.StatusCode;
 import com.dansmultipro.tms.dto.CreateResponseDto;
 import com.dansmultipro.tms.dto.UpdateResponseDto;
@@ -8,17 +9,14 @@ import com.dansmultipro.tms.dto.ticket.TicketResponseDto;
 import com.dansmultipro.tms.dto.ticket.UpdateTicketRequestDto;
 import com.dansmultipro.tms.exception.DataMissMatchException;
 import com.dansmultipro.tms.exception.NotFoundException;
-import com.dansmultipro.tms.model.Product;
-import com.dansmultipro.tms.model.Ticket;
-import com.dansmultipro.tms.model.TicketStatus;
-import com.dansmultipro.tms.model.User;
-import com.dansmultipro.tms.repository.ProductRepo;
-import com.dansmultipro.tms.repository.TicketRepo;
-import com.dansmultipro.tms.repository.TicketStatusRepo;
-import com.dansmultipro.tms.repository.UserRepo;
+import com.dansmultipro.tms.model.*;
+import com.dansmultipro.tms.pojo.MailPoJo;
+import com.dansmultipro.tms.repository.*;
 import com.dansmultipro.tms.service.TicketService;
+import com.dansmultipro.tms.util.MailUtil;
 import com.dansmultipro.tms.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -35,13 +33,18 @@ public class TicketServiceImpl extends BaseService implements TicketService {
     private final TicketStatusRepo ticketStatusRepo;
     private final UserRepo userRepo;
     private final ProductRepo productRepo;
+    private final PicCustomerRepo picCustomerRepo;
+    private final MailUtil mailUtil;
+    private final RabbitTemplate rabbitTemplate;
 
-
-    public TicketServiceImpl(TicketRepo ticketRepo, UserRepo userRepo, TicketStatusRepo ticketStatusRepo, ProductRepo productRepo) {
+    public TicketServiceImpl(TicketRepo ticketRepo, UserRepo userRepo, TicketStatusRepo ticketStatusRepo, ProductRepo productRepo, PicCustomerRepo picCustomerRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
         this.ticketRepo = ticketRepo;
         this.userRepo = userRepo;
         this.ticketStatusRepo = ticketStatusRepo;
         this.productRepo = productRepo;
+        this.picCustomerRepo = picCustomerRepo;
+        this.mailUtil = mailUtil;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -96,6 +99,19 @@ public class TicketServiceImpl extends BaseService implements TicketService {
         newTicket.setTitle(data.getTitle());
         newTicket.setDescription(data.getDescription());
         Ticket createdTicket = ticketRepo.save(newTicket);
+
+        PicCustomer picCustomer = picCustomerRepo.findByCustomerId(createdTicket.getCreatedBy()).orElseThrow(
+                () -> new NotFoundException("No PIC-Customer relation found")
+        );
+        MailPoJo mailPoJo = new MailPoJo(
+                picCustomer.getPic().getEmail(),
+                createdTicket.getCode()
+        );
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EMAIL_EX_TICKET,
+                RabbitMQConfig.EMAIL_KEY_TICKET,
+                mailPoJo
+        );
 
         return new CreateResponseDto(createdTicket.getId(), "Saved");
     }
