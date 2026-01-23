@@ -12,9 +12,6 @@ public class CreateTicketRequestDto {
     @NotBlank(message = "Ticket description is required")
     private String description;
 
-    @NotBlank(message = "Customer is required")
-    private String customerId;
-
     @NotBlank(message = "Product is required")
     private String productId;
 
@@ -24,10 +21,6 @@ public class CreateTicketRequestDto {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getCustomerId() {
-        return customerId;
     }
 
     public String getProductId() {

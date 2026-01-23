@@ -1,13 +1,16 @@
 package com.dansmultipro.tms.pojo;
 
-public class AuthorizationPoJo {
-    private String id;
+import java.util.UUID;
 
-    public AuthorizationPoJo(String id) {
+public class AuthorizationPoJo {
+
+    private UUID id;
+
+    public AuthorizationPoJo(UUID id) {
         this.id = id;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

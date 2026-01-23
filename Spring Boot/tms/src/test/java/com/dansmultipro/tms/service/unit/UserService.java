@@ -46,7 +46,7 @@ public class UserService {
     @Test
     public void shouldCreated_whenDataValid() {
         userService.setPrincipalService(principalService);
-        var authPojo = new AuthorizationPoJo(UUID.randomUUID().toString());
+        var authPojo = new AuthorizationPoJo(UUID.randomUUID());
 
         var dto = new CreateUserRequestDto();
         dto.setFullName("John Doe");

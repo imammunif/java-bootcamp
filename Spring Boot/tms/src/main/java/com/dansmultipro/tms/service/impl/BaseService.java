@@ -11,22 +11,23 @@ public abstract class BaseService {
 
     protected PrincipalService principalService;
 
+    @Autowired
+    public void setPrincipalService(PrincipalService principalService) {
+        this.principalService = principalService;
+    }
+
     protected <T extends BaseModel> T prepareForInsert(T object) {
         object.setId(UUID.randomUUID());
         object.setCreatedAt(LocalDateTime.now());
-        object.setCreatedBy(UUID.fromString(principalService.getPrincipal().getId()));
+        object.setCreatedBy(principalService.getPrincipal().getId());
         return object;
     }
 
     protected <T extends BaseModel> T prepareForUpdate(T object) {
         object.setUpdatedAt(LocalDateTime.now());
-        object.setUpdatedBy(UUID.fromString(principalService.getPrincipal().getId()));
+        object.setUpdatedBy(principalService.getPrincipal().getId());
         return object;
     }
 
-    @Autowired
-    public void setPrincipalService(PrincipalService principalService) {
-        this.principalService = principalService;
-    }
 
 }

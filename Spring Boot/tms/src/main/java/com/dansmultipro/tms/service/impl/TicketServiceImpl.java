@@ -85,7 +85,7 @@ public class TicketServiceImpl extends BaseService implements TicketService {
     @Override
     @CacheEvict(value = "tickets", allEntries = true)
     public CreateResponseDto create(CreateTicketRequestDto data) {
-        User customer = userRepo.findById(UUID.fromString(data.getCustomerId())).orElseThrow(
+        User customer = userRepo.findById(principalService.getPrincipal().getId()).orElseThrow(
                 () -> new NotFoundException("Customer not found")
         );
         Product product = productRepo.findById(UUID.fromString(data.getProductId())).orElseThrow(
