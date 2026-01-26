@@ -20,8 +20,24 @@ public class Product extends BaseModel {
         return name;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public ProductCategory getCategory() {
+        return category;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setCategory(ProductCategory category) {
+        this.category = category;
     }
 
 }
