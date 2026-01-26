@@ -1,21 +1,25 @@
 package com.dansmultipro.ims.dto.moveout;
 
+import com.dansmultipro.ims.dto.moveoutdetail.CreateMoveOutDetailRequestDto;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+
+import java.util.List;
 
 public class CreateMoveOutRequestDto {
-
-    @NotBlank(message = "Product is required")
-    private String productId;
 
     @NotBlank(message = "Agent is required")
     private String agentId;
 
-    public String getProductId() {
-        return productId;
-    }
+    @NotEmpty(message = "Move out details cannot be empty")
+    private List<CreateMoveOutDetailRequestDto> moveOutDetailList;
 
     public String getAgentId() {
         return agentId;
+    }
+
+    public List<CreateMoveOutDetailRequestDto> getMoveOutDetailList() {
+        return moveOutDetailList;
     }
 
 }

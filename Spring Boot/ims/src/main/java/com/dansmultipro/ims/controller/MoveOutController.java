@@ -3,6 +3,7 @@ package com.dansmultipro.ims.controller;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.moveout.CreateMoveOutRequestDto;
 import com.dansmultipro.ims.dto.moveout.MoveOutResponseDto;
+import com.dansmultipro.ims.dto.moveoutdetail.MoveOutDetailResponseDto;
 import com.dansmultipro.ims.service.MoveOutService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class MoveOutController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<MoveOutResponseDto> getMoveOutById(@PathVariable String id) {
-        MoveOutResponseDto res = moveOutService.getById(id);
+    public ResponseEntity<List<MoveOutDetailResponseDto>> getMoveOutById(@PathVariable String id) {
+        List<MoveOutDetailResponseDto> res = moveOutService.getById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

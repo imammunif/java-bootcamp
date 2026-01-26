@@ -1,20 +1,14 @@
 package com.dansmultipro.ims.service.impl;
 
+import com.dansmultipro.ims.constant.HistoryTypeCode;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.movein.CreateMoveInRequestDto;
 import com.dansmultipro.ims.dto.movein.MoveInResponseDto;
 import com.dansmultipro.ims.dto.moveindetail.CreateMoveInDetailRequestDto;
 import com.dansmultipro.ims.dto.moveindetail.MoveInDetailResponseDto;
-import com.dansmultipro.ims.exception.InvalidQuantityException;
 import com.dansmultipro.ims.exception.NotFoundException;
-import com.dansmultipro.ims.model.MoveIn;
-import com.dansmultipro.ims.model.MoveInDetail;
-import com.dansmultipro.ims.model.Product;
-import com.dansmultipro.ims.model.Supplier;
-import com.dansmultipro.ims.repo.MoveInDetailRepo;
-import com.dansmultipro.ims.repo.MoveInRepo;
-import com.dansmultipro.ims.repo.ProductRepo;
-import com.dansmultipro.ims.repo.SupplierRepo;
+import com.dansmultipro.ims.model.*;
+import com.dansmultipro.ims.repo.*;
 import com.dansmultipro.ims.service.MoveInService;
 import com.dansmultipro.ims.util.RandomGenerator;
 import jakarta.transaction.Transactional;
@@ -31,12 +25,16 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
     private final MoveInDetailRepo moveInDetailRepo;
     private final SupplierRepo supplierRepo;
     private final ProductRepo productRepo;
+    private final HistoryTypeRepo historyTypeRepo;
+    private final MoveHistoryRepo moveHistoryRepo;
 
-    public MoveInServiceImpl(MoveInRepo moveInRepo, MoveInDetailRepo moveInDetailRepo, SupplierRepo supplierRepo, ProductRepo productRepo) {
+    public MoveInServiceImpl(MoveInRepo moveInRepo, MoveInDetailRepo moveInDetailRepo, SupplierRepo supplierRepo, ProductRepo productRepo, HistoryTypeRepo historyTypeRepo, MoveHistoryRepo moveHistoryRepo) {
         this.moveInRepo = moveInRepo;
         this.moveInDetailRepo = moveInDetailRepo;
         this.supplierRepo = supplierRepo;
         this.productRepo = productRepo;
+        this.historyTypeRepo = historyTypeRepo;
+        this.moveHistoryRepo = moveHistoryRepo;
     }
 
     @Override
@@ -49,7 +47,7 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
 
     @Override
     public List<MoveInDetailResponseDto> getById(String id) {
-        MoveIn moveIn = moveInRepo.findById(UUID.fromString(id)).orElseThrow(
+        moveInRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Move in supply not found")
         );
         List<MoveInDetailResponseDto> result = moveInDetailRepo.findByMoveInId(UUID.fromString(id)).stream()
@@ -66,7 +64,6 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         Supplier supplier = supplierRepo.findById(UUID.fromString(requestDto.getSupplierId())).orElseThrow(
                 () -> new NotFoundException("Supplier not found")
         );
-        List<CreateMoveInDetailRequestDto> detailDtoList = requestDto.getMoveInDetailList();
         MoveIn moveInNew = new MoveIn();
         MoveIn moveInInsert = prepareForInsert(moveInNew);
         moveInInsert.setCode(RandomGenerator.randomizeCode(20));
@@ -74,18 +71,34 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         moveInInsert.setSupplier(supplier);
         MoveIn createdMoveIn = moveInRepo.save(moveInInsert);
 
+        List<CreateMoveInDetailRequestDto> detailDtoList = requestDto.getMoveInDetailList();
         for (CreateMoveInDetailRequestDto detailDto : detailDtoList) {
             Product product = productRepo.findById(UUID.fromString(detailDto.getProductId())).orElseThrow(
                     () -> new NotFoundException("Product not found")
             );
-            if (detailDto.getQuantity() <= 0) {
-                throw new InvalidQuantityException("Quantity is not valid");
-            }
+            HistoryType type = historyTypeRepo.findByCode(HistoryTypeCode.IN.name()).orElseThrow(
+                    () -> new NotFoundException("History type not found")
+            );
+            Integer oldQty = product.getQuantity();
+            Integer diffQty = detailDto.getQuantity();
+            Integer newQty = oldQty + diffQty;
+
             MoveInDetail newMoveInDetail = prepareForInsert(new MoveInDetail());
             newMoveInDetail.setMoveIn(createdMoveIn);
             newMoveInDetail.setProduct(product);
-            newMoveInDetail.setQuantity(detailDto.getQuantity());
+            newMoveInDetail.setQuantity(diffQty);
             moveInDetailRepo.save(newMoveInDetail);
+
+            product.setQuantity(newQty);
+            productRepo.save(product);
+
+            MoveHistory newHistory = prepareForInsert(new MoveHistory());
+            newHistory.setProduct(product);
+            newHistory.setHistoryType(type);
+            newHistory.setDate(LocalDate.now());
+            newHistory.setQuantity(diffQty);
+            newHistory.setNewQuantity(newQty);
+            moveHistoryRepo.save(newHistory);
         }
 
         return new CreateResponseDto(createdMoveIn.getId(), "Saved");
