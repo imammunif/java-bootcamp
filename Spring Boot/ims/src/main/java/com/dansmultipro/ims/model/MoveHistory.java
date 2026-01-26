@@ -41,7 +41,7 @@ public class MoveHistory extends BaseModel {
         return product;
     }
 
-    public HistoryType getMoveType() {
+    public HistoryType getHistoryType() {
         return historyType;
     }
 
@@ -61,7 +61,7 @@ public class MoveHistory extends BaseModel {
         this.product = product;
     }
 
-    public void setMoveType(HistoryType historyType) {
+    public void setHistoryType(HistoryType historyType) {
         this.historyType = historyType;
     }
 
