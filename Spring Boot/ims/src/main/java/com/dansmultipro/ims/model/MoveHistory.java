@@ -23,7 +23,7 @@ public class MoveHistory extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
-    private MoveType moveType;
+    private HistoryType historyType;
 
     public LocalDate getDate() {
         return date;
@@ -41,8 +41,8 @@ public class MoveHistory extends BaseModel {
         return product;
     }
 
-    public MoveType getMoveType() {
-        return moveType;
+    public HistoryType getMoveType() {
+        return historyType;
     }
 
     public void setDate(LocalDate date) {
@@ -61,8 +61,8 @@ public class MoveHistory extends BaseModel {
         this.product = product;
     }
 
-    public void setMoveType(MoveType moveType) {
-        this.moveType = moveType;
+    public void setMoveType(HistoryType historyType) {
+        this.historyType = historyType;
     }
 
 }
