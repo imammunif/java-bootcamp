@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "t_stock_history")
-public class StockHistory extends BaseModel {
+public class MoveHistory extends BaseModel {
 
     @Column(nullable = false)
     private LocalDate date;
@@ -23,7 +23,7 @@ public class StockHistory extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
-    private HistoryStatus historyStatus;
+    private MoveType moveType;
 
     public LocalDate getDate() {
         return date;
@@ -41,8 +41,8 @@ public class StockHistory extends BaseModel {
         return product;
     }
 
-    public HistoryStatus getHistoryStatus() {
-        return historyStatus;
+    public MoveType getMoveType() {
+        return moveType;
     }
 
     public void setDate(LocalDate date) {
@@ -61,8 +61,8 @@ public class StockHistory extends BaseModel {
         this.product = product;
     }
 
-    public void setHistoryStatus(HistoryStatus historyStatus) {
-        this.historyStatus = historyStatus;
+    public void setMoveType(MoveType moveType) {
+        this.moveType = moveType;
     }
 
 }
