@@ -31,7 +31,7 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
     @Override
     public List<MoveOutResponseDto> getAll() {
         List<MoveOutResponseDto> result = moveOutRepo.findAll().stream()
-                .map(v -> new MoveOutResponseDto(v.getId(), v.getCode(), v.getDate().toString(), v.getProduct().getName(), v.getAgent().getName()))
+                .map(v -> new MoveOutResponseDto(v.getId(), v.getCode(), v.getDate().toString(), v.getAgent().getName()))
                 .toList();
         return result;
     }
@@ -41,7 +41,7 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
         MoveOut moveOut = moveOutRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Move out checkout not found")
         );
-        return new MoveOutResponseDto(moveOut.getId(), moveOut.getCode(), moveOut.getDate().toString(), moveOut.getProduct().getName(), moveOut.getAgent().getName());
+        return new MoveOutResponseDto(moveOut.getId(), moveOut.getCode(), moveOut.getDate().toString(), moveOut.getAgent().getName());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -51,11 +51,11 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
                 () -> new NotFoundException("Agent not found")
         );
         MoveOut moveOutNew = new MoveOut();
-        MoveOut moveInInsert = prepareForInsert(moveOutNew);
-        moveInInsert.setCode(RandomGenerator.randomizeCode(20));
-        moveInInsert.setDate(LocalDate.now());
-        moveInInsert.setAgent(agent);
-        MoveOut createdMoveOut = moveOutRepo.save(moveInInsert);
+        MoveOut moveOutInsert = prepareForInsert(moveOutNew);
+        moveOutInsert.setCode(RandomGenerator.randomizeCode(20));
+        moveOutInsert.setDate(LocalDate.now());
+        moveOutInsert.setAgent(agent);
+        MoveOut createdMoveOut = moveOutRepo.save(moveOutInsert);
 
         //TODO ADD NEW MOVE IN DETAIL
 

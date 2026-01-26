@@ -31,7 +31,7 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
     @Override
     public List<MoveInResponseDto> getAll() {
         List<MoveInResponseDto> result = moveInRepo.findAll().stream()
-                .map(v -> new MoveInResponseDto(v.getId(), v.getCode(), v.getDate().toString(), v.getProduct().getName(), v.getSupplier().getName()))
+                .map(v -> new MoveInResponseDto(v.getId(), v.getCode(), v.getDate().toString(), v.getSupplier().getName()))
                 .toList();
         return result;
     }
@@ -41,7 +41,7 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         MoveIn moveIn = moveInRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Move in supply not found")
         );
-        return new MoveInResponseDto(moveIn.getId(), moveIn.getCode(), moveIn.getDate().toString(), moveIn.getProduct().getName(), moveIn.getSupplier().getName());
+        return new MoveInResponseDto(moveIn.getId(), moveIn.getCode(), moveIn.getDate().toString(), moveIn.getSupplier().getName());
     }
 
     @Transactional(rollbackOn = Exception.class)

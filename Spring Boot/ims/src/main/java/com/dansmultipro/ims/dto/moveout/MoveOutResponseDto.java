@@ -7,14 +7,12 @@ public class MoveOutResponseDto {
     private UUID id;
     private String code;
     private String date;
-    private String productName;
     private String agentName;
 
-    public MoveOutResponseDto(UUID id, String code, String date, String productName, String agentName) {
+    public MoveOutResponseDto(UUID id, String code, String date, String agentName) {
         this.id = id;
         this.code = code;
         this.date = date;
-        this.productName = productName;
         this.agentName = agentName;
     }
 
@@ -28,10 +26,6 @@ public class MoveOutResponseDto {
 
     public String getDate() {
         return date;
-    }
-
-    public String getProductName() {
-        return productName;
     }
 
     public String getAgentName() {
