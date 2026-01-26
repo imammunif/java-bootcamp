@@ -15,6 +15,10 @@ public class MoveOut extends BaseModel {
     private LocalDate date;
 
     @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @ManyToOne
     @JoinColumn(name = "agent_id", nullable = false)
     private Agent agent;
 
@@ -24,6 +28,10 @@ public class MoveOut extends BaseModel {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 
     public Agent getAgent() {
@@ -36,6 +44,10 @@ public class MoveOut extends BaseModel {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public void setAgent(Agent agent) {
