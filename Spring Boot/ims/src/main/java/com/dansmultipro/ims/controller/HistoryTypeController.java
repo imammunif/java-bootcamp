@@ -13,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("history-types")
-public class TicketStatusController {
+public class HistoryTypeController {
 
     private final HistoryTypeService historyTypeService;
 
-    public TicketStatusController(HistoryTypeService historyTypeService) {
+    public HistoryTypeController(HistoryTypeService historyTypeService) {
         this.historyTypeService = historyTypeService;
     }
 
