@@ -15,6 +15,10 @@ public class MoveIn extends BaseModel {
     private LocalDate date;
 
     @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @ManyToOne
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
 
@@ -24,6 +28,10 @@ public class MoveIn extends BaseModel {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 
     public Supplier getSupplier() {
@@ -36,6 +44,10 @@ public class MoveIn extends BaseModel {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public void setSupplier(Supplier supplier) {
