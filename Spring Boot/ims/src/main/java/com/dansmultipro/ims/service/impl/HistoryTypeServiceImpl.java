@@ -5,10 +5,12 @@ import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.HistoryType;
 import com.dansmultipro.ims.repo.HistoryTypeRepo;
 import com.dansmultipro.ims.service.HistoryTypeService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class HistoryTypeServiceImpl extends BaseService implements HistoryTypeService {
 
     private final HistoryTypeRepo historyTypeRepo;

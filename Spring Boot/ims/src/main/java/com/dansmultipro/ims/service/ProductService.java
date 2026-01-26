@@ -4,16 +4,16 @@ import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.product.CreateProductRequestDto;
-import com.dansmultipro.ims.dto.product.CreateProductResponseDto;
+import com.dansmultipro.ims.dto.product.ProductResponseDto;
 import com.dansmultipro.ims.dto.product.UpdateProductRequestDto;
 
 import java.util.List;
 
 public interface ProductService {
 
-    List<CreateProductResponseDto> getAll();
+    List<ProductResponseDto> getAll();
 
-    CreateProductResponseDto getById(String id);
+    ProductResponseDto getById(String id);
 
     CreateResponseDto create(CreateProductRequestDto requestDto);
 

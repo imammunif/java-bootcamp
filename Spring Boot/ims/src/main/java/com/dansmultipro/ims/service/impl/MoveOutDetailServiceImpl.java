@@ -11,6 +11,7 @@ import com.dansmultipro.ims.repo.MoveOutDetailRepo;
 import com.dansmultipro.ims.repo.MoveOutRepo;
 import com.dansmultipro.ims.repo.ProductRepo;
 import com.dansmultipro.ims.service.MoveOutDetailService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class MoveOutDetailServiceImpl extends BaseService implements MoveOutDeta
         return result;
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(String moveOutId, CreateMoveOutDetailRequestDto requestDto) {
         MoveOut moveOut = moveOutRepo.findById(UUID.fromString(moveOutId)).orElseThrow(

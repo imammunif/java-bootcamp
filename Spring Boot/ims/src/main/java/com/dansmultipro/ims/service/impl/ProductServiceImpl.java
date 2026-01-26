@@ -4,7 +4,7 @@ import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.product.CreateProductRequestDto;
-import com.dansmultipro.ims.dto.product.CreateProductResponseDto;
+import com.dansmultipro.ims.dto.product.ProductResponseDto;
 import com.dansmultipro.ims.dto.product.UpdateProductRequestDto;
 import com.dansmultipro.ims.exception.DataMissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
@@ -31,19 +31,19 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public List<CreateProductResponseDto> getAll() {
-        List<CreateProductResponseDto> result = productRepo.findAll().stream()
-                .map(v -> new CreateProductResponseDto(v.getId(), v.getName()))
+    public List<ProductResponseDto> getAll() {
+        List<ProductResponseDto> result = productRepo.findAll().stream()
+                .map(v -> new ProductResponseDto(v.getId(), v.getName(), v.getQuantity().toString()))
                 .toList();
         return result;
     }
 
     @Override
-    public CreateProductResponseDto getById(String id) {
+    public ProductResponseDto getById(String id) {
         Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
-        return new CreateProductResponseDto(product.getId(), product.getName());
+        return new ProductResponseDto(product.getId(), product.getName(), product.getQuantity().toString());
     }
 
     @Transactional(rollbackOn = Exception.class)

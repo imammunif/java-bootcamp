@@ -3,6 +3,7 @@ package com.dansmultipro.ims.controller;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.movein.CreateMoveInRequestDto;
 import com.dansmultipro.ims.dto.movein.MoveInResponseDto;
+import com.dansmultipro.ims.dto.moveindetail.MoveInDetailResponseDto;
 import com.dansmultipro.ims.service.MoveInService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class MoveInController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<MoveInResponseDto> getMoveInById(@PathVariable String id) {
-        MoveInResponseDto res = moveInService.getById(id);
+    public ResponseEntity<List<MoveInDetailResponseDto>> getMoveInById(@PathVariable String id) {
+        List<MoveInDetailResponseDto> res = moveInService.getById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

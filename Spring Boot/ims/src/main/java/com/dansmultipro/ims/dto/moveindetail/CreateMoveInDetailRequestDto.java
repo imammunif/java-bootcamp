@@ -7,16 +7,13 @@ import jakarta.validation.constraints.NotNull;
 
 public class CreateMoveInDetailRequestDto {
 
+    @NotBlank(message = "Product is required")
+    private String productId;
+
     @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "Product quantity must be at least 1")
     @Max(value = 100, message = "Product quantity cannot exceed 100")
     private Integer quantity;
-
-    @NotBlank(message = "Product is required")
-    private String productId;
-
-    @NotBlank(message = "Move in supply is required")
-    private String moveInId;
 
     public Integer getQuantity() {
         return quantity;
@@ -24,10 +21,6 @@ public class CreateMoveInDetailRequestDto {
 
     public String getProductId() {
         return productId;
-    }
-
-    public String getMoveInId() {
-        return moveInId;
     }
 
 }

@@ -5,10 +5,12 @@ import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.repo.MoveHistoryRepo;
 import com.dansmultipro.ims.repo.ProductRepo;
 import com.dansmultipro.ims.service.MoveHistoryService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class MoveHistoryServiceImpl extends BaseService implements MoveHistoryService {
 
     private final MoveHistoryRepo moveHistoryRepo;
@@ -43,5 +45,5 @@ public class MoveHistoryServiceImpl extends BaseService implements MoveHistorySe
                 .toList();
         return result;
     }
-    
+
 }
