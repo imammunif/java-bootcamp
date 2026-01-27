@@ -107,8 +107,7 @@ INSERT INTO t_m_product_category (id, name, version, created_at) VALUES
 (uuid_generate_v4(), 'Snacks', 0, now()),
 (uuid_generate_v4(), 'Personal Care', 0, now()),
 (uuid_generate_v4(), 'Groceries', 0, now()),
-(uuid_generate_v4(), 'Bakery', 0, now()),
-(uuid_generate_v4(), 'Household', 0, now());
+(uuid_generate_v4(), 'Bakery', 0, now());
 
 INSERT INTO t_m_supplier (id, name, version, created_at) VALUES 
 (uuid_generate_v4(), 'PT. Indo Citra', 0, now()),

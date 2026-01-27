@@ -7,6 +7,7 @@ import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.productcategory.CreateProductCategoryRequestDto;
 import com.dansmultipro.ims.dto.productcategory.ProductCategoryResponseDto;
 import com.dansmultipro.ims.dto.productcategory.UpdateProductCategoryRequestDto;
+import com.dansmultipro.ims.exception.DataIntegrityException;
 import com.dansmultipro.ims.exception.DataMissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.ProductCategory;
@@ -59,8 +60,9 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateProductCategoryRequestDto requestDto) {
-        //TODO CHECK EXISTING NAME
-
+        if (productCategoryRepo.findByName(requestDto.getName()).isPresent()) {
+            throw new DataIntegrityException("Category already exist");
+        }
         ProductCategory newCategory = prepareForInsert(new ProductCategory());
         newCategory.setName(requestDto.getName());
         ProductCategory createdCategory = productCategoryRepo.save(newCategory);
