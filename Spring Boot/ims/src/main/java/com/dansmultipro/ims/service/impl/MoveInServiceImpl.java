@@ -103,6 +103,7 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
             newMoveInDetail.setQuantity(diffQty);
             moveInDetailRepo.save(newMoveInDetail);
 
+            prepareForUpdate(product);
             product.setQuantity(newQty);
             productRepo.save(product);
 

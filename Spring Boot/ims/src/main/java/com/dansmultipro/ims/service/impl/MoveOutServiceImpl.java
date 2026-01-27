@@ -106,6 +106,7 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
             newMoveOutDetail.setQuantity(diffQty);
             moveOutDetailRepo.save(newMoveOutDetail);
 
+            prepareForUpdate(product);
             product.setQuantity(newQty);
             productRepo.save(product);
 
