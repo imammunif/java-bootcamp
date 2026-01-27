@@ -2,6 +2,7 @@ package com.dansmultipro.ims.service.impl;
 
 import com.dansmultipro.ims.constant.HistoryTypeCode;
 import com.dansmultipro.ims.dto.CreateResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.moveout.CreateMoveOutRequestDto;
 import com.dansmultipro.ims.dto.moveout.MoveOutResponseDto;
 import com.dansmultipro.ims.dto.moveoutdetail.CreateMoveOutDetailRequestDto;
@@ -13,6 +14,9 @@ import com.dansmultipro.ims.repo.*;
 import com.dansmultipro.ims.service.MoveOutService;
 import com.dansmultipro.ims.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,11 +43,21 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
     }
 
     @Override
-    public List<MoveOutResponseDto> getAll() {
-        List<MoveOutResponseDto> result = moveOutRepo.findAll().stream()
+    public PaginatedResponseDto<MoveOutResponseDto> getAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MoveOut> moveOutPages = moveOutRepo.findAll(pageable);
+
+        List<MoveOut> moveOutList = moveOutPages.getContent();
+        List<MoveOutResponseDto> responseDtoList = moveOutList.stream()
                 .map(v -> new MoveOutResponseDto(v.getId(), v.getCode(), v.getDate().toString(), v.getAgent().getName()))
                 .toList();
-        return result;
+
+        PaginatedResponseDto<MoveOutResponseDto> paginatedMoveOutResponse = new PaginatedResponseDto<>(
+                responseDtoList,
+                moveOutPages.getTotalElements()
+        );
+
+        return paginatedMoveOutResponse;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.dansmultipro.ims.controller;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.moveout.CreateMoveOutRequestDto;
 import com.dansmultipro.ims.dto.moveout.MoveOutResponseDto;
 import com.dansmultipro.ims.dto.moveoutdetail.MoveOutDetailResponseDto;
@@ -23,8 +24,11 @@ public class MoveOutController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MoveOutResponseDto>> getAllMoveOut() {
-        List<MoveOutResponseDto> res = moveOutService.getAll();
+    public ResponseEntity<PaginatedResponseDto<MoveOutResponseDto>> getAllMoveOut(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<MoveOutResponseDto> res = moveOutService.getAll(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
