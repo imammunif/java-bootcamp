@@ -29,7 +29,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     @Override
     public List<SupplierResponseDto> getAll() {
         List<SupplierResponseDto> result = supplierRepo.findAll().stream()
-                .map(v -> new SupplierResponseDto(v.getId(), v.getName()))
+                .map(v -> new SupplierResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
                 .toList();
         return result;
     }
@@ -39,7 +39,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         Supplier supplier = supplierRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Supplier not found")
         );
-        return new SupplierResponseDto(supplier.getId(), supplier.getName());
+        return new SupplierResponseDto(supplier.getId(), supplier.getName(), supplier.getVersion().toString());
     }
 
     @Transactional(rollbackOn = Exception.class)

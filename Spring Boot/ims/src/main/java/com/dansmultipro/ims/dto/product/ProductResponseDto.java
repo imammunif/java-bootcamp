@@ -7,11 +7,13 @@ public class ProductResponseDto {
     private UUID id;
     private String name;
     private String quantity;
+    private String version;
 
-    public ProductResponseDto(UUID id, String name, String quantity) {
+    public ProductResponseDto(UUID id, String name, String quantity, String version) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
+        this.version = version;
     }
 
     public UUID getId() {
@@ -24,6 +26,10 @@ public class ProductResponseDto {
 
     public String getQuantity() {
         return quantity;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
 }

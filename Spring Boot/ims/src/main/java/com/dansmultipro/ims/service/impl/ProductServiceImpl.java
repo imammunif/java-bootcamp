@@ -33,7 +33,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Override
     public List<ProductResponseDto> getAll() {
         List<ProductResponseDto> result = productRepo.findAll().stream()
-                .map(v -> new ProductResponseDto(v.getId(), v.getName(), v.getQuantity().toString()))
+                .map(v -> new ProductResponseDto(v.getId(), v.getName(), v.getQuantity().toString(), v.getVersion().toString()))
                 .toList();
         return result;
     }
@@ -43,7 +43,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
-        return new ProductResponseDto(product.getId(), product.getName(), product.getQuantity().toString());
+        return new ProductResponseDto(product.getId(), product.getName(), product.getQuantity().toString(), product.getVersion().toString());
     }
 
     @Transactional(rollbackOn = Exception.class)

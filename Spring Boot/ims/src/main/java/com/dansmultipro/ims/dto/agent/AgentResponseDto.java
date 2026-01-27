@@ -6,10 +6,12 @@ public class AgentResponseDto {
 
     private UUID id;
     private String name;
+    private String version;
 
-    public AgentResponseDto(UUID id, String name) {
+    public AgentResponseDto(UUID id, String name, String version) {
         this.id = id;
         this.name = name;
+        this.version = version;
     }
 
     public UUID getId() {
@@ -18,6 +20,10 @@ public class AgentResponseDto {
 
     public String getName() {
         return name;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
 }

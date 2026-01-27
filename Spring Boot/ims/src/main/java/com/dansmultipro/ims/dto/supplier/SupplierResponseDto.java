@@ -6,10 +6,12 @@ public class SupplierResponseDto {
 
     private UUID id;
     private String name;
+    private String version;
 
-    public SupplierResponseDto(UUID id, String name) {
+    public SupplierResponseDto(UUID id, String name, String version) {
         this.id = id;
         this.name = name;
+        this.version = version;
     }
 
     public UUID getId() {
@@ -18,6 +20,10 @@ public class SupplierResponseDto {
 
     public String getName() {
         return name;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
 }

@@ -29,7 +29,7 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     @Override
     public List<ProductCategoryResponseDto> getAll() {
         List<ProductCategoryResponseDto> result = productCategoryRepo.findAll().stream()
-                .map(v -> new ProductCategoryResponseDto(v.getId(), v.getName()))
+                .map(v -> new ProductCategoryResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
                 .toList();
         return result;
     }
@@ -39,7 +39,7 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
         ProductCategory productCategory = productCategoryRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
-        return new ProductCategoryResponseDto(productCategory.getId(), productCategory.getName());
+        return new ProductCategoryResponseDto(productCategory.getId(), productCategory.getName(), productCategory.getVersion().toString());
     }
 
     @Transactional(rollbackOn = Exception.class)

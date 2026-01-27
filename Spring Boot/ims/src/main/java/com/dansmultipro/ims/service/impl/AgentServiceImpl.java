@@ -30,7 +30,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
     @Override
     public List<AgentResponseDto> getAll() {
         List<AgentResponseDto> result = agentRepo.findAll().stream()
-                .map(v -> new AgentResponseDto(v.getId(), v.getName()))
+                .map(v -> new AgentResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
                 .toList();
         return result;
     }
@@ -40,7 +40,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
         Agent agent = agentRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Agent not found")
         );
-        return new AgentResponseDto(agent.getId(), agent.getName());
+        return new AgentResponseDto(agent.getId(), agent.getName(), agent.getVersion().toString());
     }
 
     @Transactional(rollbackOn = Exception.class)
