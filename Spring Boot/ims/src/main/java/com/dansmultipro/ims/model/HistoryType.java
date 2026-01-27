@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "t_history_status")
+@Table(name = "t_history_type")
 public class HistoryType extends BaseModel {
 
     @Column(nullable = false, length = 5, unique = true)

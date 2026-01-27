@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "t_stock_history")
+@Table(name = "t_move_history")
 public class MoveHistory extends BaseModel {
 
     @Column(nullable = false)
