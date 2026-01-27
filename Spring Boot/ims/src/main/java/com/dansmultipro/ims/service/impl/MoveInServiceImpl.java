@@ -2,6 +2,7 @@ package com.dansmultipro.ims.service.impl;
 
 import com.dansmultipro.ims.constant.HistoryTypeCode;
 import com.dansmultipro.ims.dto.CreateResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.movein.CreateMoveInRequestDto;
 import com.dansmultipro.ims.dto.movein.MoveInResponseDto;
 import com.dansmultipro.ims.dto.moveindetail.CreateMoveInDetailRequestDto;
@@ -12,6 +13,9 @@ import com.dansmultipro.ims.repo.*;
 import com.dansmultipro.ims.service.MoveInService;
 import com.dansmultipro.ims.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -38,11 +42,20 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
     }
 
     @Override
-    public List<MoveInResponseDto> getAll() {
-        List<MoveInResponseDto> result = moveInRepo.findAll().stream()
+    public PaginatedResponseDto<MoveInResponseDto> getAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MoveIn> moveInPages = moveInRepo.findAll(pageable);
+
+        List<MoveIn> moveInList = moveInPages.getContent();
+        List<MoveInResponseDto> responseDtoList = moveInList.stream()
                 .map(v -> new MoveInResponseDto(v.getId(), v.getCode(), v.getDate().toString(), v.getSupplier().getName()))
                 .toList();
-        return result;
+
+        PaginatedResponseDto<MoveInResponseDto> paginatedMoveInResponse = new PaginatedResponseDto<>(
+                responseDtoList,
+                moveInPages.getTotalElements()
+        );
+        return paginatedMoveInResponse;
     }
 
     @Override
