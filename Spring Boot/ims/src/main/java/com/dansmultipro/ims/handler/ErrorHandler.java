@@ -7,6 +7,7 @@ import com.dansmultipro.ims.exception.InvalidQuantityException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -33,6 +34,14 @@ public class ErrorHandler {
             HttpRequestMethodNotSupportedException ex
     ){
         var errors = ex.getMessage();
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException ex
+    ){
+        var errors = "Invalid body request JSON format";
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
