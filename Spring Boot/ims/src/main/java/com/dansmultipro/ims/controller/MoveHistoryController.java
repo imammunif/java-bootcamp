@@ -27,9 +27,9 @@ public class MoveHistoryController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("{product_id}/histories")
-    public ResponseEntity<List<MoveHistoryResponseDto>> getAllHistoryById(@PathVariable("product_id") String productId) {
-        List<MoveHistoryResponseDto> res = moveHistoryService.getAllById(productId);
+    @GetMapping("{id}/histories")
+    public ResponseEntity<List<MoveHistoryResponseDto>> getAllHistoryById(@PathVariable("id") String id) {
+        List<MoveHistoryResponseDto> res = moveHistoryService.getAllById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
