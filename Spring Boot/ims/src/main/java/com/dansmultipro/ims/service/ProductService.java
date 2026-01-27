@@ -2,16 +2,15 @@ package com.dansmultipro.ims.service;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.product.CreateProductRequestDto;
 import com.dansmultipro.ims.dto.product.ProductResponseDto;
 import com.dansmultipro.ims.dto.product.UpdateProductRequestDto;
 
-import java.util.List;
-
 public interface ProductService {
 
-    List<ProductResponseDto> getAll();
+    PaginatedResponseDto<ProductResponseDto> getAll(Integer page, Integer size);
 
     ProductResponseDto getById(String id);
 

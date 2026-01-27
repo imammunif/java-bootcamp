@@ -2,6 +2,7 @@ package com.dansmultipro.ims.service.impl;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.product.CreateProductRequestDto;
 import com.dansmultipro.ims.dto.product.ProductResponseDto;
@@ -14,6 +15,9 @@ import com.dansmultipro.ims.repo.ProductCategoryRepo;
 import com.dansmultipro.ims.repo.ProductRepo;
 import com.dansmultipro.ims.service.ProductService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,11 +35,21 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDto> getAll() {
-        List<ProductResponseDto> result = productRepo.findAll().stream()
+    public PaginatedResponseDto<ProductResponseDto> getAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPages = productRepo.findAll(pageable);
+
+        List<Product> productList = productPages.getContent();
+        List<ProductResponseDto> responseDtoList = productList.stream()
                 .map(v -> new ProductResponseDto(v.getId(), v.getName(), v.getQuantity().toString(), v.getVersion().toString()))
                 .toList();
-        return result;
+
+        PaginatedResponseDto<ProductResponseDto> paginatedProductResponse = new PaginatedResponseDto<>(
+                responseDtoList,
+                productPages.getTotalElements()
+        );
+
+        return paginatedProductResponse;
     }
 
     @Override
