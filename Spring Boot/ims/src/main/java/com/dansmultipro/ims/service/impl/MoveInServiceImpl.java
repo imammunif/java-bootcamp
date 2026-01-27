@@ -55,6 +55,7 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
                 responseDtoList,
                 moveInPages.getTotalElements()
         );
+
         return paginatedMoveInResponse;
     }
 

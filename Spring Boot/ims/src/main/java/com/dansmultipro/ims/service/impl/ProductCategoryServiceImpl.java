@@ -59,6 +59,8 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateProductCategoryRequestDto requestDto) {
+        //TODO CHECK EXISTING NAME
+
         ProductCategory newCategory = prepareForInsert(new ProductCategory());
         newCategory.setName(requestDto.getName());
         ProductCategory createdCategory = productCategoryRepo.save(newCategory);
