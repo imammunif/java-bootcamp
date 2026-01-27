@@ -13,6 +13,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -43,6 +44,14 @@ public class ErrorHandler {
     ){
         var errors = "Invalid body request JSON format";
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleNoResourceFoundException(
+            NoResourceFoundException ex
+    ){
+        var errors = ex.getMessage();
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NotFoundException.class)
