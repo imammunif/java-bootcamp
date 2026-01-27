@@ -36,8 +36,8 @@ public class AgentServiceImpl extends BaseService implements AgentService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Agent> agentPages = agentRepo.findAll(pageable);
 
-        List<Agent> agents = agentPages.getContent();
-        List<AgentResponseDto> responseDtoList = agents.stream()
+        List<Agent> agentList = agentPages.getContent();
+        List<AgentResponseDto> responseDtoList = agentList.stream()
                 .map(v -> new AgentResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
                 .toList();
 

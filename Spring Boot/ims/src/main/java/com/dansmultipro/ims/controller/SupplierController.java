@@ -2,6 +2,7 @@ package com.dansmultipro.ims.controller;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.supplier.CreateSupplierRequestDto;
 import com.dansmultipro.ims.dto.supplier.SupplierResponseDto;
@@ -11,8 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("suppliers")
@@ -25,8 +24,11 @@ public class SupplierController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SupplierResponseDto>> getAllSuppliers() {
-        List<SupplierResponseDto> res = supplierService.getAll();
+    public ResponseEntity<PaginatedResponseDto<SupplierResponseDto>> getAllSuppliers(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<SupplierResponseDto> res = supplierService.getAll(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

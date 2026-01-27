@@ -2,6 +2,7 @@ package com.dansmultipro.ims.service.impl;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.supplier.CreateSupplierRequestDto;
 import com.dansmultipro.ims.dto.supplier.SupplierResponseDto;
@@ -12,6 +13,9 @@ import com.dansmultipro.ims.model.Supplier;
 import com.dansmultipro.ims.repo.SupplierRepo;
 import com.dansmultipro.ims.service.SupplierService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +31,21 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     }
 
     @Override
-    public List<SupplierResponseDto> getAll() {
-        List<SupplierResponseDto> result = supplierRepo.findAll().stream()
+    public PaginatedResponseDto<SupplierResponseDto> getAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Supplier> supplierPages = supplierRepo.findAll(pageable);
+
+        List<Supplier> supplierList = supplierPages.getContent();
+        List<SupplierResponseDto> responseDtoList = supplierList.stream()
                 .map(v -> new SupplierResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
                 .toList();
-        return result;
+
+        PaginatedResponseDto<SupplierResponseDto> paginatedSupplierResponse = new PaginatedResponseDto<>(
+                responseDtoList,
+                supplierPages.getTotalElements()
+        );
+
+        return paginatedSupplierResponse;
     }
 
     @Override

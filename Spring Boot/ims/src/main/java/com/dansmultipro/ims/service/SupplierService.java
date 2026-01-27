@@ -2,16 +2,15 @@ package com.dansmultipro.ims.service;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.supplier.CreateSupplierRequestDto;
 import com.dansmultipro.ims.dto.supplier.SupplierResponseDto;
 import com.dansmultipro.ims.dto.supplier.UpdateSupplierRequestDto;
 
-import java.util.List;
-
 public interface SupplierService {
 
-    List<SupplierResponseDto> getAll();
+    PaginatedResponseDto<SupplierResponseDto> getAll(Integer page, Integer size);
 
     SupplierResponseDto getById(String id);
 
