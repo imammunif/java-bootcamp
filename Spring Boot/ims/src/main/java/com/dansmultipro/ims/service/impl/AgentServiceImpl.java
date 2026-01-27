@@ -2,6 +2,7 @@ package com.dansmultipro.ims.service.impl;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.agent.AgentResponseDto;
 import com.dansmultipro.ims.dto.agent.CreateAgentRequestDto;
@@ -12,6 +13,9 @@ import com.dansmultipro.ims.model.Agent;
 import com.dansmultipro.ims.repo.AgentRepo;
 import com.dansmultipro.ims.service.AgentService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +32,21 @@ public class AgentServiceImpl extends BaseService implements AgentService {
 
 
     @Override
-    public List<AgentResponseDto> getAll() {
-        List<AgentResponseDto> result = agentRepo.findAll().stream()
+    public PaginatedResponseDto<AgentResponseDto> getAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Agent> agentPages = agentRepo.findAll(pageable);
+
+        List<Agent> agents = agentPages.getContent();
+        List<AgentResponseDto> responseDtoList = agents.stream()
                 .map(v -> new AgentResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
                 .toList();
-        return result;
+
+        PaginatedResponseDto<AgentResponseDto> paginatedAgentReponse = new PaginatedResponseDto<>(
+                responseDtoList,
+                agentPages.getTotalElements()
+        );
+
+        return paginatedAgentReponse;
     }
 
     @Override

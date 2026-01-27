@@ -2,6 +2,7 @@ package com.dansmultipro.ims.controller;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.agent.AgentResponseDto;
 import com.dansmultipro.ims.dto.agent.CreateAgentRequestDto;
@@ -11,8 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("agents")
@@ -25,8 +24,11 @@ public class AgentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AgentResponseDto>> getAllAgents() {
-        List<AgentResponseDto> res = supplierService.getAll();
+    public ResponseEntity<PaginatedResponseDto<AgentResponseDto>> getAllAgents(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<AgentResponseDto> res = supplierService.getAll(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
