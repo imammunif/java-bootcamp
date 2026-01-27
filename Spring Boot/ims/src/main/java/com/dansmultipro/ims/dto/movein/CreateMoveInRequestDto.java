@@ -1,6 +1,7 @@
 package com.dansmultipro.ims.dto.movein;
 
 import com.dansmultipro.ims.dto.moveindetail.CreateMoveInDetailRequestDto;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -12,7 +13,7 @@ public class CreateMoveInRequestDto {
     private String supplierId;
 
     @NotEmpty(message = "Move in details cannot be empty")
-    private List<CreateMoveInDetailRequestDto> moveInDetailList;
+    private List<@Valid CreateMoveInDetailRequestDto> moveInDetailList;
 
     public String getSupplierId() {
         return supplierId;

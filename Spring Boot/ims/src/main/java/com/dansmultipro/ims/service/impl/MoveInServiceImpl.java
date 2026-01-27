@@ -64,6 +64,9 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         Supplier supplier = supplierRepo.findById(UUID.fromString(requestDto.getSupplierId())).orElseThrow(
                 () -> new NotFoundException("Supplier not found")
         );
+        HistoryType type = historyTypeRepo.findByCode(HistoryTypeCode.IN.name()).orElseThrow(
+                () -> new NotFoundException("History type not found")
+        );
         MoveIn moveInNew = new MoveIn();
         MoveIn moveInInsert = prepareForInsert(moveInNew);
         moveInInsert.setCode(RandomGenerator.randomizeCode(20));
@@ -75,9 +78,6 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         for (CreateMoveInDetailRequestDto detailDto : detailDtoList) {
             Product product = productRepo.findById(UUID.fromString(detailDto.getProductId())).orElseThrow(
                     () -> new NotFoundException("Product not found")
-            );
-            HistoryType type = historyTypeRepo.findByCode(HistoryTypeCode.IN.name()).orElseThrow(
-                    () -> new NotFoundException("History type not found")
             );
             Integer oldQty = product.getQuantity();
             Integer diffQty = detailDto.getQuantity();

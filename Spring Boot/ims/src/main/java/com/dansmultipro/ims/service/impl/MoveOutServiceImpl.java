@@ -65,6 +65,9 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
         Agent agent = agentRepo.findById(UUID.fromString(requestDto.getAgentId())).orElseThrow(
                 () -> new NotFoundException("Agent not found")
         );
+        HistoryType type = historyTypeRepo.findByCode(HistoryTypeCode.OUT.name()).orElseThrow(
+                () -> new NotFoundException("History type not found")
+        );
         MoveOut moveOutNew = new MoveOut();
         MoveOut moveOutInsert = prepareForInsert(moveOutNew);
         moveOutInsert.setCode(RandomGenerator.randomizeCode(20));
@@ -77,16 +80,12 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
             Product product = productRepo.findById(UUID.fromString(detailDto.getProductId())).orElseThrow(
                     () -> new NotFoundException("Product not found")
             );
-            HistoryType type = historyTypeRepo.findByCode(HistoryTypeCode.OUT.name()).orElseThrow(
-                    () -> new NotFoundException("History type not found")
-            );
             Integer oldQty = product.getQuantity();
             Integer diffQty = detailDto.getQuantity();
             Integer newQty = oldQty - diffQty;
             if (diffQty > oldQty) {
-                throw new InvalidQuantityException("Quantity is exceeding limit");
+                throw new InvalidQuantityException("Quantity " + product.getName() + " is exceeding limit");
             }
-
             MoveOutDetail newMoveOutDetail = prepareForInsert(new MoveOutDetail());
             newMoveOutDetail.setMoveOut(createdMoveOut);
             newMoveOutDetail.setProduct(product);
