@@ -2,6 +2,7 @@ package com.dansmultipro.ims.controller;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.productcategory.CreateProductCategoryRequestDto;
 import com.dansmultipro.ims.dto.productcategory.ProductCategoryResponseDto;
@@ -11,8 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("product-categories")
@@ -25,8 +24,11 @@ public class ProductCategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductCategoryResponseDto>> getAllCategories() {
-        List<ProductCategoryResponseDto> res = productCategoryService.getAll();
+    public ResponseEntity<PaginatedResponseDto<ProductCategoryResponseDto>> getAllCategories(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<ProductCategoryResponseDto> res = productCategoryService.getAll(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

@@ -2,6 +2,7 @@ package com.dansmultipro.ims.service.impl;
 
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
+import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.productcategory.CreateProductCategoryRequestDto;
 import com.dansmultipro.ims.dto.productcategory.ProductCategoryResponseDto;
@@ -12,6 +13,9 @@ import com.dansmultipro.ims.model.ProductCategory;
 import com.dansmultipro.ims.repo.ProductCategoryRepo;
 import com.dansmultipro.ims.service.ProductCategoryService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +31,21 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     }
 
     @Override
-    public List<ProductCategoryResponseDto> getAll() {
-        List<ProductCategoryResponseDto> result = productCategoryRepo.findAll().stream()
-                .map(v -> new ProductCategoryResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
-                .toList();
-        return result;
+    public PaginatedResponseDto<ProductCategoryResponseDto> getAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductCategory> categoryPages = productCategoryRepo.findAll(pageable);
+
+        List<ProductCategory> categoryList = categoryPages.getContent();
+        List<ProductCategoryResponseDto> responseDtoList = categoryList.stream()
+                .map(v -> new ProductCategoryResponseDto(
+                        v.getId(), v.getName(), v.getVersion().toString())).toList();
+
+        PaginatedResponseDto<ProductCategoryResponseDto> paginatedCategoryResponse = new PaginatedResponseDto<>(
+                responseDtoList,
+                categoryPages.getTotalElements()
+        );
+
+        return paginatedCategoryResponse;
     }
 
     @Override
