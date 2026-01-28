@@ -7,6 +7,7 @@ import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.agent.AgentResponseDto;
 import com.dansmultipro.ims.dto.agent.CreateAgentRequestDto;
 import com.dansmultipro.ims.dto.agent.UpdateAgentRequestDto;
+import com.dansmultipro.ims.exception.DataIntegrityException;
 import com.dansmultipro.ims.exception.DataMissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.Agent;
@@ -38,7 +39,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
 
         List<Agent> agentList = agentPages.getContent();
         List<AgentResponseDto> responseDtoList = agentList.stream()
-                .map(v -> new AgentResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
+                .map(v -> new AgentResponseDto(v.getId(), v.getCode(), v.getName(), v.getAddress(), v.getPhone(), v.getVersion().toString()))
                 .toList();
 
         PaginatedResponseDto<AgentResponseDto> paginatedAgentReponse = new PaginatedResponseDto<>(
@@ -54,15 +55,27 @@ public class AgentServiceImpl extends BaseService implements AgentService {
         Agent agent = agentRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Agent not found")
         );
-        return new AgentResponseDto(agent.getId(), agent.getName(), agent.getVersion().toString());
+        return new AgentResponseDto(agent.getId(), agent.getCode(), agent.getName(), agent.getAddress(), agent.getPhone(), agent.getVersion().toString());
     }
 
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateAgentRequestDto requestDto) {
+        String requestCode = requestDto.getCode();
+        if (agentRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
+            throw new DataIntegrityException("Agent with corresponding code already exist");
+        }
+        String requestPhone = requestDto.getPhone();
+        if (agentRepo.findByPhone(requestPhone).isPresent()) {
+            throw new DataIntegrityException("Phone already exist");
+        }
         Agent agentNew = new Agent();
         Agent agentInsert = prepareForInsert(agentNew);
+        agentInsert.setCode(requestCode);
         agentInsert.setName(requestDto.getName());
+        agentInsert.setAddress(requestDto.getAddress());
+        agentInsert.setPhone(requestPhone);
+        
         Agent createdAgent = agentRepo.save(agentInsert);
         return new CreateResponseDto(createdAgent.getId(), "Saved");
     }
@@ -76,8 +89,24 @@ public class AgentServiceImpl extends BaseService implements AgentService {
         if (!agent.getVersion().equals(requestDto.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
+        String requestCode = requestDto.getCode();
+        if (!agent.getCode().equals(requestCode)) {
+            if (agentRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
+                throw new DataIntegrityException("Code already exist");
+            }
+        }
+        String requestPhone = requestDto.getPhone();
+        if (!agent.getPhone().equals(requestPhone)) {
+            if (agentRepo.findByPhone(requestPhone).isPresent()) {
+                throw new DataIntegrityException("Phone already exist");
+            }
+        }
         Agent agentUpdate = prepareForUpdate(agent);
+        agentUpdate.setCode(requestCode);
         agentUpdate.setName(requestDto.getName());
+        agentUpdate.setAddress(requestDto.getAddress());
+        agentUpdate.setPhone(requestPhone);
+
         Agent updatedAgent = agentRepo.saveAndFlush(agentUpdate);
         return new UpdateResponseDto(updatedAgent.getVersion(), "Updated");
     }

@@ -10,7 +10,10 @@ CREATE TABLE t_m_supplier (
 
 CREATE TABLE t_m_agent (
     id VARCHAR(36) PRIMARY KEY,
+    code VARCHAR(10) NOT NULL UNIQUE, 
     name VARCHAR(100) NOT NULL,
+    address VARCHAR(250) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
     version INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
@@ -119,15 +122,15 @@ INSERT INTO t_m_supplier (id, name, version, created_at) VALUES
 (uuid_generate_v4(), 'Jaya Abadi Sentosa', 0, now()),
 (uuid_generate_v4(), 'CV. Sansurya', 0, now());
 
-INSERT INTO t_m_agent (id, name, version, created_at) VALUES 
-(uuid_generate_v4(), 'Super Mart A', 0, now()),
-(uuid_generate_v4(), 'Mini Market B', 0, now()),
-(uuid_generate_v4(), 'Agent C', 0, now()),
-(uuid_generate_v4(), 'Toko Berkah', 0, now()),
-(uuid_generate_v4(), 'Warung Sejahtera', 0, now()),
-(uuid_generate_v4(), 'Online Store Z', 0, now()),
-(uuid_generate_v4(), 'Hyper Store X', 0, now()),
-(uuid_generate_v4(), 'Corner Shop 99', 0, now());
+INSERT INTO t_m_agent (id, code, name, address, phone, version, created_at) VALUES 
+(uuid_generate_v4(), 'AG01282601', 'Super Mart A', 'Jl. Jend. Sudirman No. 10, Jakarta', '081234567890', 0, now()),
+(uuid_generate_v4(), 'AG01282602', 'Mini Market B', 'Jl. Gatot Subroto Kav. 5, Jakarta', '081398765432', 0, now()),
+(uuid_generate_v4(), 'AG01282603', 'Agent C', 'Jl. Asia Afrika No. 88, Bandung', '081812345678', 0, now()),
+(uuid_generate_v4(), 'AG01282604', 'Toko Berkah', 'Jl. Malioboro No. 12, Yogyakarta', '085711223344', 0, now()),
+(uuid_generate_v4(), 'AG01282605', 'Warung Sejahtera', 'Jl. Diponegoro No. 45, Surabaya', '081155667788', 0, now()),
+(uuid_generate_v4(), 'AG01282606', 'Online Store Z', 'Ruko Grand Wisata Blok AA, Bekasi', '02188997766', 0, now()),
+(uuid_generate_v4(), 'AG01282607', 'Hyper Store X', 'Jl. Pahlawan Seribu, Tangerang', '02155443322', 0, now()),
+(uuid_generate_v4(), 'AG01282608', 'Corner Shop 99', 'Jl. Raya Bogor KM 30, Depok', '089644556677', 0, now());
 
 INSERT INTO t_history_type (id, code, name, version, created_at) VALUES 
 (uuid_generate_v4(), 'IN', 'Supply', 0, now()),

@@ -5,12 +5,36 @@ import jakarta.validation.constraints.Size;
 
 public class CreateAgentRequestDto {
 
+    @NotBlank(message = "Code is required")
+    @Size(max = 10, message = "Code length exceeds limit, max 10 characters")
+    private String code;
+
     @NotBlank(message = "Name is required")
     @Size(max = 100, message = "Name length exceeds limit, max 100 characters")
     private String name;
 
+    @NotBlank(message = "Address is required")
+    @Size(max = 250, message = "Address length exceeds limit, max 250 characters")
+    private String address;
+
+    @NotBlank(message = "Phone is required")
+    @Size(max = 20, message = "Phone length exceeds limit, max 20 characters")
+    private String phone;
+
+    public String getCode() {
+        return code;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
 }
