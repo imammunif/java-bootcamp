@@ -11,8 +11,10 @@ import com.dansmultipro.ims.dto.agent.UpdateAgentRequestDto;
 import com.dansmultipro.ims.exception.AlreadyExistsException;
 import com.dansmultipro.ims.exception.MissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
+import com.dansmultipro.ims.exception.ResourceInUseException;
 import com.dansmultipro.ims.model.Agent;
 import com.dansmultipro.ims.repo.AgentRepo;
+import com.dansmultipro.ims.repo.MoveOutRepo;
 import com.dansmultipro.ims.service.AgentService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -27,11 +29,12 @@ import java.util.UUID;
 public class AgentServiceImpl extends BaseService implements AgentService {
 
     private final AgentRepo agentRepo;
+    private final MoveOutRepo moveOutRepo;
 
-    public AgentServiceImpl(AgentRepo agentRepo) {
+    public AgentServiceImpl(AgentRepo agentRepo, MoveOutRepo moveOutRepo) {
         this.agentRepo = agentRepo;
+        this.moveOutRepo = moveOutRepo;
     }
-
 
     @Override
     public PaginatedResponseDto<AgentResponseDto> getAll(Integer page, Integer size) {
@@ -120,6 +123,9 @@ public class AgentServiceImpl extends BaseService implements AgentService {
         Agent agent = agentRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Agent not found")
         );
+        if (moveOutRepo.existsByAgentId(validId)) {
+            throw new ResourceInUseException("Unable to delete, already referenced in move out records");
+        }
 
         agentRepo.deleteById(agent.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());

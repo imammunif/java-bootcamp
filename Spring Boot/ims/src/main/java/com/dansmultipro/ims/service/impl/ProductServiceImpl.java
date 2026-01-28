@@ -10,8 +10,10 @@ import com.dansmultipro.ims.dto.product.ProductResponseDto;
 import com.dansmultipro.ims.dto.product.UpdateProductRequestDto;
 import com.dansmultipro.ims.exception.MissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
+import com.dansmultipro.ims.exception.ResourceInUseException;
 import com.dansmultipro.ims.model.Product;
 import com.dansmultipro.ims.model.ProductCategory;
+import com.dansmultipro.ims.repo.MoveHistoryRepo;
 import com.dansmultipro.ims.repo.ProductCategoryRepo;
 import com.dansmultipro.ims.repo.ProductRepo;
 import com.dansmultipro.ims.service.ProductService;
@@ -29,10 +31,12 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     private final ProductRepo productRepo;
     private final ProductCategoryRepo productCategoryRepo;
+    private final MoveHistoryRepo moveHistoryRepo;
 
-    public ProductServiceImpl(ProductRepo productRepo, ProductCategoryRepo productCategoryRepo) {
+    public ProductServiceImpl(ProductRepo productRepo, ProductCategoryRepo productCategoryRepo, MoveHistoryRepo moveHistoryRepo) {
         this.productRepo = productRepo;
         this.productCategoryRepo = productCategoryRepo;
+        this.moveHistoryRepo = moveHistoryRepo;
     }
 
     @Override
@@ -107,6 +111,9 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         Product product = productRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
+        if (!moveHistoryRepo.findByProductId(validId).isEmpty()) {
+            throw new ResourceInUseException("Unable to delete, already referenced in other records");
+        }
 
         productRepo.deleteById(product.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());

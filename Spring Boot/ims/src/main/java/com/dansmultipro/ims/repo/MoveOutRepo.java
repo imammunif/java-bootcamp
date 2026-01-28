@@ -10,4 +10,6 @@ public interface MoveOutRepo extends JpaRepository<MoveOut, UUID> {
 
     Optional<MoveOut> findByCodeIgnoreCase(String code);
 
+    Boolean existsByAgentId(UUID agentId);
+
 }

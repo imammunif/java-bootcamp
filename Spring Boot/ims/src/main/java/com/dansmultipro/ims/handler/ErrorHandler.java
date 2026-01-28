@@ -91,4 +91,12 @@ public class ErrorHandler {
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ResourceInUseException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleResourceInUseException(
+            ResourceInUseException ex
+    ) {
+        var errors = ex.getMessage();
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.CONFLICT);
+    }
+
 }

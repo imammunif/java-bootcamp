@@ -10,4 +10,6 @@ public interface MoveInRepo extends JpaRepository<MoveIn, UUID> {
 
     Optional<MoveIn> findByCodeIgnoreCase(String code);
 
+    Boolean existsBySupplierId(UUID supplierId);
+
 }

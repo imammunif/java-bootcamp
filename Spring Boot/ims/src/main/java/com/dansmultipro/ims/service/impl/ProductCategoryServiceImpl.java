@@ -11,8 +11,10 @@ import com.dansmultipro.ims.dto.productcategory.UpdateProductCategoryRequestDto;
 import com.dansmultipro.ims.exception.AlreadyExistsException;
 import com.dansmultipro.ims.exception.MissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
+import com.dansmultipro.ims.exception.ResourceInUseException;
 import com.dansmultipro.ims.model.ProductCategory;
 import com.dansmultipro.ims.repo.ProductCategoryRepo;
+import com.dansmultipro.ims.repo.ProductRepo;
 import com.dansmultipro.ims.service.ProductCategoryService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -27,9 +29,11 @@ import java.util.UUID;
 public class ProductCategoryServiceImpl extends BaseService implements ProductCategoryService {
 
     private final ProductCategoryRepo productCategoryRepo;
+    private final ProductRepo productRepo;
 
-    public ProductCategoryServiceImpl(ProductCategoryRepo productCategoryRepo) {
+    public ProductCategoryServiceImpl(ProductCategoryRepo productCategoryRepo, ProductRepo productRepo) {
         this.productCategoryRepo = productCategoryRepo;
+        this.productRepo = productRepo;
     }
 
     @Override
@@ -104,6 +108,9 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
         ProductCategory category = productCategoryRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
+        if (productRepo.existsByCategoryId(validId)) {
+            throw new ResourceInUseException("Unable to delete, already referenced in product records");
+        }
 
         productCategoryRepo.deleteById(category.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());

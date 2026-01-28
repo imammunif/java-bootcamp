@@ -11,7 +11,9 @@ import com.dansmultipro.ims.dto.supplier.UpdateSupplierRequestDto;
 import com.dansmultipro.ims.exception.AlreadyExistsException;
 import com.dansmultipro.ims.exception.MissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
+import com.dansmultipro.ims.exception.ResourceInUseException;
 import com.dansmultipro.ims.model.Supplier;
+import com.dansmultipro.ims.repo.MoveInRepo;
 import com.dansmultipro.ims.repo.SupplierRepo;
 import com.dansmultipro.ims.service.SupplierService;
 import jakarta.transaction.Transactional;
@@ -27,9 +29,11 @@ import java.util.UUID;
 public class SupplierServiceImpl extends BaseService implements SupplierService {
 
     private final SupplierRepo supplierRepo;
+    private final MoveInRepo moveInRepo;
 
-    public SupplierServiceImpl(SupplierRepo supplierRepo) {
+    public SupplierServiceImpl(SupplierRepo supplierRepo, MoveInRepo moveInRepo) {
         this.supplierRepo = supplierRepo;
+        this.moveInRepo = moveInRepo;
     }
 
     @Override
@@ -119,6 +123,9 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         Supplier supplier = supplierRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Supplier not found")
         );
+        if (moveInRepo.existsBySupplierId(validId)) {
+            throw new ResourceInUseException("Unable to delete, already referenced in move in records");
+        }
 
         supplierRepo.deleteById(supplier.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
