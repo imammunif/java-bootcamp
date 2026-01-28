@@ -7,6 +7,7 @@ import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.supplier.CreateSupplierRequestDto;
 import com.dansmultipro.ims.dto.supplier.SupplierResponseDto;
 import com.dansmultipro.ims.dto.supplier.UpdateSupplierRequestDto;
+import com.dansmultipro.ims.exception.DataIntegrityException;
 import com.dansmultipro.ims.exception.DataMissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.Supplier;
@@ -37,7 +38,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
 
         List<Supplier> supplierList = supplierPages.getContent();
         List<SupplierResponseDto> responseDtoList = supplierList.stream()
-                .map(v -> new SupplierResponseDto(v.getId(), v.getName(), v.getVersion().toString()))
+                .map(v -> new SupplierResponseDto(v.getId(), v.getCode(), v.getName(), v.getAddress(), v.getPhone(), v.getVersion().toString()))
                 .toList();
 
         PaginatedResponseDto<SupplierResponseDto> paginatedSupplierResponse = new PaginatedResponseDto<>(
@@ -53,15 +54,27 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         Supplier supplier = supplierRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new RuntimeException("Supplier not found")
         );
-        return new SupplierResponseDto(supplier.getId(), supplier.getName(), supplier.getVersion().toString());
+        return new SupplierResponseDto(supplier.getId(), supplier.getCode(), supplier.getName(), supplier.getAddress(), supplier.getPhone(), supplier.getVersion().toString());
     }
 
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateSupplierRequestDto requestDto) {
+        String requestCode = requestDto.getCode();
+        if (supplierRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
+            throw new DataIntegrityException("Supplier with corresponding code already exist");
+        }
+        String requestPhone = requestDto.getPhone();
+        if (supplierRepo.findByPhone(requestPhone).isPresent()) {
+            throw new DataIntegrityException("Phone already exist");
+        }
         Supplier supplierNew = new Supplier();
         Supplier supplierInsert = prepareForInsert(supplierNew);
+        supplierInsert.setCode(requestCode);
         supplierInsert.setName(requestDto.getName());
+        supplierInsert.setAddress(requestDto.getAddress());
+        supplierInsert.setPhone(requestPhone);
+
         Supplier createdSupplier = supplierRepo.save(supplierInsert);
         return new CreateResponseDto(createdSupplier.getId(), "Saved");
     }
@@ -75,8 +88,24 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         if (!supplier.getVersion().equals(requestDto.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
+        String requestCode = requestDto.getCode();
+        if (!supplier.getCode().equals(requestCode)) {
+            if (supplierRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
+                throw new DataIntegrityException("Code already exist");
+            }
+        }
+        String requestPhone = requestDto.getPhone();
+        if (!supplier.getPhone().equals(requestPhone)) {
+            if (supplierRepo.findByPhone(requestPhone).isPresent()) {
+                throw new DataIntegrityException("Phone already exist");
+            }
+        }
         Supplier supplierUpdate = prepareForUpdate(supplier);
+        supplierUpdate.setCode(requestCode);
         supplierUpdate.setName(requestDto.getName());
+        supplierUpdate.setAddress(requestDto.getAddress());
+        supplierUpdate.setPhone(requestPhone);
+
         Supplier updatedSupplier = supplierRepo.saveAndFlush(supplierUpdate);
         return new UpdateResponseDto(updatedSupplier.getVersion(), "Updated");
     }

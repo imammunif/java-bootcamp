@@ -2,7 +2,10 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE t_m_supplier (
     id VARCHAR(36) PRIMARY KEY,
+    code VARCHAR(10) NOT NULL UNIQUE, 
     name VARCHAR(100) NOT NULL,
+    address VARCHAR(250) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
     version INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
@@ -112,15 +115,15 @@ INSERT INTO t_m_product_category (id, name, version, created_at) VALUES
 (uuid_generate_v4(), 'Groceries', 0, now()),
 (uuid_generate_v4(), 'Bakery', 0, now());
 
-INSERT INTO t_m_supplier (id, name, version, created_at) VALUES 
-(uuid_generate_v4(), 'PT. Indo Citra', 0, now()),
-(uuid_generate_v4(), 'Magma Agenta', 0, now()),
-(uuid_generate_v4(), 'PT. Indo Makmur', 0, now()),
-(uuid_generate_v4(), 'CV. Sumber Rejeki', 0, now()),
-(uuid_generate_v4(), 'Global Distribution Ltd', 0, now()),
-(uuid_generate_v4(), 'PT. Segar Alam', 0, now()),
-(uuid_generate_v4(), 'Jaya Abadi Sentosa', 0, now()),
-(uuid_generate_v4(), 'CV. Sansurya', 0, now());
+INSERT INTO t_m_supplier (id, code, name, address, phone, version, created_at) VALUES 
+(uuid_generate_v4(), 'SP01282601', 'PT. Indo Citra', 'Kawasan Industri Pulogadung Blok A, Jakarta', '0214601234', 0, now()),
+(uuid_generate_v4(), 'SP01282602', 'Magma Agenta', 'Jl. Soekarno Hatta No. 202, Bandung', '0227509876', 0, now()),
+(uuid_generate_v4(), 'SP01282603', 'PT. Indo Makmur', 'Jl. Margomulyo Indah Kav. 8, Surabaya', '0317491122', 0, now()),
+(uuid_generate_v4(), 'SP01282604', 'CV. Sumber Rejeki', 'Jl. Gajah Mada No. 55, Semarang', '0248415566', 0, now()),
+(uuid_generate_v4(), 'SP01282605', 'Global Distribution Ltd', 'Sudirman Business District Lot 9, Jakarta', '0215152233', 0, now()),
+(uuid_generate_v4(), 'SP01282606', 'PT. Segar Alam', 'Jl. Raya Bogor KM 25, Depok', '0218774455', 0, now()),
+(uuid_generate_v4(), 'SP01282607', 'Jaya Abadi Sentosa', 'Komplek Pergudangan Safe N Lock, Sidoarjo', '031-8913344', 0, now()),
+(uuid_generate_v4(), 'SP01282608', 'CV. Sansurya', 'Jl. Teuku Umar No. 10, Denpasar', '0361-223344', 0, now());
 
 INSERT INTO t_m_agent (id, code, name, address, phone, version, created_at) VALUES 
 (uuid_generate_v4(), 'AG01282601', 'Super Mart A', 'Jl. Jend. Sudirman No. 10, Jakarta', '081234567890', 0, now()),
