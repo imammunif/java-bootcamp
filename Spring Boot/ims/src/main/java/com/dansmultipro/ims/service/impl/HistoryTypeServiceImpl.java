@@ -29,7 +29,8 @@ public class HistoryTypeServiceImpl extends BaseService implements HistoryTypeSe
 
     @Override
     public HistoryTypeResponseDto getById(String id) {
-        HistoryType historyType = historyTypeRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        HistoryType historyType = historyTypeRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("History type not found")
         );
         return new HistoryTypeResponseDto(historyType.getId(), historyType.getCode(), historyType.getName());

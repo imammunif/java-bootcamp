@@ -46,13 +46,13 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
                 responseDtoList,
                 supplierPages.getTotalElements()
         );
-
         return paginatedSupplierResponse;
     }
 
     @Override
     public SupplierResponseDto getById(String id) {
-        Supplier supplier = supplierRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        Supplier supplier = supplierRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Supplier not found")
         );
         return new SupplierResponseDto(supplier.getId(), supplier.getCode(), supplier.getName(), supplier.getAddress(), supplier.getPhone(), supplier.getVersion().toString());
@@ -83,7 +83,8 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateSupplierRequestDto requestDto) {
-        Supplier supplier = supplierRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        Supplier supplier = supplierRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Supplier not found")
         );
         if (!supplier.getVersion().equals(requestDto.getVersion())) {
@@ -114,9 +115,11 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto delete(String id) {
-        Supplier supplier = supplierRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        Supplier supplier = supplierRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Supplier not found")
         );
+
         supplierRepo.deleteById(supplier.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }

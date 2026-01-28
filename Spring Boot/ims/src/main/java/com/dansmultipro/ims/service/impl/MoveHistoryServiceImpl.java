@@ -42,16 +42,16 @@ public class MoveHistoryServiceImpl extends BaseService implements MoveHistorySe
                 responseDtoList,
                 historyPages.getTotalElements()
         );
-
         return paginatedHistoryResponse;
     }
 
     @Override
     public List<MoveHistoryResponseDto> getAllById(String productId) {
-        productRepo.findById(UUID.fromString(productId)).orElseThrow(
+        UUID validId = validateUUID(productId);
+        productRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
-        List<MoveHistoryResponseDto> result = moveHistoryRepo.findByProductId(UUID.fromString(productId)).stream()
+        List<MoveHistoryResponseDto> result = moveHistoryRepo.findByProductId(validId).stream()
                 .map(v -> new MoveHistoryResponseDto(
                         v.getId(), v.getDate().toString(), v.getQuantity().toString(),
                         v.getNewQuantity().toString(), v.getProduct().getName(),

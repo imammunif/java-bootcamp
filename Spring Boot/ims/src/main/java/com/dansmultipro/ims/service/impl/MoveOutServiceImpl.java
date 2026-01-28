@@ -59,16 +59,16 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
                 responseDtoList,
                 moveOutPages.getTotalElements()
         );
-
         return paginatedMoveOutResponse;
     }
 
     @Override
     public List<MoveOutDetailResponseDto> getById(String id) {
-        moveOutRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        moveOutRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Move out checkout not found")
         );
-        List<MoveOutDetailResponseDto> result = moveOutDetailRepo.findByMoveOutId(UUID.fromString(id)).stream()
+        List<MoveOutDetailResponseDto> result = moveOutDetailRepo.findByMoveOutId(validId).stream()
                 .map(v -> new MoveOutDetailResponseDto(
                         v.getId(), v.getQuantity().toString(), v.getProduct().getName(),
                         v.getMoveOut().getCode()))
@@ -79,7 +79,8 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateMoveOutRequestDto requestDto) {
-        Agent agent = agentRepo.findById(UUID.fromString(requestDto.getAgentId())).orElseThrow(
+        UUID validAgentId = validateUUID(requestDto.getAgentId());
+        Agent agent = agentRepo.findById(validAgentId).orElseThrow(
                 () -> new NotFoundException("Agent not found")
         );
         HistoryType type = historyTypeRepo.findByCode(HistoryTypeCode.OUT.name()).orElseThrow(
@@ -99,7 +100,8 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
         List<CreateMoveOutDetailRequestDto> detailDtoList = requestDto.getMoveOutDetailList();
         List<Product> addedProducts = new ArrayList<>();
         for (CreateMoveOutDetailRequestDto detailDto : detailDtoList) {
-            Product product = productRepo.findById(UUID.fromString(detailDto.getProductId())).orElseThrow(
+            UUID validProductId = validateUUID(detailDto.getProductId());
+            Product product = productRepo.findById(validProductId).orElseThrow(
                     () -> new NotFoundException("Product not found")
             );
             if (addedProducts.contains(product)) {

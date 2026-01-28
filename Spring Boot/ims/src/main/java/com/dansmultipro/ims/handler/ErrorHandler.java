@@ -1,10 +1,7 @@
 package com.dansmultipro.ims.handler;
 
 import com.dansmultipro.ims.dto.ErrorResponseDto;
-import com.dansmultipro.ims.exception.DataIntegrityException;
-import com.dansmultipro.ims.exception.DataMissMatchException;
-import com.dansmultipro.ims.exception.InvalidQuantityException;
-import com.dansmultipro.ims.exception.NotFoundException;
+import com.dansmultipro.ims.exception.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +87,14 @@ public class ErrorHandler {
     @ExceptionHandler(InvalidQuantityException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleInvalidQuantityException(
             InvalidQuantityException ex
+    ) {
+        var errors = ex.getMessage();
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidIdException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleInvalidIdException(
+            InvalidIdException ex
     ) {
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);

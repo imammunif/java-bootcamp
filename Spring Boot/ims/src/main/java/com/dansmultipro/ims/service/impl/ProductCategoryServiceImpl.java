@@ -47,13 +47,13 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
                 responseDtoList,
                 categoryPages.getTotalElements()
         );
-
         return paginatedCategoryResponse;
     }
 
     @Override
     public ProductCategoryResponseDto getById(String id) {
-        ProductCategory category = productCategoryRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        ProductCategory category = productCategoryRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
         return new ProductCategoryResponseDto(category.getId(), category.getCode(), category.getName(), category.getVersion().toString());
@@ -68,6 +68,7 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
         ProductCategory newCategory = prepareForInsert(new ProductCategory());
         newCategory.setCode(requestDto.getCode());
         newCategory.setName(requestDto.getName());
+
         ProductCategory createdCategory = productCategoryRepo.save(newCategory);
         return new CreateResponseDto(createdCategory.getId(), ResponseMessage.CREATED.getMessage());
     }
@@ -75,7 +76,8 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateProductCategoryRequestDto requestDto) {
-        ProductCategory category = productCategoryRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        ProductCategory category = productCategoryRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
         if (!category.getVersion().equals(requestDto.getVersion())) {
@@ -90,6 +92,7 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
         ProductCategory categoryUpdate = prepareForUpdate(category);
         categoryUpdate.setCode(requestCode);
         categoryUpdate.setName(requestDto.getName());
+
         ProductCategory updatedCategory = productCategoryRepo.saveAndFlush(categoryUpdate);
         return new UpdateResponseDto(updatedCategory.getVersion(), ResponseMessage.UPDATED.getMessage());
     }
@@ -97,9 +100,11 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
-        ProductCategory category = productCategoryRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        ProductCategory category = productCategoryRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
+
         productCategoryRepo.deleteById(category.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }

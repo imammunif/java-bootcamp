@@ -47,13 +47,13 @@ public class AgentServiceImpl extends BaseService implements AgentService {
                 responseDtoList,
                 agentPages.getTotalElements()
         );
-
         return paginatedAgentReponse;
     }
 
     @Override
     public AgentResponseDto getById(String id) {
-        Agent agent = agentRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        Agent agent = agentRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Agent not found")
         );
         return new AgentResponseDto(agent.getId(), agent.getCode(), agent.getName(), agent.getAddress(), agent.getPhone(), agent.getVersion().toString());
@@ -76,7 +76,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
         agentInsert.setName(requestDto.getName());
         agentInsert.setAddress(requestDto.getAddress());
         agentInsert.setPhone(requestPhone);
-        
+
         Agent createdAgent = agentRepo.save(agentInsert);
         return new CreateResponseDto(createdAgent.getId(), ResponseMessage.CREATED.getMessage());
     }
@@ -84,7 +84,8 @@ public class AgentServiceImpl extends BaseService implements AgentService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateAgentRequestDto requestDto) {
-        Agent agent = agentRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        Agent agent = agentRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Agent not found")
         );
         if (!agent.getVersion().equals(requestDto.getVersion())) {
@@ -115,9 +116,11 @@ public class AgentServiceImpl extends BaseService implements AgentService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto delete(String id) {
-        Agent agent = agentRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        Agent agent = agentRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Agent not found")
         );
+
         agentRepo.deleteById(agent.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }

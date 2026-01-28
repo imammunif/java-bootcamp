@@ -55,7 +55,8 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Override
     public ProductResponseDto getById(String id) {
-        Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        Product product = productRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
         return new ProductResponseDto(product.getId(), product.getName(), product.getQuantity().toString(), product.getVersion().toString());
@@ -64,14 +65,15 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateProductRequestDto requestDto) {
-        ProductCategory category = productCategoryRepo.findById(UUID.fromString(requestDto.getCategoryId())).orElseThrow(
+        UUID validCategoryId = validateUUID(requestDto.getCategoryId());
+        ProductCategory category = productCategoryRepo.findById(validCategoryId).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
-
         Product newProduct = prepareForInsert(new Product());
         newProduct.setName(requestDto.getName());
         newProduct.setQuantity(0);
         newProduct.setCategory(category);
+
         Product createdProduct = productRepo.save(newProduct);
         return new CreateResponseDto(createdProduct.getId(), ResponseMessage.CREATED.getMessage());
     }
@@ -79,10 +81,12 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, UpdateProductRequestDto requestDto) {
-        Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validProductId = validateUUID(id);
+        Product product = productRepo.findById(validProductId).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
-        ProductCategory category = productCategoryRepo.findById(UUID.fromString(requestDto.getCategoryId())).orElseThrow(
+        UUID validCategoryId = validateUUID(requestDto.getCategoryId());
+        ProductCategory category = productCategoryRepo.findById(validCategoryId).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
         if (!product.getVersion().equals(requestDto.getVersion())) {
@@ -91,6 +95,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         Product productUpdate = prepareForUpdate(product);
         productUpdate.setName(requestDto.getName());
         productUpdate.setCategory(category);
+
         Product updatedProduct = productRepo.saveAndFlush(productUpdate);
         return new UpdateResponseDto(updatedProduct.getVersion(), ResponseMessage.UPDATED.getMessage());
     }
@@ -98,9 +103,11 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public DeleteResponseDto deleteById(String id) {
-        Product product = productRepo.findById(UUID.fromString(id)).orElseThrow(
+        UUID validId = validateUUID(id);
+        Product product = productRepo.findById(validId).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
+
         productRepo.deleteById(product.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }
