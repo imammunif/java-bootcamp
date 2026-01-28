@@ -85,9 +85,13 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
         HistoryType type = historyTypeRepo.findByCode(HistoryTypeCode.OUT.name()).orElseThrow(
                 () -> new NotFoundException("History type not found")
         );
+        String code = RandomGenerator.randomizeCode(20);
+        if (moveOutRepo.findByCodeIgnoreCase(code).isPresent()) {
+            throw new DataIntegrityException("Move out with corresponding code already exist");
+        }
         MoveOut moveOutNew = new MoveOut();
         MoveOut moveOutInsert = prepareForInsert(moveOutNew);
-        moveOutInsert.setCode(RandomGenerator.randomizeCode(20));
+        moveOutInsert.setCode(code);
         moveOutInsert.setDate(LocalDate.now());
         moveOutInsert.setAgent(agent);
         MoveOut createdMoveOut = moveOutRepo.save(moveOutInsert);

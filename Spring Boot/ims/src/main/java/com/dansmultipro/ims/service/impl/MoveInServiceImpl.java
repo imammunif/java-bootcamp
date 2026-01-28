@@ -84,9 +84,13 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         HistoryType type = historyTypeRepo.findByCode(HistoryTypeCode.IN.name()).orElseThrow(
                 () -> new NotFoundException("History type not found")
         );
+        String code = RandomGenerator.randomizeCode(20);
+        if (moveInRepo.findByCodeIgnoreCase(code).isPresent()) {
+            throw new DataIntegrityException("Move in with corresponding code already exist");
+        }
         MoveIn moveInNew = new MoveIn();
         MoveIn moveInInsert = prepareForInsert(moveInNew);
-        moveInInsert.setCode(RandomGenerator.randomizeCode(20));
+        moveInInsert.setCode(code);
         moveInInsert.setDate(LocalDate.now());
         moveInInsert.setSupplier(supplier);
         MoveIn createdMoveIn = moveInRepo.save(moveInInsert);
