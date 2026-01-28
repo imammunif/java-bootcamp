@@ -5,6 +5,7 @@ import com.dansmultipro.ims.exception.DataIntegrityException;
 import com.dansmultipro.ims.exception.DataMissMatchException;
 import com.dansmultipro.ims.exception.InvalidQuantityException;
 import com.dansmultipro.ims.exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -52,6 +53,14 @@ public class ErrorHandler {
     ){
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleDataIntegrityViolationException(
+            DataIntegrityViolationException ex
+    ) {
+        var errors = "Unable to delete, referenced by other records";
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
