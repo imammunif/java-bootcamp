@@ -7,6 +7,7 @@ import com.dansmultipro.ims.dto.movein.CreateMoveInRequestDto;
 import com.dansmultipro.ims.dto.movein.MoveInResponseDto;
 import com.dansmultipro.ims.dto.moveindetail.CreateMoveInDetailRequestDto;
 import com.dansmultipro.ims.dto.moveindetail.MoveInDetailResponseDto;
+import com.dansmultipro.ims.exception.DataIntegrityException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.*;
 import com.dansmultipro.ims.repo.*;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -89,10 +91,15 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         MoveIn createdMoveIn = moveInRepo.save(moveInInsert);
 
         List<CreateMoveInDetailRequestDto> detailDtoList = requestDto.getMoveInDetailList();
+        List<Product> addedProducts = new ArrayList<>();
         for (CreateMoveInDetailRequestDto detailDto : detailDtoList) {
             Product product = productRepo.findById(UUID.fromString(detailDto.getProductId())).orElseThrow(
                     () -> new NotFoundException("Product not found")
             );
+            if (addedProducts.contains(product)) {
+                throw new DataIntegrityException("Found duplicate product");
+            }
+            addedProducts.add(product);
             Integer oldQty = product.getQuantity();
             Integer diffQty = detailDto.getQuantity();
             Integer newQty = oldQty + diffQty;

@@ -7,6 +7,7 @@ import com.dansmultipro.ims.dto.moveout.CreateMoveOutRequestDto;
 import com.dansmultipro.ims.dto.moveout.MoveOutResponseDto;
 import com.dansmultipro.ims.dto.moveoutdetail.CreateMoveOutDetailRequestDto;
 import com.dansmultipro.ims.dto.moveoutdetail.MoveOutDetailResponseDto;
+import com.dansmultipro.ims.exception.DataIntegrityException;
 import com.dansmultipro.ims.exception.InvalidQuantityException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.*;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -90,10 +92,15 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
         MoveOut createdMoveOut = moveOutRepo.save(moveOutInsert);
 
         List<CreateMoveOutDetailRequestDto> detailDtoList = requestDto.getMoveOutDetailList();
+        List<Product> addedProducts = new ArrayList<>();
         for (CreateMoveOutDetailRequestDto detailDto : detailDtoList) {
             Product product = productRepo.findById(UUID.fromString(detailDto.getProductId())).orElseThrow(
                     () -> new NotFoundException("Product not found")
             );
+            if (addedProducts.contains(product)) {
+                throw new DataIntegrityException("Found duplicate product");
+            }
+            addedProducts.add(product);
             Integer oldQty = product.getQuantity();
             Integer diffQty = detailDto.getQuantity();
             Integer newQty = oldQty - diffQty;
