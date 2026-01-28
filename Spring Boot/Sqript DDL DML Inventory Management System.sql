@@ -24,7 +24,8 @@ CREATE TABLE t_m_agent (
 
 CREATE TABLE t_m_product_category (
     id VARCHAR(36) PRIMARY KEY,
-    name VARCHAR(40) NOT NULL UNIQUE,
+    code VARCHAR(10) NOT NULL UNIQUE, 
+    name VARCHAR(40) NOT NULL,
     version INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP
@@ -103,17 +104,17 @@ CREATE TABLE t_move_history (
     updated_at TIMESTAMP
 );
 
-INSERT INTO t_m_product_category (id, name, version, created_at) VALUES 
-(uuid_generate_v4(), 'Fruits', 0, now()),
-(uuid_generate_v4(), 'Veggies', 0, now()),
-(uuid_generate_v4(), 'Instant Noodle', 0, now()),
-(uuid_generate_v4(), 'Household', 0, now()),
-(uuid_generate_v4(), 'Beverages', 0, now()),
-(uuid_generate_v4(), 'Frozen Food', 0, now()),
-(uuid_generate_v4(), 'Snacks', 0, now()),
-(uuid_generate_v4(), 'Personal Care', 0, now()),
-(uuid_generate_v4(), 'Groceries', 0, now()),
-(uuid_generate_v4(), 'Bakery', 0, now());
+INSERT INTO t_m_product_category (id, code, name, version, created_at) VALUES 
+(uuid_generate_v4(), 'FRT', 'Fruits', 0, now()),
+(uuid_generate_v4(), 'VGG', 'Veggies', 0, now()),
+(uuid_generate_v4(), 'INN', 'Instant Noodle', 0, now()),
+(uuid_generate_v4(), 'HSE', 'Household', 0, now()),
+(uuid_generate_v4(), 'BVG', 'Beverages', 0, now()),
+(uuid_generate_v4(), 'FRZ', 'Frozen Food', 0, now()),
+(uuid_generate_v4(), 'SNK', 'Snacks', 0, now()),
+(uuid_generate_v4(), 'PC', 'Personal Care', 0, now()),
+(uuid_generate_v4(), 'GRY', 'Groceries', 0, now()),
+(uuid_generate_v4(), 'BAK', 'Bakery', 0, now());
 
 INSERT INTO t_m_supplier (id, code, name, address, phone, version, created_at) VALUES 
 (uuid_generate_v4(), 'SP01282601', 'PT. Indo Citra', 'Kawasan Industri Pulogadung Blok A, Jakarta', '0214601234', 0, now()),

@@ -40,7 +40,8 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
         List<ProductCategory> categoryList = categoryPages.getContent();
         List<ProductCategoryResponseDto> responseDtoList = categoryList.stream()
                 .map(v -> new ProductCategoryResponseDto(
-                        v.getId(), v.getName(), v.getVersion().toString())).toList();
+                        v.getId(), v.getCode(), v.getName(), v.getVersion().toString()))
+                .toList();
 
         PaginatedResponseDto<ProductCategoryResponseDto> paginatedCategoryResponse = new PaginatedResponseDto<>(
                 responseDtoList,
@@ -52,19 +53,20 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
 
     @Override
     public ProductCategoryResponseDto getById(String id) {
-        ProductCategory productCategory = productCategoryRepo.findById(UUID.fromString(id)).orElseThrow(
+        ProductCategory category = productCategoryRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
-        return new ProductCategoryResponseDto(productCategory.getId(), productCategory.getName(), productCategory.getVersion().toString());
+        return new ProductCategoryResponseDto(category.getId(), category.getCode(), category.getName(), category.getVersion().toString());
     }
 
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateProductCategoryRequestDto requestDto) {
-        if (productCategoryRepo.findByName(requestDto.getName()).isPresent()) {
-            throw new DataIntegrityException("Category already exist");
+        if (productCategoryRepo.findByCodeIgnoreCase(requestDto.getCode()).isPresent()) {
+            throw new DataIntegrityException("Category with corresponding code already exist");
         }
         ProductCategory newCategory = prepareForInsert(new ProductCategory());
+        newCategory.setCode(requestDto.getCode());
         newCategory.setName(requestDto.getName());
         ProductCategory createdCategory = productCategoryRepo.save(newCategory);
         return new CreateResponseDto(createdCategory.getId(), ResponseMessage.CREATED.getMessage());
@@ -79,7 +81,14 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
         if (!category.getVersion().equals(requestDto.getVersion())) {
             throw new DataMissMatchException("Version not match");
         }
+        String requestCode = requestDto.getCode();
+        if (!category.getCode().equals(requestCode)) {
+            if (productCategoryRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
+                throw new DataIntegrityException("Code already exist");
+            }
+        }
         ProductCategory categoryUpdate = prepareForUpdate(category);
+        categoryUpdate.setCode(requestCode);
         categoryUpdate.setName(requestDto.getName());
         ProductCategory updatedCategory = productCategoryRepo.saveAndFlush(categoryUpdate);
         return new UpdateResponseDto(updatedCategory.getVersion(), ResponseMessage.UPDATED.getMessage());

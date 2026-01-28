@@ -8,11 +8,22 @@ import jakarta.persistence.Table;
 @Table(name = "t_m_product_category")
 public class ProductCategory extends BaseModel {
 
-    @Column(nullable = false, length = 40, unique = true)
+    @Column(nullable = false, length = 10, unique = true)
+    private String code;
+
+    @Column(nullable = false, length = 40)
     private String name;
+
+    public String getCode() {
+        return code;
+    }
 
     public String getName() {
         return name;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public void setName(String name) {

@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface ProductCategoryRepo extends JpaRepository<ProductCategory, UUID> {
 
-    Optional<ProductCategory> findByName(String name);
+    Optional<ProductCategory> findByCodeIgnoreCase(String code);
 
 }
