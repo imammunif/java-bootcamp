@@ -1,6 +1,6 @@
 package com.dansmultipro.ims.service.impl;
 
-import com.dansmultipro.ims.exception.InvalidIdException;
+import com.dansmultipro.ims.exception.InvalidUuidException;
 import com.dansmultipro.ims.model.BaseModel;
 
 import java.time.LocalDateTime;
@@ -21,13 +21,13 @@ public class BaseService {
 
     protected UUID validateUUID(String id) {
         if (id.isBlank()) {
-            throw new InvalidIdException("Invalid ID format");
+            throw new InvalidUuidException("Invalid ID format");
         }
         try {
             UUID validId = UUID.fromString(id);
             return validId;
         } catch (IllegalArgumentException ex) {
-            throw new InvalidIdException("Invalid ID format");
+            throw new InvalidUuidException("Invalid ID format");
         }
     }
 

@@ -8,8 +8,8 @@ import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.productcategory.CreateProductCategoryRequestDto;
 import com.dansmultipro.ims.dto.productcategory.ProductCategoryResponseDto;
 import com.dansmultipro.ims.dto.productcategory.UpdateProductCategoryRequestDto;
-import com.dansmultipro.ims.exception.DataIntegrityException;
-import com.dansmultipro.ims.exception.DataMissMatchException;
+import com.dansmultipro.ims.exception.AlreadyExistsException;
+import com.dansmultipro.ims.exception.MissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.ProductCategory;
 import com.dansmultipro.ims.repo.ProductCategoryRepo;
@@ -63,7 +63,7 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
     @Override
     public CreateResponseDto create(CreateProductCategoryRequestDto requestDto) {
         if (productCategoryRepo.findByCodeIgnoreCase(requestDto.getCode()).isPresent()) {
-            throw new DataIntegrityException("Category with corresponding code already exist");
+            throw new AlreadyExistsException("Category with corresponding code already exist");
         }
         ProductCategory newCategory = prepareForInsert(new ProductCategory());
         newCategory.setCode(requestDto.getCode());
@@ -81,12 +81,12 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
                 () -> new NotFoundException("Category not found")
         );
         if (!category.getVersion().equals(requestDto.getVersion())) {
-            throw new DataMissMatchException("Version not match");
+            throw new MissMatchException("Version not match");
         }
         String requestCode = requestDto.getCode();
         if (!category.getCode().equals(requestCode)) {
             if (productCategoryRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
-                throw new DataIntegrityException("Code already exist");
+                throw new AlreadyExistsException("Code already exist");
             }
         }
         ProductCategory categoryUpdate = prepareForUpdate(category);

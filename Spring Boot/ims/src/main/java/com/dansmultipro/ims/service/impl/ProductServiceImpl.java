@@ -8,7 +8,7 @@ import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.product.CreateProductRequestDto;
 import com.dansmultipro.ims.dto.product.ProductResponseDto;
 import com.dansmultipro.ims.dto.product.UpdateProductRequestDto;
-import com.dansmultipro.ims.exception.DataMissMatchException;
+import com.dansmultipro.ims.exception.MissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.Product;
 import com.dansmultipro.ims.model.ProductCategory;
@@ -90,7 +90,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
                 () -> new NotFoundException("Category not found")
         );
         if (!product.getVersion().equals(requestDto.getVersion())) {
-            throw new DataMissMatchException("Version not match");
+            throw new MissMatchException("Version not match");
         }
         Product productUpdate = prepareForUpdate(product);
         productUpdate.setName(requestDto.getName());

@@ -8,8 +8,8 @@ import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.agent.AgentResponseDto;
 import com.dansmultipro.ims.dto.agent.CreateAgentRequestDto;
 import com.dansmultipro.ims.dto.agent.UpdateAgentRequestDto;
-import com.dansmultipro.ims.exception.DataIntegrityException;
-import com.dansmultipro.ims.exception.DataMissMatchException;
+import com.dansmultipro.ims.exception.AlreadyExistsException;
+import com.dansmultipro.ims.exception.MissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.Agent;
 import com.dansmultipro.ims.repo.AgentRepo;
@@ -64,11 +64,11 @@ public class AgentServiceImpl extends BaseService implements AgentService {
     public CreateResponseDto create(CreateAgentRequestDto requestDto) {
         String requestCode = requestDto.getCode();
         if (agentRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
-            throw new DataIntegrityException("Agent with corresponding code already exist");
+            throw new AlreadyExistsException("Agent with corresponding code already exist");
         }
         String requestPhone = requestDto.getPhone();
         if (agentRepo.findByPhone(requestPhone).isPresent()) {
-            throw new DataIntegrityException("Phone already exist");
+            throw new AlreadyExistsException("Phone already exist");
         }
         Agent agentNew = new Agent();
         Agent agentInsert = prepareForInsert(agentNew);
@@ -89,18 +89,18 @@ public class AgentServiceImpl extends BaseService implements AgentService {
                 () -> new NotFoundException("Agent not found")
         );
         if (!agent.getVersion().equals(requestDto.getVersion())) {
-            throw new DataMissMatchException("Version not match");
+            throw new MissMatchException("Version not match");
         }
         String requestCode = requestDto.getCode();
         if (!agent.getCode().equals(requestCode)) {
             if (agentRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
-                throw new DataIntegrityException("Code already exist");
+                throw new AlreadyExistsException("Code already exist");
             }
         }
         String requestPhone = requestDto.getPhone();
         if (!agent.getPhone().equals(requestPhone)) {
             if (agentRepo.findByPhone(requestPhone).isPresent()) {
-                throw new DataIntegrityException("Phone already exist");
+                throw new AlreadyExistsException("Phone already exist");
             }
         }
         Agent agentUpdate = prepareForUpdate(agent);

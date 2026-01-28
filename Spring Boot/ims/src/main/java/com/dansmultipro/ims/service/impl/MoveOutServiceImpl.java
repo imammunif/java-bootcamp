@@ -8,7 +8,7 @@ import com.dansmultipro.ims.dto.moveout.CreateMoveOutRequestDto;
 import com.dansmultipro.ims.dto.moveout.MoveOutResponseDto;
 import com.dansmultipro.ims.dto.moveoutdetail.CreateMoveOutDetailRequestDto;
 import com.dansmultipro.ims.dto.moveoutdetail.MoveOutDetailResponseDto;
-import com.dansmultipro.ims.exception.DataIntegrityException;
+import com.dansmultipro.ims.exception.AlreadyExistsException;
 import com.dansmultipro.ims.exception.InvalidQuantityException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.*;
@@ -88,7 +88,7 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
         );
         String code = RandomGenerator.randomizeCode(20);
         if (moveOutRepo.findByCodeIgnoreCase(code).isPresent()) {
-            throw new DataIntegrityException("Move out with corresponding code already exist");
+            throw new AlreadyExistsException("Move out with corresponding code already exist");
         }
         MoveOut moveOutNew = new MoveOut();
         MoveOut moveOutInsert = prepareForInsert(moveOutNew);
@@ -105,7 +105,7 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
                     () -> new NotFoundException("Product not found")
             );
             if (addedProducts.contains(product)) {
-                throw new DataIntegrityException("Found duplicate product");
+                throw new AlreadyExistsException("Found duplicate product");
             }
             addedProducts.add(product);
             Integer oldQty = product.getQuantity();

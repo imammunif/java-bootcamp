@@ -8,8 +8,8 @@ import com.dansmultipro.ims.dto.UpdateResponseDto;
 import com.dansmultipro.ims.dto.supplier.CreateSupplierRequestDto;
 import com.dansmultipro.ims.dto.supplier.SupplierResponseDto;
 import com.dansmultipro.ims.dto.supplier.UpdateSupplierRequestDto;
-import com.dansmultipro.ims.exception.DataIntegrityException;
-import com.dansmultipro.ims.exception.DataMissMatchException;
+import com.dansmultipro.ims.exception.AlreadyExistsException;
+import com.dansmultipro.ims.exception.MissMatchException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.Supplier;
 import com.dansmultipro.ims.repo.SupplierRepo;
@@ -63,11 +63,11 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     public CreateResponseDto create(CreateSupplierRequestDto requestDto) {
         String requestCode = requestDto.getCode();
         if (supplierRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
-            throw new DataIntegrityException("Supplier with corresponding code already exist");
+            throw new AlreadyExistsException("Supplier with corresponding code already exist");
         }
         String requestPhone = requestDto.getPhone();
         if (supplierRepo.findByPhone(requestPhone).isPresent()) {
-            throw new DataIntegrityException("Phone already exist");
+            throw new AlreadyExistsException("Phone already exist");
         }
         Supplier supplierNew = new Supplier();
         Supplier supplierInsert = prepareForInsert(supplierNew);
@@ -88,18 +88,18 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
                 () -> new NotFoundException("Supplier not found")
         );
         if (!supplier.getVersion().equals(requestDto.getVersion())) {
-            throw new DataMissMatchException("Version not match");
+            throw new MissMatchException("Version not match");
         }
         String requestCode = requestDto.getCode();
         if (!supplier.getCode().equals(requestCode)) {
             if (supplierRepo.findByCodeIgnoreCase(requestCode).isPresent()) {
-                throw new DataIntegrityException("Code already exist");
+                throw new AlreadyExistsException("Code already exist");
             }
         }
         String requestPhone = requestDto.getPhone();
         if (!supplier.getPhone().equals(requestPhone)) {
             if (supplierRepo.findByPhone(requestPhone).isPresent()) {
-                throw new DataIntegrityException("Phone already exist");
+                throw new AlreadyExistsException("Phone already exist");
             }
         }
         Supplier supplierUpdate = prepareForUpdate(supplier);

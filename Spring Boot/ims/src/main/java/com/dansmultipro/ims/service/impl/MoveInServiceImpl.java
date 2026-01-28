@@ -8,7 +8,7 @@ import com.dansmultipro.ims.dto.movein.CreateMoveInRequestDto;
 import com.dansmultipro.ims.dto.movein.MoveInResponseDto;
 import com.dansmultipro.ims.dto.moveindetail.CreateMoveInDetailRequestDto;
 import com.dansmultipro.ims.dto.moveindetail.MoveInDetailResponseDto;
-import com.dansmultipro.ims.exception.DataIntegrityException;
+import com.dansmultipro.ims.exception.AlreadyExistsException;
 import com.dansmultipro.ims.exception.NotFoundException;
 import com.dansmultipro.ims.model.*;
 import com.dansmultipro.ims.repo.*;
@@ -87,7 +87,7 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         );
         String code = RandomGenerator.randomizeCode(20);
         if (moveInRepo.findByCodeIgnoreCase(code).isPresent()) {
-            throw new DataIntegrityException("Move in with corresponding code already exist");
+            throw new AlreadyExistsException("Move in with corresponding code already exist");
         }
         MoveIn moveInNew = new MoveIn();
         MoveIn moveInInsert = prepareForInsert(moveInNew);
@@ -104,7 +104,7 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
                     () -> new NotFoundException("Product not found")
             );
             if (addedProducts.contains(product)) {
-                throw new DataIntegrityException("Found duplicate product");
+                throw new AlreadyExistsException("Found duplicate product");
             }
             addedProducts.add(product);
             Integer oldQty = product.getQuantity();

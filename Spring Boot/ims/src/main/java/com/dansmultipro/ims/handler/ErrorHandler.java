@@ -2,7 +2,6 @@ package com.dansmultipro.ims.handler;
 
 import com.dansmultipro.ims.dto.ErrorResponseDto;
 import com.dansmultipro.ims.exception.*;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -31,7 +30,7 @@ public class ErrorHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleHttpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException ex
-    ){
+    ) {
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.METHOD_NOT_ALLOWED);
     }
@@ -39,7 +38,7 @@ public class ErrorHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException ex
-    ){
+    ) {
         var errors = "Invalid body request JSON format";
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.METHOD_NOT_ALLOWED);
     }
@@ -47,17 +46,9 @@ public class ErrorHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleNoResourceFoundException(
             NoResourceFoundException ex
-    ){
+    ) {
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponseDto<String>> handleDataIntegrityViolationException(
-            DataIntegrityViolationException ex
-    ) {
-        var errors = "Unable to delete, referenced by other records";
-        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -68,17 +59,17 @@ public class ErrorHandler {
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DataIntegrityException.class)
-    public ResponseEntity<ErrorResponseDto<String>> handleDataIntegrityViolationException(
-            DataIntegrityException ex
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleAlreadyExistsException(
+            AlreadyExistsException ex
     ) {
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DataMissMatchException.class)
-    public ResponseEntity<ErrorResponseDto<String>> handleDataMissMatchException(
-            DataMissMatchException ex
+    @ExceptionHandler(MissMatchException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleMissMatchException(
+            MissMatchException ex
     ) {
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
@@ -92,9 +83,9 @@ public class ErrorHandler {
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InvalidIdException.class)
+    @ExceptionHandler(InvalidUuidException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleInvalidIdException(
-            InvalidIdException ex
+            InvalidUuidException ex
     ) {
         var errors = ex.getMessage();
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
