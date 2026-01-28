@@ -65,7 +65,7 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
     @Override
     public List<MoveInDetailResponseDto> getById(String id) {
         moveInRepo.findById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Move in supply not found")
+                () -> new NotFoundException("Move in supply not found")
         );
         List<MoveInDetailResponseDto> result = moveInDetailRepo.findByMoveInId(UUID.fromString(id)).stream()
                 .map(v -> new MoveInDetailResponseDto(

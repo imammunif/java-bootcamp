@@ -54,7 +54,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
     @Override
     public AgentResponseDto getById(String id) {
         Agent agent = agentRepo.findById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Agent not found")
+                () -> new NotFoundException("Agent not found")
         );
         return new AgentResponseDto(agent.getId(), agent.getCode(), agent.getName(), agent.getAddress(), agent.getPhone(), agent.getVersion().toString());
     }
@@ -116,7 +116,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
     @Override
     public DeleteResponseDto delete(String id) {
         Agent agent = agentRepo.findById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Agent not found")
+                () -> new NotFoundException("Agent not found")
         );
         agentRepo.deleteById(agent.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());

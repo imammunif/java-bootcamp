@@ -66,7 +66,7 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
     @Override
     public List<MoveOutDetailResponseDto> getById(String id) {
         moveOutRepo.findById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Move out checkout not found")
+                () -> new NotFoundException("Move out checkout not found")
         );
         List<MoveOutDetailResponseDto> result = moveOutDetailRepo.findByMoveOutId(UUID.fromString(id)).stream()
                 .map(v -> new MoveOutDetailResponseDto(

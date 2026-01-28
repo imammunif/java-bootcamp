@@ -53,7 +53,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     @Override
     public SupplierResponseDto getById(String id) {
         Supplier supplier = supplierRepo.findById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Supplier not found")
+                () -> new NotFoundException("Supplier not found")
         );
         return new SupplierResponseDto(supplier.getId(), supplier.getCode(), supplier.getName(), supplier.getAddress(), supplier.getPhone(), supplier.getVersion().toString());
     }
@@ -115,7 +115,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
     @Override
     public DeleteResponseDto delete(String id) {
         Supplier supplier = supplierRepo.findById(UUID.fromString(id)).orElseThrow(
-                () -> new RuntimeException("Supplier not found")
+                () -> new NotFoundException("Supplier not found")
         );
         supplierRepo.deleteById(supplier.getId());
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
