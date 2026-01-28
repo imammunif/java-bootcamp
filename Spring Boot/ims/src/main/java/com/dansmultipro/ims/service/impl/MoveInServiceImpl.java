@@ -1,6 +1,7 @@
 package com.dansmultipro.ims.service.impl;
 
 import com.dansmultipro.ims.constant.HistoryTypeCode;
+import com.dansmultipro.ims.constant.ResponseMessage;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.movein.CreateMoveInRequestDto;
@@ -123,6 +124,6 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
             moveHistoryRepo.save(newHistory);
         }
 
-        return new CreateResponseDto(createdMoveIn.getId(), "Saved");
+        return new CreateResponseDto(createdMoveIn.getId(), ResponseMessage.CREATED.getMessage());
     }
 }

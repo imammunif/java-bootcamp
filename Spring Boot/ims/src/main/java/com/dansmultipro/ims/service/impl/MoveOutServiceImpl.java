@@ -1,6 +1,7 @@
 package com.dansmultipro.ims.service.impl;
 
 import com.dansmultipro.ims.constant.HistoryTypeCode;
+import com.dansmultipro.ims.constant.ResponseMessage;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.PaginatedResponseDto;
 import com.dansmultipro.ims.dto.moveout.CreateMoveOutRequestDto;
@@ -126,6 +127,6 @@ public class MoveOutServiceImpl extends BaseService implements MoveOutService {
             moveHistoryRepo.save(newHistory);
         }
 
-        return new CreateResponseDto(createdMoveOut.getId(), "Saved");
+        return new CreateResponseDto(createdMoveOut.getId(), ResponseMessage.CREATED.getMessage());
     }
 }

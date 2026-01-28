@@ -1,5 +1,6 @@
 package com.dansmultipro.ims.service.impl;
 
+import com.dansmultipro.ims.constant.ResponseMessage;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
 import com.dansmultipro.ims.dto.PaginatedResponseDto;
@@ -72,7 +73,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         newProduct.setQuantity(0);
         newProduct.setCategory(category);
         Product createdProduct = productRepo.save(newProduct);
-        return new CreateResponseDto(createdProduct.getId(), "Saved");
+        return new CreateResponseDto(createdProduct.getId(), ResponseMessage.CREATED.getMessage());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -91,7 +92,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         productUpdate.setName(requestDto.getName());
         productUpdate.setCategory(category);
         Product updatedProduct = productRepo.saveAndFlush(productUpdate);
-        return new UpdateResponseDto(updatedProduct.getVersion(), "Updated");
+        return new UpdateResponseDto(updatedProduct.getVersion(), ResponseMessage.UPDATED.getMessage());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -101,7 +102,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
                 () -> new NotFoundException("Product not found")
         );
         productRepo.deleteById(product.getId());
-        return new DeleteResponseDto("Deleted");
+        return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }
 
 }

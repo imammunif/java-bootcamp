@@ -1,5 +1,6 @@
 package com.dansmultipro.ims.service.impl;
 
+import com.dansmultipro.ims.constant.ResponseMessage;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
 import com.dansmultipro.ims.dto.PaginatedResponseDto;
@@ -77,7 +78,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
         agentInsert.setPhone(requestPhone);
         
         Agent createdAgent = agentRepo.save(agentInsert);
-        return new CreateResponseDto(createdAgent.getId(), "Saved");
+        return new CreateResponseDto(createdAgent.getId(), ResponseMessage.CREATED.getMessage());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -108,7 +109,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
         agentUpdate.setPhone(requestPhone);
 
         Agent updatedAgent = agentRepo.saveAndFlush(agentUpdate);
-        return new UpdateResponseDto(updatedAgent.getVersion(), "Updated");
+        return new UpdateResponseDto(updatedAgent.getVersion(), ResponseMessage.UPDATED.getMessage());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -118,7 +119,7 @@ public class AgentServiceImpl extends BaseService implements AgentService {
                 () -> new RuntimeException("Agent not found")
         );
         agentRepo.deleteById(agent.getId());
-        return new DeleteResponseDto("Deleted");
+        return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }
 
 }

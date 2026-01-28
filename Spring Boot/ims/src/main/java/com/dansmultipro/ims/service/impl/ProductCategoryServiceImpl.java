@@ -1,5 +1,6 @@
 package com.dansmultipro.ims.service.impl;
 
+import com.dansmultipro.ims.constant.ResponseMessage;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
 import com.dansmultipro.ims.dto.PaginatedResponseDto;
@@ -66,7 +67,7 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
         ProductCategory newCategory = prepareForInsert(new ProductCategory());
         newCategory.setName(requestDto.getName());
         ProductCategory createdCategory = productCategoryRepo.save(newCategory);
-        return new CreateResponseDto(createdCategory.getId(), "Saved");
+        return new CreateResponseDto(createdCategory.getId(), ResponseMessage.CREATED.getMessage());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -81,7 +82,7 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
         ProductCategory categoryUpdate = prepareForUpdate(category);
         categoryUpdate.setName(requestDto.getName());
         ProductCategory updatedCategory = productCategoryRepo.saveAndFlush(categoryUpdate);
-        return new UpdateResponseDto(updatedCategory.getVersion(), "Updated");
+        return new UpdateResponseDto(updatedCategory.getVersion(), ResponseMessage.UPDATED.getMessage());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -91,7 +92,7 @@ public class ProductCategoryServiceImpl extends BaseService implements ProductCa
                 () -> new NotFoundException("Category not found")
         );
         productCategoryRepo.deleteById(category.getId());
-        return new DeleteResponseDto("Deleted");
+        return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }
 
 }

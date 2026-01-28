@@ -1,5 +1,6 @@
 package com.dansmultipro.ims.service.impl;
 
+import com.dansmultipro.ims.constant.ResponseMessage;
 import com.dansmultipro.ims.dto.CreateResponseDto;
 import com.dansmultipro.ims.dto.DeleteResponseDto;
 import com.dansmultipro.ims.dto.PaginatedResponseDto;
@@ -76,7 +77,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         supplierInsert.setPhone(requestPhone);
 
         Supplier createdSupplier = supplierRepo.save(supplierInsert);
-        return new CreateResponseDto(createdSupplier.getId(), "Saved");
+        return new CreateResponseDto(createdSupplier.getId(), ResponseMessage.CREATED.getMessage());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -107,7 +108,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
         supplierUpdate.setPhone(requestPhone);
 
         Supplier updatedSupplier = supplierRepo.saveAndFlush(supplierUpdate);
-        return new UpdateResponseDto(updatedSupplier.getVersion(), "Updated");
+        return new UpdateResponseDto(updatedSupplier.getVersion(), ResponseMessage.UPDATED.getMessage());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -117,7 +118,7 @@ public class SupplierServiceImpl extends BaseService implements SupplierService 
                 () -> new RuntimeException("Supplier not found")
         );
         supplierRepo.deleteById(supplier.getId());
-        return new DeleteResponseDto("Deleted");
+        return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }
 
 }
