@@ -96,21 +96,24 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
 
         List<CreateMoveInDetailRequestDto> detailDtoList = requestDto.getMoveInDetailList();
 
-        Map<UUID, Integer> distinctProductIds = new HashMap<>();
+        Map<UUID, Integer> distinctProductDetails = new HashMap<>();
         for (CreateMoveInDetailRequestDto detailDto : detailDtoList) {
             UUID validId = validateUUID(detailDto.getProductId());
-            if (distinctProductIds.containsKey(validId)) {
+            if (distinctProductDetails.containsKey(validId)) {
                 throw new AlreadyExistsException("Found duplicate product");
             }
-            distinctProductIds.put(validId, detailDto.getQuantity());
+            distinctProductDetails.put(validId, detailDto.getQuantity());
+        }
+
+        List<UUID> distinctProductIds = new ArrayList<>(distinctProductDetails.keySet());
+        List<Product> validProductList = productRepo.findByIdIn(distinctProductIds);
+        if (distinctProductIds.size() != validProductList.size()) {
+            throw new NotFoundException("Product not found");
         }
 
         Map<Product, Integer> validProducts = new HashMap<>();
-        for (UUID productId : distinctProductIds.keySet()) {
-            Product product = productRepo.findById(productId).orElseThrow(
-                    () -> new NotFoundException("Product not found")
-            );
-            validProducts.put(product, distinctProductIds.get(productId));
+        for (Product product : validProductList) {
+            validProducts.put(product, distinctProductDetails.get(product.getId()));
         }
 
         for (Product product : validProducts.keySet()) {
