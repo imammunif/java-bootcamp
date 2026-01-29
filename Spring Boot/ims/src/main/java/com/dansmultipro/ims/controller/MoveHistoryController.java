@@ -29,7 +29,7 @@ public class MoveHistoryController {
     }
 
     @GetMapping("{id}/histories")
-    public ResponseEntity<List<MoveHistoryResponseDto>> getAllHistoryById(@PathVariable("id") String id) {
+    public ResponseEntity<List<MoveHistoryResponseDto>> getAllHistoryById(@PathVariable String id) {
         List<MoveHistoryResponseDto> res = moveHistoryService.getAllById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
