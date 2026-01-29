@@ -21,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class MoveInServiceImpl extends BaseService implements MoveInService {
@@ -97,18 +95,27 @@ public class MoveInServiceImpl extends BaseService implements MoveInService {
         MoveIn createdMoveIn = moveInRepo.save(moveInInsert);
 
         List<CreateMoveInDetailRequestDto> detailDtoList = requestDto.getMoveInDetailList();
-        List<Product> addedProducts = new ArrayList<>();
+
+        Map<UUID, Integer> distinctProductIds = new HashMap<>();
         for (CreateMoveInDetailRequestDto detailDto : detailDtoList) {
-            UUID validProductId = validateUUID(detailDto.getProductId());
-            Product product = productRepo.findById(validProductId).orElseThrow(
-                    () -> new NotFoundException("Product not found")
-            );
-            if (addedProducts.contains(product)) {
+            UUID validId = validateUUID(detailDto.getProductId());
+            if (distinctProductIds.containsKey(validId)) {
                 throw new AlreadyExistsException("Found duplicate product");
             }
-            addedProducts.add(product);
+            distinctProductIds.put(validId, detailDto.getQuantity());
+        }
+
+        Map<Product, Integer> validProducts = new HashMap<>();
+        for (UUID productId : distinctProductIds.keySet()) {
+            Product product = productRepo.findById(productId).orElseThrow(
+                    () -> new NotFoundException("Product not found")
+            );
+            validProducts.put(product, distinctProductIds.get(productId));
+        }
+
+        for (Product product : validProducts.keySet()) {
             Integer oldQty = product.getQuantity();
-            Integer diffQty = detailDto.getQuantity();
+            Integer diffQty = validProducts.get(product);
             Integer newQty = oldQty + diffQty;
 
             MoveInDetail newMoveInDetail = prepareForInsert(new MoveInDetail());
