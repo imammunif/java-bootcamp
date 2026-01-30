@@ -8,9 +8,9 @@ import java.math.BigInteger;
 
 public class CreateTransactionRequestDto {
 
-    @NotNull(message = "Virtual account number is required")
-    @Min(value = 0, message = "Virtual account cannot be negative")
-    private Integer virtualNumber;
+    @NotNull(message = "Account number is required")
+    @Min(value = 0, message = "Account cannot be negative")
+    private Integer accountNumber;
 
     @NotNull(message = "Transaction amount is required")
     @Min(value = 5000, message = "Amount minimum at least 5000")
@@ -22,8 +22,8 @@ public class CreateTransactionRequestDto {
     @NotBlank(message = "Product is required")
     private String productId;
 
-    public Integer getVirtualNumber() {
-        return virtualNumber;
+    public Integer getAccountNumber() {
+        return accountNumber;
     }
 
     public BigInteger getAmount() {

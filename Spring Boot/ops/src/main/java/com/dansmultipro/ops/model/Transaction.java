@@ -2,18 +2,20 @@ package com.dansmultipro.ops.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "t_transaction")
 public class Transaction extends BaseModel {
 
-    @Column(nullable = false, length = 5, unique = true)
+    @Column(nullable = false, length = 10, unique = true)
     private String code;
 
     @Column(nullable = false)
-    private Double totalBill;
+    private BigDecimal totalBill;
 
     @Column(nullable = false, length = 20)
-    private Integer virtualNumber;
+    private String accountNumber;
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
@@ -25,7 +27,7 @@ public class Transaction extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "gateway_id", nullable = false)
-    private User gateway;
+    private Gateway gateway;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
@@ -35,12 +37,12 @@ public class Transaction extends BaseModel {
         return code;
     }
 
-    public Double getTotalBill() {
+    public BigDecimal getTotalBill() {
         return totalBill;
     }
 
-    public Integer getVirtualNumber() {
-        return virtualNumber;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     public TransactionStatus getStatus() {
@@ -51,7 +53,7 @@ public class Transaction extends BaseModel {
         return customer;
     }
 
-    public User getGateway() {
+    public Gateway getGateway() {
         return gateway;
     }
 
@@ -63,12 +65,12 @@ public class Transaction extends BaseModel {
         this.code = code;
     }
 
-    public void setTotalBill(Double totalBill) {
+    public void setTotalBill(BigDecimal totalBill) {
         this.totalBill = totalBill;
     }
 
-    public void setVirtualNumber(Integer virtualNumber) {
-        this.virtualNumber = virtualNumber;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public void setStatus(TransactionStatus status) {
@@ -79,7 +81,7 @@ public class Transaction extends BaseModel {
         this.customer = customer;
     }
 
-    public void setGateway(User gateway) {
+    public void setGateway(Gateway gateway) {
         this.gateway = gateway;
     }
 

@@ -5,7 +5,7 @@ public class TransactionResponseDto {
     private String id;
     private String code;
     private String totalBill;
-    private String virtualNumber;
+    private String accountNumber;
     private String statusName;
     private String customerName;
     private String gatewayName;
@@ -15,7 +15,7 @@ public class TransactionResponseDto {
         this.id = id;
         this.code = code;
         this.totalBill = totalBill;
-        this.virtualNumber = virtualNumber;
+        this.accountNumber = virtualNumber;
         this.statusName = statusName;
         this.customerName = customerName;
         this.gatewayName = gatewayName;
@@ -34,8 +34,8 @@ public class TransactionResponseDto {
         return totalBill;
     }
 
-    public String getVirtualNumber() {
-        return virtualNumber;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     public String getStatusName() {
