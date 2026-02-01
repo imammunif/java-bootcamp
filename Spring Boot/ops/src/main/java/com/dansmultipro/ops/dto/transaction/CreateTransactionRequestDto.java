@@ -4,17 +4,17 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 public class CreateTransactionRequestDto {
 
     @NotNull(message = "Account number is required")
     @Min(value = 0, message = "Account cannot be negative")
-    private Integer accountNumber;
+    private String accountNumber;
 
     @NotNull(message = "Transaction amount is required")
     @Min(value = 5000, message = "Amount minimum at least 5000")
-    private BigInteger amount;
+    private BigDecimal amount;
 
     @NotBlank(message = "Gateway is required")
     private String gatewayId;
@@ -22,11 +22,11 @@ public class CreateTransactionRequestDto {
     @NotBlank(message = "Product is required")
     private String productId;
 
-    public Integer getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 
-    public BigInteger getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

@@ -3,7 +3,8 @@ package com.dansmultipro.ops.service;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
-import com.dansmultipro.ops.dto.user.CreateUserRequestDto;
+import com.dansmultipro.ops.dto.user.CreateUserCustomerRequestDto;
+import com.dansmultipro.ops.dto.user.CreateUserGatewayRequestDto;
 import com.dansmultipro.ops.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ops.dto.user.UserResponseDto;
 
@@ -15,9 +16,11 @@ public interface UserService {
 
     UserResponseDto getById(String id);
 
-    CreateResponseDto create(CreateUserRequestDto requestDto);
+    CreateResponseDto createUserCustomer(CreateUserCustomerRequestDto data);
 
-    UpdateResponseDto update(String id, UpdateUserRequestDto requestDto);
+    CreateResponseDto createUserGateway(CreateUserGatewayRequestDto data);
+
+    UpdateResponseDto update(String id, UpdateUserRequestDto data);
 
     DeleteResponseDto deleteById(String id);
 

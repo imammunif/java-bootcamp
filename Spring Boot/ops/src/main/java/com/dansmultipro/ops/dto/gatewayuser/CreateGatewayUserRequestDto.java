@@ -10,15 +10,15 @@ public class CreateGatewayUserRequestDto {
     @NotBlank(message = "Gateway is required")
     private String gatewayId;
 
-    @NotEmpty(message = "Customer(s) is required")
-    private List<String> customerIdList;
+    @NotEmpty(message = "User(s) is required")
+    private List<String> userIdList;
 
     public String getGatewayId() {
         return gatewayId;
     }
 
-    public List<String> getCustomerIdList() {
-        return customerIdList;
+    public List<String> getUserIdList() {
+        return userIdList;
     }
 
 }

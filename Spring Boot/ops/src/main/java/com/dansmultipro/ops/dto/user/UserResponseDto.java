@@ -8,10 +8,10 @@ public class UserResponseDto {
     private String name;
     private String email;
     private String roleName;
-    private Boolean isActive;
+    private String isActive;
     private String version;
 
-    public UserResponseDto(UUID id, String name, String email, String roleName, Boolean isActive, String version) {
+    public UserResponseDto(UUID id, String name, String email, String roleName, String isActive, String version) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -36,7 +36,7 @@ public class UserResponseDto {
         return roleName;
     }
 
-    public Boolean getActive() {
+    public String getActive() {
         return isActive;
     }
 

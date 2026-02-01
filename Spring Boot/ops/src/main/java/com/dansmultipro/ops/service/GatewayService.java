@@ -1,13 +1,13 @@
 package com.dansmultipro.ops.service;
 
-import com.dansmultipro.ops.dto.userrole.RoleResponseDto;
+import com.dansmultipro.ops.dto.gateway.GatewayResponseDto;
 
 import java.util.List;
 
 public interface GatewayService {
 
-    List<RoleResponseDto> getAll();
+    List<GatewayResponseDto> getAll();
 
-    RoleResponseDto getById(String id);
+    GatewayResponseDto getById(String id);
 
 }

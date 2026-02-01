@@ -1,11 +1,10 @@
 package com.dansmultipro.ops.dto.user;
 
-import com.dansmultipro.ops.model.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class CreateUserRequestDto {
+public class CreateUserGatewayRequestDto {
 
     @NotBlank(message = "Name is required")
     @Size(max = 50, message = "Name length exceeds limit, max 50 characters")
@@ -21,8 +20,8 @@ public class CreateUserRequestDto {
     @Size(max = 200, message = "Password length exceeds limit, max 200 characters")
     private String password;
 
-    @NotBlank(message = "User's role is required")
-    private UserRole role;
+    @NotBlank(message = "Gateway is required")
+    private String gatewayId;
 
     public String getName() {
         return name;
@@ -36,8 +35,8 @@ public class CreateUserRequestDto {
         return password;
     }
 
-    public UserRole getRole() {
-        return role;
+    public String getGatewayId() {
+        return gatewayId;
     }
 
     public void setName(String name) {
@@ -52,8 +51,8 @@ public class CreateUserRequestDto {
         this.password = password;
     }
 
-    public void setRole(UserRole role) {
-        this.role = role;
+    public void setGatewayId(String gatewayId) {
+        this.gatewayId = gatewayId;
     }
-
+    
 }

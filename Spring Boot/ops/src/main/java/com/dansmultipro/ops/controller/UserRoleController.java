@@ -22,13 +22,15 @@ public class UserRoleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoleResponseDto>> getAllRoles() {
+    public ResponseEntity<List<RoleResponseDto>> getAll() {
         List<RoleResponseDto> res = userRoleService.getAll();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<RoleResponseDto> getRoleById(@PathVariable String id) {
+    public ResponseEntity<RoleResponseDto> getById(
+            @PathVariable String id
+    ) {
         RoleResponseDto res = userRoleService.getById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

@@ -11,7 +11,7 @@ public class TransactionStatus extends BaseModel {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = false, length = 5, unique = true)
+    @Column(nullable = false, length = 7, unique = true)
     private String code;
 
     public String getName() {

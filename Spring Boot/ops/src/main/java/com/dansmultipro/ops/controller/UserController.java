@@ -3,7 +3,8 @@ package com.dansmultipro.ops.controller;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
-import com.dansmultipro.ops.dto.user.CreateUserRequestDto;
+import com.dansmultipro.ops.dto.user.CreateUserCustomerRequestDto;
+import com.dansmultipro.ops.dto.user.CreateUserGatewayRequestDto;
 import com.dansmultipro.ops.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ops.dto.user.UserResponseDto;
 import com.dansmultipro.ops.service.UserService;
@@ -25,31 +26,50 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDto>> getAll() {
         List<UserResponseDto> res = userService.getAll();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable String id) {
+    public ResponseEntity<UserResponseDto> getById(
+            @PathVariable String id
+    ) {
         UserResponseDto res = userService.getById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<CreateResponseDto> create(@RequestBody @Valid CreateUserRequestDto requestDto) {
-        CreateResponseDto res = userService.create(requestDto);
+    @PostMapping("/customers")
+    public ResponseEntity<CreateResponseDto> createUserCustomer(
+            @RequestBody @Valid CreateUserCustomerRequestDto data
+    ) {
+        CreateResponseDto res = userService.createUserCustomer(data);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
+    @PostMapping("/gateways")
+    public ResponseEntity<CreateResponseDto> createGatewayAdmin(
+            @RequestBody @Valid CreateUserGatewayRequestDto data
+    ) {
+        CreateResponseDto res = userService.createUserGateway(data);
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
+    }
+
+    //TODO ENDPOINT ACTIVATE USER
+
     @PutMapping("{id}")
-    public ResponseEntity<UpdateResponseDto> update(@PathVariable String id, @RequestBody @Valid UpdateUserRequestDto requestDto) {
-        UpdateResponseDto res = userService.update(id, requestDto);
+    public ResponseEntity<UpdateResponseDto> update(
+            @PathVariable String id,
+            @RequestBody @Valid UpdateUserRequestDto data
+    ) {
+        UpdateResponseDto res = userService.update(id, data);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<DeleteResponseDto> delete(@PathVariable String id) {
+    public ResponseEntity<DeleteResponseDto> delete(
+            @PathVariable String id
+    ) {
         DeleteResponseDto res = userService.deleteById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

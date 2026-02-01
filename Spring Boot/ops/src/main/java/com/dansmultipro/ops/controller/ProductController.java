@@ -25,31 +25,40 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
+    public ResponseEntity<List<ProductResponseDto>> getAll() {
         List<ProductResponseDto> res = productService.getAll();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable String id) {
+    public ResponseEntity<ProductResponseDto> getById(
+            @PathVariable String id
+    ) {
         ProductResponseDto res = productService.getById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponseDto> create(@RequestBody @Valid CreateProductRequestDto requestDto) {
-        CreateResponseDto res = productService.create(requestDto);
+    public ResponseEntity<CreateResponseDto> create(
+            @RequestBody @Valid CreateProductRequestDto data
+    ) {
+        CreateResponseDto res = productService.create(data);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UpdateResponseDto> update(@PathVariable String id, @RequestBody @Valid UpdateProductRequestDto requestDto) {
-        UpdateResponseDto res = productService.update(id, requestDto);
+    public ResponseEntity<UpdateResponseDto> update(
+            @PathVariable String id,
+            @RequestBody @Valid UpdateProductRequestDto data
+    ) {
+        UpdateResponseDto res = productService.update(id, data);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<DeleteResponseDto> delete(@PathVariable String id) {
+    public ResponseEntity<DeleteResponseDto> delete(
+            @PathVariable String id
+    ) {
         DeleteResponseDto res = productService.deleteById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

@@ -9,8 +9,16 @@ public class CreateProductRequestDto {
     @Size(max = 40, message = "Name length exceeds limit, max 40 characters")
     private String name;
 
+    @NotBlank(message = "Code is required")
+    @Size(max = 5, message = "Code length exceeds limit, max 5 characters")
+    private String code;
+
     public String getName() {
         return name;
+    }
+
+    public String getCode() {
+        return code;
     }
 
 }

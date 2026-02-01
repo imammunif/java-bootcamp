@@ -15,9 +15,9 @@ public interface ProductService {
 
     ProductResponseDto getById(String id);
 
-    CreateResponseDto create(CreateProductRequestDto requestDto);
+    CreateResponseDto create(CreateProductRequestDto data);
 
-    UpdateResponseDto update(String id, UpdateProductRequestDto requestDto);
+    UpdateResponseDto update(String id, UpdateProductRequestDto data);
 
     DeleteResponseDto deleteById(String id);
 

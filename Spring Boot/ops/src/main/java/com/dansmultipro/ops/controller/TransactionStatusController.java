@@ -22,13 +22,15 @@ public class TransactionStatusController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionStatusResponseDto>> getAllTransactionStatuses() {
+    public ResponseEntity<List<TransactionStatusResponseDto>> getAll() {
         List<TransactionStatusResponseDto> res = transactionStatusService.getAll();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<TransactionStatusResponseDto> getTransactionStatusById(@PathVariable String id) {
+    public ResponseEntity<TransactionStatusResponseDto> getById(
+            @PathVariable String id
+    ) {
         TransactionStatusResponseDto res = transactionStatusService.getById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

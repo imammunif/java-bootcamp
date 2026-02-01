@@ -1,6 +1,6 @@
 package com.dansmultipro.ops.controller;
 
-import com.dansmultipro.ops.dto.userrole.RoleResponseDto;
+import com.dansmultipro.ops.dto.gateway.GatewayResponseDto;
 import com.dansmultipro.ops.service.GatewayService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +22,16 @@ public class GatewayController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoleResponseDto>> getAllGateways() {
-        List<RoleResponseDto> res = gatewayService.getAll();
+    public ResponseEntity<List<GatewayResponseDto>> getAll() {
+        List<GatewayResponseDto> res = gatewayService.getAll();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<RoleResponseDto> getGatewayById(@PathVariable String id) {
-        RoleResponseDto res = gatewayService.getById(id);
+    public ResponseEntity<GatewayResponseDto> getById(
+            @PathVariable String id
+    ) {
+        GatewayResponseDto res = gatewayService.getById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
