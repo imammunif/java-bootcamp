@@ -35,6 +35,7 @@ public class SecurityConfig {
     public List<RequestMatcher> getRequestMatchers() {
         var matchers = new ArrayList<RequestMatcher>();
         matchers.add(PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/login"));
+        matchers.add(PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/users/register"));
         return matchers;
     }
 

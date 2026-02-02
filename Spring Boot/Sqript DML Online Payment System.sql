@@ -21,6 +21,7 @@ SET created_by = (SELECT id FROM t_user WHERE email = 'admin@mail.com' LIMIT 1)
 WHERE code = 'SA';
 
 INSERT INTO t_m_user_role (id, code, name, created_at, created_by, version) VALUES
+(uuid_generate_v4(), 'SYS', 'System', now(), (SELECT id FROM t_user WHERE email = 'admin@mail.com' LIMIT 1), 0),
 (uuid_generate_v4(), 'CUST', 'Customer', now(), (SELECT id FROM t_user WHERE email = 'admin@mail.com' LIMIT 1), 0),
 (uuid_generate_v4(), 'GA', 'Gateway Admin', now(), (SELECT id FROM t_user WHERE email = 'admin@mail.com' LIMIT 1), 0);
 

@@ -39,7 +39,7 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PostMapping("/customers")
+    @PostMapping("/register")
     public ResponseEntity<CreateResponseDto> createUserCustomer(
             @RequestBody @Valid CreateUserCustomerRequestDto data
     ) {

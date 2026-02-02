@@ -2,7 +2,8 @@ package com.dansmultipro.ops.constant;
 
 public enum RoleCode {
 
-    SA("SA"),
+    SYSTEM("SYS"),
+    SUPERADMIN("SA"),
     CUSTOMER("CUST"),
     GATEWAY("GA");
 
