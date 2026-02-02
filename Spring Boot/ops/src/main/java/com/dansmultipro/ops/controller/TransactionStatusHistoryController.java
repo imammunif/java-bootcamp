@@ -5,12 +5,13 @@ import com.dansmultipro.ops.service.TransactionStatusHistoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("histories")
 public class TransactionStatusHistoryController {
 
     private final TransactionStatusHistoryService transactionStatusHistoryService;
@@ -19,29 +20,15 @@ public class TransactionStatusHistoryController {
         this.transactionStatusHistoryService = transactionStatusHistoryService;
     }
 
-    @GetMapping("transactions/{transaction_id}")
-    public ResponseEntity<List<TransactionStatusHistoryResponseDto>> getByTransactionId(
-            @PathVariable("transaction_id") String transactionId
-    ) {
-        List<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAllByTransactionId(transactionId);
+    @GetMapping
+    public ResponseEntity<List<TransactionStatusHistoryResponseDto>> getAll() {
+        List<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAll();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("users/{customer_id}/transactions/{transaction_id}")
-    public ResponseEntity<List<TransactionStatusHistoryResponseDto>> getByCustomerId(
-            @PathVariable("customer_id") String customerId,
-            @PathVariable("transaction_id") String transactionId
-    ) {
-        List<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAllByCustomerId(customerId, transactionId);
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
-
-    @GetMapping("gateways/{gateway_id}/transactions/{transaction_id}")
-    public ResponseEntity<List<TransactionStatusHistoryResponseDto>> getByGatewayId(
-            @PathVariable("gateway_id") String gatewayId,
-            @PathVariable("transaction_id") String transactionId
-    ) {
-        List<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAllByGatewayId(gatewayId, transactionId);
+    @GetMapping("/gateway")
+    public ResponseEntity<List<TransactionStatusHistoryResponseDto>> getByGatewayId() {
+        List<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAllByGatewayId();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

@@ -6,10 +6,8 @@ import java.util.List;
 
 public interface TransactionStatusHistoryService {
 
-    List<TransactionStatusHistoryResponseDto> getAllByTransactionId(String id);
+    List<TransactionStatusHistoryResponseDto> getAll();
 
-    List<TransactionStatusHistoryResponseDto> getAllByCustomerId(String customerId, String transactionId);
-
-    List<TransactionStatusHistoryResponseDto> getAllByGatewayId(String gatewayId, String transactionId);
+    List<TransactionStatusHistoryResponseDto> getAllByGatewayId();
 
 }

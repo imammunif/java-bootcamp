@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface TransactionStatusHistoryRepo extends JpaRepository<TransactionStatusHistory, UUID> {
 
-    List<TransactionStatusHistory> findAllByTransactionId(UUID transactionId);
+    List<TransactionStatusHistory> findAllByTransaction_GatewayId(UUID gatewayId);
 
 }
