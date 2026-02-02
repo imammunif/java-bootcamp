@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("transactions")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -22,29 +23,25 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping("transactions")
+    @GetMapping
     public ResponseEntity<List<TransactionResponseDto>> getAllTransactions() {
         List<TransactionResponseDto> res = transactionService.getAll();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("users/{customer_id}/transactions")
-    public ResponseEntity<List<TransactionResponseDto>> getAllByCustomerId(
-            @PathVariable("customer_id") String customerId
-    ) {
-        List<TransactionResponseDto> res = transactionService.getAllByCustomerId(customerId);
+    @GetMapping("/customer")
+    public ResponseEntity<List<TransactionResponseDto>> getAllByCustomerId() {
+        List<TransactionResponseDto> res = transactionService.getAllByCustomerId();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("gateways/{gateway_id}/transactions")
-    public ResponseEntity<List<TransactionResponseDto>> getAllByGatewayId(
-            @PathVariable("gateway_id") String gatewayId
-    ) {
-        List<TransactionResponseDto> res = transactionService.getAllByGatewayId(gatewayId);
+    @GetMapping("/gateway")
+    public ResponseEntity<List<TransactionResponseDto>> getAllByGatewayId() {
+        List<TransactionResponseDto> res = transactionService.getAllByGatewayId();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PostMapping("transactions")
+    @PostMapping
     public ResponseEntity<CreateResponseDto> create(
             @RequestBody @Valid CreateTransactionRequestDto data
     ) {
@@ -52,14 +49,13 @@ public class TransactionController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @PutMapping("gateways/{gateway_id}/transactions/{id}/{status_code}")
+    @PutMapping("/{id}/{status_code}")
     public ResponseEntity<UpdateResponseDto> update(
-            @PathVariable("gateway_id") String gatewayId,
             @PathVariable String id,
             @PathVariable("status_code") String code,
             @RequestBody @Valid UpdateTransactionRequestDto data
     ) {
-        UpdateResponseDto res = transactionService.update(gatewayId, id, code, data);
+        UpdateResponseDto res = transactionService.update(id, code, data);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

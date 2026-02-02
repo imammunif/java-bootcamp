@@ -67,12 +67,12 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
     }
 
     @Override
-    public List<TransactionResponseDto> getAllByCustomerId(String customerId) {
-        UUID validId = validateUUID(customerId);
-        userRepo.findById(validId).orElseThrow(
+    public List<TransactionResponseDto> getAllByCustomerId() {
+        UUID customerId = principalService.getPrincipal().getId();
+        userRepo.findById(customerId).orElseThrow(
                 () -> new NotFoundException("Customer not found")
         );
-        List<Transaction> transactionList = transactionRepo.findByCustomerId(validId);
+        List<Transaction> transactionList = transactionRepo.findByCustomerId(customerId);
         List<TransactionResponseDto> transactionResponseDtoList = new ArrayList<>();
         for (Transaction v : transactionList) {
             TransactionResponseDto responseDto = new TransactionResponseDto(
@@ -85,12 +85,12 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
     }
 
     @Override
-    public List<TransactionResponseDto> getAllByGatewayId(String gatewayId) {
-        UUID validId = validateUUID(gatewayId);
-        gatewayRepo.findById(validId).orElseThrow(
+    public List<TransactionResponseDto> getAllByGatewayId() {
+        UUID gatewayId = principalService.getPrincipal().getId();
+        gatewayRepo.findById(gatewayId).orElseThrow(
                 () -> new NotFoundException("Gateway not found")
         );
-        List<Transaction> transactionList = transactionRepo.findByGatewayId(validId);
+        List<Transaction> transactionList = transactionRepo.findByGatewayId(gatewayId);
         List<TransactionResponseDto> transactionResponseDtoList = new ArrayList<>();
         for (Transaction v : transactionList) {
             TransactionResponseDto responseDto = new TransactionResponseDto(
@@ -143,8 +143,9 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String gatewayId, String id, String newStatus, UpdateTransactionRequestDto data) {
-        gatewayRepo.findById(validateUUID(gatewayId)).orElseThrow(
+    public UpdateResponseDto update(String id, String newStatus, UpdateTransactionRequestDto data) {
+        UUID gatewayId = principalService.getPrincipal().getId();
+        gatewayRepo.findById(gatewayId).orElseThrow(
                 () -> new NotFoundException("Gateway not found")
         );
         Transaction transaction = transactionRepo.findById(validateUUID(id)).orElseThrow(

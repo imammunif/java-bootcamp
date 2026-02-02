@@ -15,12 +15,12 @@ public interface TransactionService {
     //CHECK NO USAGE
     TransactionResponseDto getById(String id);
 
-    List<TransactionResponseDto> getAllByCustomerId(String customerId);
+    List<TransactionResponseDto> getAllByCustomerId();
 
-    List<TransactionResponseDto> getAllByGatewayId(String gatewayId);
+    List<TransactionResponseDto> getAllByGatewayId();
 
     CreateResponseDto create(CreateTransactionRequestDto data);
 
-    UpdateResponseDto update(String gatewayId, String id, String code, UpdateTransactionRequestDto data);
+    UpdateResponseDto update(String id, String code, UpdateTransactionRequestDto data);
 
 }
