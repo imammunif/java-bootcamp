@@ -51,6 +51,15 @@ public class BaseService {
         return object;
     }
 
+    protected <T extends BaseModel> T updateBySystem(T object) {
+        UserRole system = userRoleRepo.findByCode(RoleCode.SYSTEM.getCode()).orElseThrow(
+                () -> new NotFoundException("System role not found")
+        );
+        object.setUpdatedAt(LocalDateTime.now());
+        object.setUpdatedBy(system.getId());
+        return object;
+    }
+
     protected UUID validateUUID(String id) {
         if (id.isBlank()) {
             throw new InvalidUuidException("Invalid ID format");

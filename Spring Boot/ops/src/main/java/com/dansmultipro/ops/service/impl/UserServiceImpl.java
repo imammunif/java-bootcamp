@@ -2,6 +2,7 @@ package com.dansmultipro.ops.service.impl;
 
 import com.dansmultipro.ops.constant.ResponseMessage;
 import com.dansmultipro.ops.constant.RoleCode;
+import com.dansmultipro.ops.dto.CommonResponseDto;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
@@ -9,10 +10,7 @@ import com.dansmultipro.ops.dto.user.CreateUserCustomerRequestDto;
 import com.dansmultipro.ops.dto.user.CreateUserGatewayRequestDto;
 import com.dansmultipro.ops.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ops.dto.user.UserResponseDto;
-import com.dansmultipro.ops.exception.AlreadyExistsException;
-import com.dansmultipro.ops.exception.MissMatchException;
-import com.dansmultipro.ops.exception.NotFoundException;
-import com.dansmultipro.ops.exception.ResourceInUseException;
+import com.dansmultipro.ops.exception.*;
 import com.dansmultipro.ops.model.Gateway;
 import com.dansmultipro.ops.model.GatewayUser;
 import com.dansmultipro.ops.model.User;
@@ -138,6 +136,25 @@ public class UserServiceImpl extends BaseService implements UserService {
         //TODO SEND EMAIL CODE VALIDATION
 
         return new CreateResponseDto(createdUser.getId(), ResponseMessage.CREATED.getMessage());
+    }
+
+    @Override
+    public CommonResponseDto activateUserCustomer(String id, String code) {
+        UUID validId = validateUUID(id);
+        User user = userRepo.findById(validId).orElseThrow(
+                () -> new NotFoundException("User not found")
+        );
+        if (!user.getActivationCode().equals(code)) {
+            throw new MissMatchException("Oops!, Code is not valid");
+        }
+        if (user.getActive()) {
+            throw new InvalidStatusException("User already activated");
+        }
+        User updateUser = updateBySystem(user);
+        updateUser.setActive(true);
+        userRepo.saveAndFlush(updateUser);
+
+        return new CommonResponseDto("User is successfully activated");
     }
 
     @Transactional(rollbackOn = Exception.class)
