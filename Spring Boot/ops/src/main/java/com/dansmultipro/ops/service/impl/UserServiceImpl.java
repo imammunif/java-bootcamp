@@ -139,9 +139,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public CommonResponseDto activateUserCustomer(String id, String code) {
-        UUID validId = validateUUID(id);
-        User user = userRepo.findById(validId).orElseThrow(
+    public CommonResponseDto activateUserCustomer(String email, String code) {
+        User user = userRepo.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
         if (!user.getActivationCode().equals(code)) {

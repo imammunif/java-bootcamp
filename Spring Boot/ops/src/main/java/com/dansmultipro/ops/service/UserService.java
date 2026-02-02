@@ -25,7 +25,7 @@ public interface UserService extends UserDetailsService {
 
     CreateResponseDto createUserGateway(CreateUserGatewayRequestDto data);
 
-    CommonResponseDto activateUserCustomer(String id, String code);
+    CommonResponseDto activateUserCustomer(String email, String code);
 
     UpdateResponseDto update(String id, UpdateUserRequestDto data);
 

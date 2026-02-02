@@ -48,7 +48,7 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @PostMapping("/gateways")
+    @PostMapping("/gateway")
     public ResponseEntity<CreateResponseDto> createGatewayAdmin(
             @RequestBody @Valid CreateUserGatewayRequestDto data
     ) {
@@ -56,12 +56,12 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}/activate/{code}")
+    @GetMapping("{email}/activate/{code}")
     public ResponseEntity<CommonResponseDto> activateUserCustomer(
-            @PathVariable String id,
+            @PathVariable String email,
             @PathVariable String code
     ) {
-        CommonResponseDto res = userService.activateUserCustomer(id, code);
+        CommonResponseDto res = userService.activateUserCustomer(email, code);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
