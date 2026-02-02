@@ -138,6 +138,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         return new CreateResponseDto(createdUser.getId(), ResponseMessage.CREATED.getMessage());
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public CommonResponseDto activateUserCustomer(String email, String code) {
         User user = userRepo.findByEmail(email).orElseThrow(
