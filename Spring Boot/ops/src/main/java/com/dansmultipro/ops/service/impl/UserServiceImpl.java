@@ -88,7 +88,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         UserRole userRole = userRoleRepo.findByCode(RoleCode.CUSTOMER.getCode()).orElseThrow(
                 () -> new NotFoundException("Role not found")
         );
-        User newUser = insertBySystem(new User());
+        User newUser = prepareForInsertBySystem(new User());
         String requestEmail = data.getEmail();
         if (userRepo.findByEmail(requestEmail).isPresent()) {
             throw new AlreadyExistsException("Email already exist");
@@ -150,7 +150,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (user.getActive()) {
             throw new InvalidStatusException("User already activated");
         }
-        User updateUser = updateBySystem(user);
+        User updateUser = prepareForUpdateBySystem(user);
         updateUser.setActive(true);
         userRepo.saveAndFlush(updateUser);
 

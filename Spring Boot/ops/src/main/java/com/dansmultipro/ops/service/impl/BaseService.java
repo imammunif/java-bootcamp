@@ -35,7 +35,7 @@ public class BaseService {
         return object;
     }
 
-    protected <T extends BaseModel> T insertBySystem(T object) {
+    protected <T extends BaseModel> T prepareForInsertBySystem(T object) {
         UserRole system = userRoleRepo.findByCode(RoleCode.SYSTEM.getCode()).orElseThrow(
                 () -> new NotFoundException("System role not found")
         );
@@ -51,7 +51,7 @@ public class BaseService {
         return object;
     }
 
-    protected <T extends BaseModel> T updateBySystem(T object) {
+    protected <T extends BaseModel> T prepareForUpdateBySystem(T object) {
         UserRole system = userRoleRepo.findByCode(RoleCode.SYSTEM.getCode()).orElseThrow(
                 () -> new NotFoundException("System role not found")
         );
