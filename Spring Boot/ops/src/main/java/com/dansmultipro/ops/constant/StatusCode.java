@@ -2,9 +2,9 @@ package com.dansmultipro.ops.constant;
 
 public enum StatusCode {
 
-    PROCESS("PRC"),
+    PROCESS("PROCESS"),
     PAID("PAY"),
-    REJECTED("RJC");
+    REJECTED("REJECT");
 
     private final String code;
 

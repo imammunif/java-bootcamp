@@ -1,5 +1,6 @@
 package com.dansmultipro.ops.service.impl;
 
+import com.dansmultipro.ops.config.RabbitMQConfig;
 import com.dansmultipro.ops.constant.ResponseMessage;
 import com.dansmultipro.ops.constant.StatusCode;
 import com.dansmultipro.ops.dto.CreateResponseDto;
@@ -11,10 +12,14 @@ import com.dansmultipro.ops.exception.InvalidStatusException;
 import com.dansmultipro.ops.exception.MissMatchException;
 import com.dansmultipro.ops.exception.NotFoundException;
 import com.dansmultipro.ops.model.*;
+import com.dansmultipro.ops.pojo.MailPoJo;
 import com.dansmultipro.ops.repository.*;
 import com.dansmultipro.ops.service.TransactionService;
+import com.dansmultipro.ops.util.MailUtil;
 import com.dansmultipro.ops.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,14 +35,18 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
     private final GatewayRepo gatewayRepo;
     private final ProductRepo productRepo;
     private final TransactionStatusHistoryRepo transactionStatusHistoryRepo;
+    private final MailUtil mailUtil;
+    private final RabbitTemplate rabbitTemplate;
 
-    public TransactionServiceImpl(TransactionRepo transactionRepo, UserRepo userRepo, TransactionStatusRepo transactionStatusRepo, GatewayRepo gatewayRepo, ProductRepo productRepo, TransactionStatusHistoryRepo transactionStatusHistoryRepo) {
+    public TransactionServiceImpl(TransactionRepo transactionRepo, UserRepo userRepo, TransactionStatusRepo transactionStatusRepo, GatewayRepo gatewayRepo, ProductRepo productRepo, TransactionStatusHistoryRepo transactionStatusHistoryRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
         this.transactionRepo = transactionRepo;
         this.userRepo = userRepo;
         this.transactionStatusRepo = transactionStatusRepo;
         this.gatewayRepo = gatewayRepo;
         this.productRepo = productRepo;
         this.transactionStatusHistoryRepo = transactionStatusHistoryRepo;
+        this.mailUtil = mailUtil;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -107,7 +116,7 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
     public CreateResponseDto create(CreateTransactionRequestDto data) {
         UUID gatewayId = validateUUID(data.getGatewayId());
         UUID productId = validateUUID(data.getProductId());
-        User user = userRepo.findById(UUID.fromString("31b8d223-656a-4964-b390-1248cbd98e35")).orElseThrow(
+        User user = userRepo.findById(principalService.getPrincipal().getId()).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
         TransactionStatus status = transactionStatusRepo.findByCode(StatusCode.PROCESS.getCode()).orElseThrow(
@@ -137,6 +146,16 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         newStatusHistory.setStatus(transactionStatus);
         newStatusHistory.setTransaction(createdTransaction);
         transactionStatusHistoryRepo.save(newStatusHistory);
+
+        MailPoJo mailPoJo = new MailPoJo(
+                user.getEmail(),
+                createdTransaction.getCode()
+        );
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EMAIL_EX_TRANSACTION,
+                RabbitMQConfig.EMAIL_KEY_TRANSACTION,
+                mailPoJo
+        );
 
         return new CreateResponseDto(createdTransaction.getId(), ResponseMessage.CREATED.getMessage());
     }
@@ -187,6 +206,14 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         transactionStatusHistoryRepo.save(newStatusHistory);
 
         return new UpdateResponseDto(updatedTransaction.getVersion(), ResponseMessage.UPDATED.getMessage());
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_TRANSACTION)
+    public void receiveEmailNotificationAssign(MailPoJo pojo) {
+        mailUtil.send(
+                pojo.getEmailAddress(),
+                "New Transaction Successfully Created",
+                "Your transaction " + pojo.getEmailBody() + " has been created and is now being process");
     }
 
 }
