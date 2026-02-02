@@ -21,8 +21,12 @@ import com.dansmultipro.ops.repository.*;
 import com.dansmultipro.ops.service.UserService;
 import com.dansmultipro.ops.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,13 +38,31 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final GatewayUserRepo gatewayUserRepo;
     private final TransactionRepo transactionRepo;
     private final GatewayRepo gatewayRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRoleRepo userRoleRepo, UserRepo userRepo, GatewayUserRepo gatewayUserRepo, TransactionRepo transactionRepo, GatewayRepo gatewayRepo) {
+    public UserServiceImpl(UserRoleRepo userRoleRepo, UserRepo userRepo, GatewayUserRepo gatewayUserRepo, TransactionRepo transactionRepo, GatewayRepo gatewayRepo, PasswordEncoder passwordEncoder) {
         this.userRoleRepo = userRoleRepo;
         this.userRepo = userRepo;
         this.gatewayUserRepo = gatewayUserRepo;
         this.transactionRepo = transactionRepo;
         this.gatewayRepo = gatewayRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepo.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("User not found")
+        );
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        var userDb = userRepo.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException(email));
+        return new org.springframework.security.core.userdetails.User(
+                email, userDb.getPassword(), new ArrayList<>()
+        );
     }
 
     @Override
@@ -75,7 +97,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
         String code = RandomGenerator.randomizeCode(6);
         newUser.setEmail(requestEmail);
-        newUser.setPassword(data.getPassword());
+        newUser.setPassword(passwordEncoder.encode(data.getPassword()));
         newUser.setName(data.getName());
         newUser.setActive(false);
         newUser.setActivationCode(code);
@@ -99,7 +121,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new AlreadyExistsException("Email already exist");
         }
         newUser.setEmail(requestEmail);
-        newUser.setPassword(data.getPassword());
+        newUser.setPassword(passwordEncoder.encode(data.getPassword()));
         newUser.setName(data.getName());
         newUser.setActive(true);
         newUser.setUserRole(userRole);

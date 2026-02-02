@@ -7,10 +7,14 @@ import com.dansmultipro.ops.dto.user.CreateUserCustomerRequestDto;
 import com.dansmultipro.ops.dto.user.CreateUserGatewayRequestDto;
 import com.dansmultipro.ops.dto.user.UpdateUserRequestDto;
 import com.dansmultipro.ops.dto.user.UserResponseDto;
+import com.dansmultipro.ops.model.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
+
+    User findByEmail(String email);
 
     List<UserResponseDto> getAll();
 
