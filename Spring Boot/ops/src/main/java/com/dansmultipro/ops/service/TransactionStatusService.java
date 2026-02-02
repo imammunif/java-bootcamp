@@ -8,6 +8,4 @@ public interface TransactionStatusService {
 
     List<TransactionStatusResponseDto> getAll();
 
-    TransactionStatusResponseDto getById(String id);
-
 }

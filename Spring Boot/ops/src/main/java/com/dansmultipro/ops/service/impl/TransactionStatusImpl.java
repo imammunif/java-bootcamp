@@ -1,14 +1,11 @@
 package com.dansmultipro.ops.service.impl;
 
 import com.dansmultipro.ops.dto.transactionstatus.TransactionStatusResponseDto;
-import com.dansmultipro.ops.exception.NotFoundException;
-import com.dansmultipro.ops.model.TransactionStatus;
 import com.dansmultipro.ops.repository.TransactionStatusRepo;
 import com.dansmultipro.ops.service.TransactionStatusService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class TransactionStatusImpl extends BaseService implements TransactionStatusService {
@@ -25,15 +22,6 @@ public class TransactionStatusImpl extends BaseService implements TransactionSta
                 .map(v -> new TransactionStatusResponseDto(v.getId(), v.getName(), v.getCode()))
                 .toList();
         return result;
-    }
-
-    @Override
-    public TransactionStatusResponseDto getById(String id) {
-        UUID validId = validateUUID(id);
-        TransactionStatus status = transactionStatusRepo.findById(validId).orElseThrow(
-                () -> new NotFoundException("Status not found")
-        );
-        return new TransactionStatusResponseDto(status.getId(), status.getName(), status.getCode());
     }
 
 }

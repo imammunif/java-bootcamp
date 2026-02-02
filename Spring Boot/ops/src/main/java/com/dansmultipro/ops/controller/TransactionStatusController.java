@@ -5,7 +5,6 @@ import com.dansmultipro.ops.service.TransactionStatusService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,14 +23,6 @@ public class TransactionStatusController {
     @GetMapping
     public ResponseEntity<List<TransactionStatusResponseDto>> getAll() {
         List<TransactionStatusResponseDto> res = transactionStatusService.getAll();
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<TransactionStatusResponseDto> getById(
-            @PathVariable String id
-    ) {
-        TransactionStatusResponseDto res = transactionStatusService.getById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
