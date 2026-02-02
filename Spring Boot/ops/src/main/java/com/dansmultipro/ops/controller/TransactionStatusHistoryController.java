@@ -26,7 +26,7 @@ public class TransactionStatusHistoryController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("/gateway")
+    @GetMapping("/gateways")
     public ResponseEntity<List<TransactionStatusHistoryResponseDto>> getByGatewayId() {
         List<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAllByGatewayId();
         return new ResponseEntity<>(res, HttpStatus.OK);

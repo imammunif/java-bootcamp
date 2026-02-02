@@ -20,7 +20,7 @@ public class GatewayUserController {
         this.gatewayUserService = gatewayUserService;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public ResponseEntity<List<GatewayUserResponseDto>> getAllByGatewayId() {
         List<GatewayUserResponseDto> res = gatewayUserService.getAllByGatewayId();
         return new ResponseEntity<>(res, HttpStatus.OK);

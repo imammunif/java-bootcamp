@@ -48,7 +48,7 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @PostMapping("/gateway")
+    @PostMapping("/gateways")
     public ResponseEntity<CreateResponseDto> createGatewayAdmin(
             @RequestBody @Valid CreateUserGatewayRequestDto data
     ) {

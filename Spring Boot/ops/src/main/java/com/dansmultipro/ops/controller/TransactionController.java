@@ -29,13 +29,13 @@ public class TransactionController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("/customer")
+    @GetMapping("/customers")
     public ResponseEntity<List<TransactionResponseDto>> getAllByCustomerId() {
         List<TransactionResponseDto> res = transactionService.getAllByCustomerId();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping("/gateway")
+    @GetMapping("/gateways")
     public ResponseEntity<List<TransactionResponseDto>> getAllByGatewayId() {
         List<TransactionResponseDto> res = transactionService.getAllByGatewayId();
         return new ResponseEntity<>(res, HttpStatus.OK);
