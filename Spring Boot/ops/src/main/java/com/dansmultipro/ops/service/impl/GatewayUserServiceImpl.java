@@ -22,12 +22,12 @@ public class GatewayUserServiceImpl extends BaseService implements GatewayUserSe
     }
 
     @Override
-    public List<GatewayUserResponseDto> getAllByGatewayId(String gatewayId) {
-        UUID validId = validateUUID(gatewayId);
-        gatewayRepo.findById(validId).orElseThrow(
+    public List<GatewayUserResponseDto> getAllByGatewayId() {
+        UUID gatewayId = principalService.getPrincipal().getId();
+        gatewayRepo.findById(gatewayId).orElseThrow(
                 () -> new NotFoundException("Gateway not found")
         );
-        List<GatewayUserResponseDto> result = gatewayUserRepo.findByGatewayId(validId).stream()
+        List<GatewayUserResponseDto> result = gatewayUserRepo.findByGatewayId(gatewayId).stream()
                 .map(v -> new GatewayUserResponseDto(
                         v.getId(), v.getUser().getName(), v.getUser().getEmail(), v.getGateway().getName())
                 ).toList();

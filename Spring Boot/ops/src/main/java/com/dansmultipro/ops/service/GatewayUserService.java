@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface GatewayUserService {
 
-    List<GatewayUserResponseDto> getAllByGatewayId(String gatewayId);
+    List<GatewayUserResponseDto> getAllByGatewayId();
 
 }
