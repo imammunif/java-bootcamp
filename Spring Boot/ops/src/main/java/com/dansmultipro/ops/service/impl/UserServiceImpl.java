@@ -221,7 +221,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_USER)
-    public void receiveEmailNotificationAssign(MailPoJo pojo) {
+    public void receiveEmailNotificationRegister(MailPoJo pojo) {
         Context context = new Context();
         String userName = pojo.getUsername();
         String url = "http://localhost:8080/users/activate"

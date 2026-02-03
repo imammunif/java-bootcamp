@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Account Activation</title>
+    <title>Transaction Update</title>
     <style type="text/css">
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -21,8 +21,16 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
+        /* Dynamic Header Color */
+        .header-paid {
+            background-color: #28a745;
+        }
+
+        .header-rejected {
+            background-color: #dc3545;
+        }
+
         .header {
-            background-color: #007bff;
             padding: 40px 20px;
             text-align: center;
             color: #ffffff;
@@ -34,20 +42,23 @@
             color: #333333;
         }
 
-        .button-container {
+        .status-banner {
             text-align: center;
-            padding: 30px 0;
+            font-weight: 700;
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 6px;
         }
 
-        .btn {
-            background-color: #007bff;
-            color: #ffffff !important;
-            padding: 14px 32px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 16px;
-            display: inline-block;
+        .status-paid {
+            color: #28a745;
+            background-color: #eafaf1;
+        }
+
+        .status-rejected {
+            color: #dc3545;
+            background-color: #fdf2f2;
         }
 
         .footer {
@@ -56,12 +67,6 @@
             text-align: center;
             font-size: 13px;
             color: #777777;
-        }
-
-        .link-text {
-            color: #007bff;
-            word-break: break-all;
-            font-size: 14px;
         }
 
         h1 {
@@ -73,26 +78,22 @@
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <h1>Welcome to Online Payment System</h1>
+    <div class="header" th:classappend="${status == 'Paid' ? 'header-paid' : 'header-rejected'}">
+        <h1 th:text="${status == 'Paid' ? 'Payment Successful' : 'Transaction Rejected'}">Update</h1>
     </div>
-
     <div class="content">
         <p>Hi, <strong th:text="${userName}">User</strong>!</p>
+        <p>There has been an update to your transaction status for code: <strong
+                th:text="${transactionCode}">TRX-0000</strong>.</p>
 
-        <p th:text="${messageContent}">Verification message goes here.</p>
-
-        <div class="button-container">
-            <a th:href="${actionUrl}" class="btn">Confirm Account</a>
+        <div class="status-banner" th:classappend="${status == 'Paid' ? 'status-paid' : 'status-rejected'}">
+            Status: <span th:text="${status}">STATUS</span>
         </div>
 
-        <p style="font-size: 14px; color: #666;">If the button above doesn't work, copy and paste this link into your
-            browser:</p>
-        <p><a th:href="${actionUrl}" class="link-text" th:text="${actionUrl}">URL link here</a></p>
+        <p th:text="${messageContent}">Details about the update.</p>
     </div>
-
     <div class="footer">
-        <p>If you did not create an account, you can safely ignore this email.</p>
+        <p>For any questions, please contact our support team.</p>
         <p>&copy; 2026 Online Payment System. All rights reserved.</p>
     </div>
 </div>

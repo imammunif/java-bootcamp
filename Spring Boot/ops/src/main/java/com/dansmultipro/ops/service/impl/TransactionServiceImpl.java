@@ -12,6 +12,7 @@ import com.dansmultipro.ops.exception.MissMatchException;
 import com.dansmultipro.ops.exception.NotFoundException;
 import com.dansmultipro.ops.model.*;
 import com.dansmultipro.ops.pojo.MailPoJo;
+import com.dansmultipro.ops.pojo.MailUpdateStatusPoJo;
 import com.dansmultipro.ops.repository.*;
 import com.dansmultipro.ops.service.TransactionService;
 import com.dansmultipro.ops.util.MailUtil;
@@ -20,6 +21,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,10 +209,11 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         newStatusHistory.setTransaction(transaction);
         transactionStatusHistoryRepo.save(newStatusHistory);
 
-        MailPoJo mailPoJo = new MailPoJo(
+        MailUpdateStatusPoJo mailPoJo = new MailUpdateStatusPoJo(
                 updatedTransaction.getCustomer().getEmail(),
                 updatedTransaction.getCode(),
-                transaction.getCustomer().getName()
+                transaction.getCustomer().getName(),
+                updatedTransaction.getStatus().getName()
         );
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EMAIL_EX_STATUS,
@@ -223,18 +226,41 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
 
     @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_TRANSACTION)
     public void receiveEmailNotificationTransaction(MailPoJo pojo) {
-        mailUtil.send(
+        Context context = new Context();
+        context.setVariable("userName", pojo.getUsername());
+        context.setVariable("transactionCode", pojo.getEmailBody());
+
+        mailUtil.sendHtml(
                 pojo.getEmailAddress(),
                 "New Transaction Successfully Created",
-                "Your transaction " + pojo.getEmailBody() + " has been created and is now being process.");
+                "email-template-transaction-created",
+                context);
     }
 
     @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_STATUS)
-    public void receiveEmailNotificationStatus(MailPoJo pojo) {
-        mailUtil.send(
+    public void receiveEmailNotificationUpdate(MailUpdateStatusPoJo pojo) {
+        Context context = new Context();
+        String status = pojo.getStatus();
+        String name = pojo.getUsername();
+        String trxCode = pojo.getEmailBody();
+        String content = status.equalsIgnoreCase("Paid")
+                ? "Thank you for your payment. Your transaction is now complete."
+                : "Unfortunately, your transaction could not be processed at this time.";
+        String subject = status.equalsIgnoreCase("Paid")
+                ? "Transaction Success " + trxCode
+                : "Transaction rejected " + trxCode;
+
+        context.setVariable("userName", name);
+        context.setVariable("transactionCode", trxCode);
+        context.setVariable("status", status);
+        context.setVariable("messageContent", content);
+
+        mailUtil.sendHtml(
                 pojo.getEmailAddress(),
-                "Your Transaction Has Been Updated",
-                "Your transaction " + pojo.getEmailBody() + " has been updated, check it out now!");
+                subject,
+                "email-template-transaction-updated",
+                context
+        );
     }
 
 }
