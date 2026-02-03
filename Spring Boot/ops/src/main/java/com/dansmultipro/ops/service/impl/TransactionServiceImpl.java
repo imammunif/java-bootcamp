@@ -213,7 +213,7 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         mailUtil.send(
                 pojo.getEmailAddress(),
                 "New Transaction Successfully Created",
-                "Your transaction " + pojo.getEmailBody() + " has been created and is now being process");
+                "Your transaction " + pojo.getEmailBody() + " has been created and is now being process.");
     }
 
 }

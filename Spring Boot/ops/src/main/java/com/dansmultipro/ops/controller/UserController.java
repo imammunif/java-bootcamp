@@ -56,10 +56,10 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @GetMapping("{email}/activate/{code}")
+    @GetMapping("/activate")
     public ResponseEntity<CommonResponseDto> activateUserCustomer(
-            @PathVariable String email,
-            @PathVariable String code
+            @RequestParam String email,
+            @RequestParam String code
     ) {
         CommonResponseDto res = userService.activateUserCustomer(email, code);
         return new ResponseEntity<>(res, HttpStatus.OK);

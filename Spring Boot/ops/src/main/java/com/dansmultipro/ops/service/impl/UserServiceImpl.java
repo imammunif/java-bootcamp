@@ -1,5 +1,6 @@
 package com.dansmultipro.ops.service.impl;
 
+import com.dansmultipro.ops.config.RabbitMQConfig;
 import com.dansmultipro.ops.constant.ResponseMessage;
 import com.dansmultipro.ops.constant.RoleCode;
 import com.dansmultipro.ops.dto.CommonResponseDto;
@@ -15,15 +16,21 @@ import com.dansmultipro.ops.model.Gateway;
 import com.dansmultipro.ops.model.GatewayUser;
 import com.dansmultipro.ops.model.User;
 import com.dansmultipro.ops.model.UserRole;
+import com.dansmultipro.ops.pojo.MailPoJo;
 import com.dansmultipro.ops.repository.*;
 import com.dansmultipro.ops.service.UserService;
+import com.dansmultipro.ops.util.MailUtil;
 import com.dansmultipro.ops.util.RandomGenerator;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,14 +44,18 @@ public class UserServiceImpl extends BaseService implements UserService {
     private final TransactionRepo transactionRepo;
     private final GatewayRepo gatewayRepo;
     private final PasswordEncoder passwordEncoder;
+    private final MailUtil mailUtil;
+    private final RabbitTemplate rabbitTemplate;
 
-    public UserServiceImpl(UserRoleRepo userRoleRepo, UserRepo userRepo, GatewayUserRepo gatewayUserRepo, TransactionRepo transactionRepo, GatewayRepo gatewayRepo, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRoleRepo userRoleRepo, UserRepo userRepo, GatewayUserRepo gatewayUserRepo, TransactionRepo transactionRepo, GatewayRepo gatewayRepo, PasswordEncoder passwordEncoder, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
         this.userRoleRepo = userRoleRepo;
         this.userRepo = userRepo;
         this.gatewayUserRepo = gatewayUserRepo;
         this.transactionRepo = transactionRepo;
         this.gatewayRepo = gatewayRepo;
         this.passwordEncoder = passwordEncoder;
+        this.mailUtil = mailUtil;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -102,7 +113,15 @@ public class UserServiceImpl extends BaseService implements UserService {
         newUser.setUserRole(userRole);
         User createdUser = userRepo.save(newUser);
 
-        //TODO SEND EMAIL CODE VALIDATION
+        MailPoJo mailPoJo = new MailPoJo(
+                createdUser.getEmail(),
+                createdUser.getActivationCode()
+        );
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EMAIL_EX_USER,
+                RabbitMQConfig.EMAIL_KEY_USER,
+                mailPoJo
+        );
 
         return new CreateResponseDto(createdUser.getId(), ResponseMessage.CREATED.getMessage());
     }
@@ -198,4 +217,16 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         return new DeleteResponseDto(ResponseMessage.DELETED.getMessage());
     }
+
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_USER)
+    public void receiveEmailNotificationAssign(MailPoJo pojo) {
+        String url = "http://localhost:8080/users/activate"
+                + "?email=" + URLEncoder.encode(pojo.getEmailAddress(), StandardCharsets.UTF_8)
+                + "&code=" + pojo.getEmailBody();
+        mailUtil.send(
+                pojo.getEmailAddress(),
+                "Activate Your Account",
+                "Your account has been created! Click this link in order to activate your profile and enable transactions \n" + url);
+    }
+
 }
