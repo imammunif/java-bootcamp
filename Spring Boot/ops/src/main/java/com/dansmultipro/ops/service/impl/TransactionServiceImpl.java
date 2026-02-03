@@ -7,7 +7,6 @@ import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
 import com.dansmultipro.ops.dto.transaction.CreateTransactionRequestDto;
 import com.dansmultipro.ops.dto.transaction.TransactionResponseDto;
-import com.dansmultipro.ops.dto.transaction.UpdateTransactionRequestDto;
 import com.dansmultipro.ops.exception.InvalidStatusException;
 import com.dansmultipro.ops.exception.MissMatchException;
 import com.dansmultipro.ops.exception.NotFoundException;
@@ -33,16 +32,18 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
     private final UserRepo userRepo;
     private final TransactionStatusRepo transactionStatusRepo;
     private final GatewayRepo gatewayRepo;
+    private final GatewayUserRepo gatewayUserRepo;
     private final ProductRepo productRepo;
     private final TransactionStatusHistoryRepo transactionStatusHistoryRepo;
     private final MailUtil mailUtil;
     private final RabbitTemplate rabbitTemplate;
 
-    public TransactionServiceImpl(TransactionRepo transactionRepo, UserRepo userRepo, TransactionStatusRepo transactionStatusRepo, GatewayRepo gatewayRepo, ProductRepo productRepo, TransactionStatusHistoryRepo transactionStatusHistoryRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
+    public TransactionServiceImpl(TransactionRepo transactionRepo, UserRepo userRepo, TransactionStatusRepo transactionStatusRepo, GatewayRepo gatewayRepo, GatewayUserRepo gatewayUserRepo, ProductRepo productRepo, TransactionStatusHistoryRepo transactionStatusHistoryRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
         this.transactionRepo = transactionRepo;
         this.userRepo = userRepo;
         this.transactionStatusRepo = transactionStatusRepo;
         this.gatewayRepo = gatewayRepo;
+        this.gatewayUserRepo = gatewayUserRepo;
         this.productRepo = productRepo;
         this.transactionStatusHistoryRepo = transactionStatusHistoryRepo;
         this.mailUtil = mailUtil;
@@ -95,11 +96,11 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
 
     @Override
     public List<TransactionResponseDto> getAllByGatewayId() {
-        UUID gatewayId = principalService.getPrincipal().getId();
-        gatewayRepo.findById(gatewayId).orElseThrow(
-                () -> new NotFoundException("Gateway not found")
+        UUID userId = principalService.getPrincipal().getId();
+        GatewayUser gatewayUser = gatewayUserRepo.findByUserId(userId).orElseThrow(
+                () -> new NotFoundException("Gateway user not found")
         );
-        List<Transaction> transactionList = transactionRepo.findByGatewayId(gatewayId);
+        List<Transaction> transactionList = transactionRepo.findByGatewayId(gatewayUser.getGateway().getId());
         List<TransactionResponseDto> transactionResponseDtoList = new ArrayList<>();
         for (Transaction v : transactionList) {
             TransactionResponseDto responseDto = new TransactionResponseDto(
@@ -162,25 +163,25 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public UpdateResponseDto update(String id, String newStatus, UpdateTransactionRequestDto data) {
-        UUID gatewayId = principalService.getPrincipal().getId();
-        gatewayRepo.findById(gatewayId).orElseThrow(
-                () -> new NotFoundException("Gateway not found")
+    public UpdateResponseDto update(String id, String action, Integer version) {
+        UUID userId = principalService.getPrincipal().getId();
+        gatewayUserRepo.findByUserId(userId).orElseThrow(
+                () -> new NotFoundException("Gateway user not found")
         );
         Transaction transaction = transactionRepo.findById(validateUUID(id)).orElseThrow(
                 () -> new NotFoundException("Transaction not found")
         );
-        if (!transaction.getVersion().equals(data.getVersion())) {
+        if (!transaction.getVersion().equals(version)) {
             throw new MissMatchException("Version not match");
         }
-        TransactionStatus transactionStatus = transactionStatusRepo.findByCode(newStatus).orElseThrow(
+        TransactionStatus transactionStatus = transactionStatusRepo.findByCode(action).orElseThrow(
                 () -> new NotFoundException("Status is not found")
         );
 
         Transaction updateTransaction = prepareForUpdate(transaction);
         String currentStatus = transaction.getStatus().getCode();
 
-        if (newStatus.equals(StatusCode.PAID.getCode())) {
+        if (action.equals(StatusCode.PAID.getCode())) {
             if (currentStatus.equals(StatusCode.REJECTED.getCode())) {
                 throw new InvalidStatusException("Rejected transaction can't be paid");
             } else if (currentStatus.equals(StatusCode.PAID.getCode())) {
@@ -189,7 +190,7 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
                 updateTransaction.setStatus(transactionStatus);
             }
         }
-        if (newStatus.equals(StatusCode.REJECTED.getCode())) {
+        if (action.equals(StatusCode.REJECTED.getCode())) {
             if (currentStatus.equals(StatusCode.PAID.getCode())) {
                 throw new InvalidStatusException("Paid transaction can't be rejected");
             } else if (currentStatus.equals(StatusCode.REJECTED.getCode())) {

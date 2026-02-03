@@ -4,7 +4,6 @@ import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
 import com.dansmultipro.ops.dto.transaction.CreateTransactionRequestDto;
 import com.dansmultipro.ops.dto.transaction.TransactionResponseDto;
-import com.dansmultipro.ops.dto.transaction.UpdateTransactionRequestDto;
 
 import java.util.List;
 
@@ -21,6 +20,6 @@ public interface TransactionService {
 
     CreateResponseDto create(CreateTransactionRequestDto data);
 
-    UpdateResponseDto update(String id, String code, UpdateTransactionRequestDto data);
+    UpdateResponseDto update(String id, String action, Integer version);
 
 }

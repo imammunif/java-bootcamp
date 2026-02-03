@@ -4,7 +4,6 @@ import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
 import com.dansmultipro.ops.dto.transaction.CreateTransactionRequestDto;
 import com.dansmultipro.ops.dto.transaction.TransactionResponseDto;
-import com.dansmultipro.ops.dto.transaction.UpdateTransactionRequestDto;
 import com.dansmultipro.ops.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -49,13 +48,13 @@ public class TransactionController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/{status_code}")
+    @PutMapping
     public ResponseEntity<UpdateResponseDto> update(
-            @PathVariable String id,
-            @PathVariable("status_code") String code,
-            @RequestBody @Valid UpdateTransactionRequestDto data
+            @RequestParam String id,
+            @RequestParam String action,
+            @RequestParam Integer version
     ) {
-        UpdateResponseDto res = transactionService.update(id, code, data);
+        UpdateResponseDto res = transactionService.update(id, action, version);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
