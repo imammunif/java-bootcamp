@@ -35,7 +35,7 @@ public class LoginController {
         authenticationManager.authenticate(auth);
 
         var user = userService.findByEmail(data.getEmail());
-        var token = JwtUtil.generateToken(user.getId().toString(), Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
+        var token = JwtUtil.generateToken(user.getId().toString(), user.getUserRole().getCode(), Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
         return new ResponseEntity<>(new LoginResponseDto(
                 user.getName(), user.getUserRole().getCode(), token
         ), HttpStatus.OK);

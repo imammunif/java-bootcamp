@@ -12,9 +12,10 @@ import java.util.HashMap;
 
 public class JwtUtil {
 
-    public static String generateToken(String id, Timestamp timestamp) {
+    public static String generateToken(String id, String roleCode, Timestamp timestamp) {
         var claims = new HashMap<String, Object>();
         claims.put("id", id);
+        claims.put("roleCode", roleCode);
         claims.put("exp", timestamp);
         var secretKey =
                 Keys.hmacShaKeyFor(Decoders.BASE64.decode("cffca86125ae36268b060f31ec1c90e028c08b0164d8ce3c4134829bfd6e9cc4"));

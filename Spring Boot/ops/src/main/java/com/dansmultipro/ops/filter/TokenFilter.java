@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
@@ -44,8 +45,12 @@ public class TokenFilter extends OncePerRequestFilter {
                 var claims = JwtUtil.validateToken(token);
 
                 var data = new AuthorizationPoJo(UUID.fromString(claims.get("id").toString()));
-                var auth = new UsernamePasswordAuthenticationToken(data, null, null);
+                var role = claims.get("roleCode").toString();
+                List<SimpleGrantedAuthority> simpleGrantedAuthorityList = List.of(
+                        new SimpleGrantedAuthority(role)
+                );
 
+                var auth = new UsernamePasswordAuthenticationToken(data, null, simpleGrantedAuthorityList);
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 filterChain.doFilter(request, response);
             } catch (Exception e) {
