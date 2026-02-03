@@ -67,10 +67,13 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        var userDb = userRepo.findByEmail(email).orElseThrow(
+        User user = userRepo.findByEmail(email).orElseThrow(
                 () -> new UsernameNotFoundException(email));
+        if (!user.getActive()) {
+            throw new InactiveException("Account is not activated");
+        }
         return new org.springframework.security.core.userdetails.User(
-                email, userDb.getPassword(), new ArrayList<>()
+                email, user.getPassword(), new ArrayList<>()
         );
     }
 

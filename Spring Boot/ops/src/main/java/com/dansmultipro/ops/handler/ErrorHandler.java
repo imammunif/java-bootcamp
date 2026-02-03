@@ -84,6 +84,14 @@ public class ErrorHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InactiveException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleInactiveException(
+            InactiveException ex
+    ) {
+        var errors = ex.getMessage();
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(MissMatchException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleMissMatchException(
             MissMatchException ex
