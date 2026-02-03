@@ -5,8 +5,8 @@ import com.dansmultipro.ops.constant.RoleCode;
 import com.dansmultipro.ops.exception.InvalidUuidException;
 import com.dansmultipro.ops.exception.NotFoundException;
 import com.dansmultipro.ops.model.BaseModel;
-import com.dansmultipro.ops.model.UserRole;
-import com.dansmultipro.ops.repository.UserRoleRepo;
+import com.dansmultipro.ops.model.User;
+import com.dansmultipro.ops.repository.UserRepo;
 import com.dansmultipro.ops.service.PrincipalService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class BaseService {
 
     protected PrincipalService principalService;
-    private UserRoleRepo userRoleRepo;
+    private UserRepo userRepo;
 
     @Autowired
     public void setPrincipalService(PrincipalService principalService) {
@@ -24,8 +24,8 @@ public class BaseService {
     }
 
     @Autowired
-    public void setUserRoleRepo(UserRoleRepo userRoleRepo) {
-        this.userRoleRepo = userRoleRepo;
+    public void setUserRepo(UserRepo userRepo) {
+        this.userRepo = userRepo;
     }
 
     protected <T extends BaseModel> T prepareForInsert(T object) {
@@ -36,12 +36,12 @@ public class BaseService {
     }
 
     protected <T extends BaseModel> T prepareForInsertBySystem(T object) {
-        UserRole system = userRoleRepo.findByCode(RoleCode.SYSTEM.getCode()).orElseThrow(
-                () -> new NotFoundException("System role not found")
+        User userSystem = userRepo.findByUserRole_Code(RoleCode.SYSTEM.getCode()).orElseThrow(
+                () -> new NotFoundException("User system not found")
         );
         object.setId(UUID.randomUUID());
         object.setCreatedAt(LocalDateTime.now());
-        object.setCreatedBy(system.getId());
+        object.setCreatedBy(userSystem.getId());
         return object;
     }
 
@@ -52,11 +52,11 @@ public class BaseService {
     }
 
     protected <T extends BaseModel> T prepareForUpdateBySystem(T object) {
-        UserRole system = userRoleRepo.findByCode(RoleCode.SYSTEM.getCode()).orElseThrow(
-                () -> new NotFoundException("System role not found")
+        User userSystem = userRepo.findByUserRole_Code(RoleCode.SYSTEM.getCode()).orElseThrow(
+                () -> new NotFoundException("User system not found")
         );
         object.setUpdatedAt(LocalDateTime.now());
-        object.setUpdatedBy(system.getId());
+        object.setUpdatedBy(userSystem.getId());
         return object;
     }
 
