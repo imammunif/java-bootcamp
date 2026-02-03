@@ -1,6 +1,5 @@
 package com.dansmultipro.ops.service;
 
-import com.dansmultipro.ops.dto.CommonResponseDto;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
@@ -25,7 +24,7 @@ public interface UserService extends UserDetailsService {
 
     CreateResponseDto createUserGateway(CreateUserGatewayRequestDto data);
 
-    CommonResponseDto activateUserCustomer(String email, String code);
+    String activateUserCustomer(String email, String code);
 
     UpdateResponseDto update(String id, UpdateUserRequestDto data);
 

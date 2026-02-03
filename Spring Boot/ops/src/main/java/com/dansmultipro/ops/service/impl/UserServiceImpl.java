@@ -3,7 +3,6 @@ package com.dansmultipro.ops.service.impl;
 import com.dansmultipro.ops.config.RabbitMQConfig;
 import com.dansmultipro.ops.constant.ResponseMessage;
 import com.dansmultipro.ops.constant.RoleCode;
-import com.dansmultipro.ops.dto.CommonResponseDto;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
@@ -161,7 +160,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public CommonResponseDto activateUserCustomer(String email, String code) {
+    public String activateUserCustomer(String email, String code) {
         User user = userRepo.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
@@ -175,7 +174,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         updateUser.setActive(true);
         userRepo.saveAndFlush(updateUser);
 
-        return new CommonResponseDto("User is successfully activated");
+        return "User is successfully activated";
     }
 
     @Transactional(rollbackOn = Exception.class)

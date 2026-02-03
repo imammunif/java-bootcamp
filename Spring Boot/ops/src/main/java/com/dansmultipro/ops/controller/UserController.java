@@ -1,6 +1,5 @@
 package com.dansmultipro.ops.controller;
 
-import com.dansmultipro.ops.dto.CommonResponseDto;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
@@ -57,11 +56,11 @@ public class UserController {
     }
 
     @GetMapping("/activate")
-    public ResponseEntity<CommonResponseDto> activateUserCustomer(
+    public ResponseEntity<String> activateUserCustomer(
             @RequestParam String email,
             @RequestParam String code
     ) {
-        CommonResponseDto res = userService.activateUserCustomer(email, code);
+        String res = userService.activateUserCustomer(email, code);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
