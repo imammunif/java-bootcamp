@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("gateways")
+@RequestMapping("users")
 public class GatewayUserController {
 
     private final GatewayUserService gatewayUserService;
@@ -20,7 +20,7 @@ public class GatewayUserController {
         this.gatewayUserService = gatewayUserService;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/gateways")
     public ResponseEntity<List<GatewayUserResponseDto>> getAllByGatewayId() {
         List<GatewayUserResponseDto> res = gatewayUserService.getAllByGatewayId();
         return new ResponseEntity<>(res, HttpStatus.OK);

@@ -2,7 +2,7 @@ package com.dansmultipro.ops.service.impl;
 
 import com.dansmultipro.ops.dto.gatewayuser.GatewayUserResponseDto;
 import com.dansmultipro.ops.exception.NotFoundException;
-import com.dansmultipro.ops.repository.GatewayRepo;
+import com.dansmultipro.ops.model.GatewayUser;
 import com.dansmultipro.ops.repository.GatewayUserRepo;
 import com.dansmultipro.ops.service.GatewayUserService;
 import org.springframework.stereotype.Service;
@@ -14,20 +14,19 @@ import java.util.UUID;
 public class GatewayUserServiceImpl extends BaseService implements GatewayUserService {
 
     private final GatewayUserRepo gatewayUserRepo;
-    private final GatewayRepo gatewayRepo;
 
-    public GatewayUserServiceImpl(GatewayUserRepo gatewayUserRepo, GatewayRepo gatewayRepo) {
+    public GatewayUserServiceImpl(GatewayUserRepo gatewayUserRepo) {
         this.gatewayUserRepo = gatewayUserRepo;
-        this.gatewayRepo = gatewayRepo;
     }
 
     @Override
     public List<GatewayUserResponseDto> getAllByGatewayId() {
-        UUID gatewayId = principalService.getPrincipal().getId();
-        gatewayRepo.findById(gatewayId).orElseThrow(
-                () -> new NotFoundException("Gateway not found")
+        UUID userId = principalService.getPrincipal().getId();
+        GatewayUser gatewayUser = gatewayUserRepo.findByUserId(userId).orElseThrow(
+                () -> new NotFoundException("Gateway user not found")
         );
-        List<GatewayUserResponseDto> result = gatewayUserRepo.findByGatewayId(gatewayId).stream()
+
+        List<GatewayUserResponseDto> result = gatewayUserRepo.findByGatewayId(gatewayUser.getGateway().getId()).stream()
                 .map(v -> new GatewayUserResponseDto(
                         v.getId(), v.getUser().getName(), v.getUser().getEmail(), v.getGateway().getName())
                 ).toList();
