@@ -28,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -115,7 +116,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         MailPoJo mailPoJo = new MailPoJo(
                 createdUser.getEmail(),
-                createdUser.getActivationCode()
+                createdUser.getActivationCode(),
+                createdUser.getName()
         );
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EMAIL_EX_USER,
@@ -220,13 +222,22 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_USER)
     public void receiveEmailNotificationAssign(MailPoJo pojo) {
+        Context context = new Context();
+        String userName = pojo.getUsername();
         String url = "http://localhost:8080/users/activate"
                 + "?email=" + URLEncoder.encode(pojo.getEmailAddress(), StandardCharsets.UTF_8)
                 + "&code=" + pojo.getEmailBody();
-        mailUtil.send(
+
+        context.setVariable("userName", userName);
+        context.setVariable("messageContent", "Your account has been created! Click this link in order to activate your profile and enable transactions.");
+        context.setVariable("actionUrl", url);
+
+        mailUtil.sendHtml(
                 pojo.getEmailAddress(),
                 "Activate Your Account",
-                "Your account has been created! Click this link in order to activate your profile and enable transactions \n" + url);
+                "email-template-verification",
+                context
+        );
     }
 
 }

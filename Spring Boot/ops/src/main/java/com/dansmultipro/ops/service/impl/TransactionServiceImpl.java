@@ -150,7 +150,8 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
 
         MailPoJo mailPoJo = new MailPoJo(
                 user.getEmail(),
-                createdTransaction.getCode()
+                createdTransaction.getCode(),
+                user.getName()
         );
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EMAIL_EX_TRANSACTION,
@@ -208,7 +209,8 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
 
         MailPoJo mailPoJo = new MailPoJo(
                 updatedTransaction.getCustomer().getEmail(),
-                updatedTransaction.getCode()
+                updatedTransaction.getCode(),
+                transaction.getCustomer().getName()
         );
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EMAIL_EX_STATUS,
