@@ -13,6 +13,10 @@ public class RabbitMQConfig {
     public static final String EMAIL_QUEUE_TRANSACTION = "email.notification.queue.transaction";
     public static final String EMAIL_KEY_TRANSACTION = "email.notification.key.transaction";
 
+    public static final String EMAIL_EX_STATUS = "email.notification.exchange.status";
+    public static final String EMAIL_QUEUE_STATUS = "email.notification.queue.status";
+    public static final String EMAIL_KEY_STATUS = "email.notification.key.status";
+
     public static final String EMAIL_EX_USER = "email.notification.exchange.user";
     public static final String EMAIL_QUEUE_USER = "email.notification.queue.user";
     public static final String EMAIL_KEY_USER = "email.notification.key.user";
@@ -28,6 +32,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public DirectExchange emailExchangeStatus() {
+        return new DirectExchange(EMAIL_EX_STATUS);
+    }
+
+    @Bean
     public DirectExchange emailExchangeUser() {
         return new DirectExchange(EMAIL_EX_USER);
     }
@@ -35,6 +44,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue emailQueueTransaction() {
         return QueueBuilder.durable(EMAIL_QUEUE_TRANSACTION).build();
+    }
+
+    @Bean
+    public Queue emailQueueStatus() {
+        return QueueBuilder.durable(EMAIL_QUEUE_STATUS).build();
     }
 
     @Bean
@@ -47,6 +61,13 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(emailQueueTransaction())
                 .to(emailExchangeTransaction())
                 .with(EMAIL_KEY_TRANSACTION);
+    }
+
+    @Bean
+    public Binding categoryBindingStatus() {
+        return BindingBuilder.bind(emailQueueStatus())
+                .to(emailExchangeStatus())
+                .with(EMAIL_KEY_STATUS);
     }
 
     @Bean

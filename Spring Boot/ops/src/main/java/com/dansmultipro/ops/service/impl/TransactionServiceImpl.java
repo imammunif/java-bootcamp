@@ -28,24 +28,24 @@ import java.util.UUID;
 @Service
 public class TransactionServiceImpl extends BaseService implements TransactionService {
 
-    private final TransactionRepo transactionRepo;
     private final UserRepo userRepo;
-    private final TransactionStatusRepo transactionStatusRepo;
     private final GatewayRepo gatewayRepo;
     private final GatewayUserRepo gatewayUserRepo;
-    private final ProductRepo productRepo;
+    private final TransactionRepo transactionRepo;
+    private final TransactionStatusRepo transactionStatusRepo;
     private final TransactionStatusHistoryRepo transactionStatusHistoryRepo;
+    private final ProductRepo productRepo;
     private final MailUtil mailUtil;
     private final RabbitTemplate rabbitTemplate;
 
-    public TransactionServiceImpl(TransactionRepo transactionRepo, UserRepo userRepo, TransactionStatusRepo transactionStatusRepo, GatewayRepo gatewayRepo, GatewayUserRepo gatewayUserRepo, ProductRepo productRepo, TransactionStatusHistoryRepo transactionStatusHistoryRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
-        this.transactionRepo = transactionRepo;
+    public TransactionServiceImpl(UserRepo userRepo, GatewayRepo gatewayRepo, GatewayUserRepo gatewayUserRepo, TransactionRepo transactionRepo, TransactionStatusRepo transactionStatusRepo, TransactionStatusHistoryRepo transactionStatusHistoryRepo, ProductRepo productRepo, MailUtil mailUtil, RabbitTemplate rabbitTemplate) {
         this.userRepo = userRepo;
-        this.transactionStatusRepo = transactionStatusRepo;
         this.gatewayRepo = gatewayRepo;
         this.gatewayUserRepo = gatewayUserRepo;
-        this.productRepo = productRepo;
+        this.transactionRepo = transactionRepo;
+        this.transactionStatusRepo = transactionStatusRepo;
         this.transactionStatusHistoryRepo = transactionStatusHistoryRepo;
+        this.productRepo = productRepo;
         this.mailUtil = mailUtil;
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -206,15 +206,33 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         newStatusHistory.setTransaction(transaction);
         transactionStatusHistoryRepo.save(newStatusHistory);
 
+        MailPoJo mailPoJo = new MailPoJo(
+                updatedTransaction.getCustomer().getEmail(),
+                updatedTransaction.getCode()
+        );
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EMAIL_EX_STATUS,
+                RabbitMQConfig.EMAIL_KEY_STATUS,
+                mailPoJo
+        );
+
         return new UpdateResponseDto(updatedTransaction.getVersion(), ResponseMessage.UPDATED.getMessage());
     }
 
     @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_TRANSACTION)
-    public void receiveEmailNotificationAssign(MailPoJo pojo) {
+    public void receiveEmailNotificationTransaction(MailPoJo pojo) {
         mailUtil.send(
                 pojo.getEmailAddress(),
                 "New Transaction Successfully Created",
                 "Your transaction " + pojo.getEmailBody() + " has been created and is now being process.");
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_STATUS)
+    public void receiveEmailNotificationStatus(MailPoJo pojo) {
+        mailUtil.send(
+                pojo.getEmailAddress(),
+                "Your Transaction Has Been Updated",
+                "Your transaction " + pojo.getEmailBody() + " has been updated, check it out now!");
     }
 
 }
