@@ -168,7 +168,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new MissMatchException("Oops!, Code is not valid");
         }
         if (user.getActive()) {
-            throw new InvalidStatusException("User already activated");
+            throw new AlreadyActivatedException("User already activated");
         }
         User updateUser = prepareForUpdateBySystem(user);
         updateUser.setActive(true);

@@ -76,6 +76,14 @@ public class ErrorHandler {
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AlreadyActivatedException.class)
+    public ResponseEntity<String> handleAlreadyActivatedException(
+            AlreadyActivatedException ex
+    ) {
+        var errors = ex.getMessage();
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MissMatchException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleMissMatchException(
             MissMatchException ex
