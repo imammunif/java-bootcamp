@@ -121,9 +121,6 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         Product product = productRepo.findById(productId).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
-        TransactionStatus transactionStatus = transactionStatusRepo.findByCode(StatusCode.PROCESS.getCode()).orElseThrow(
-                () -> new NotFoundException("Status is not found")
-        );
 
         Transaction newTransaction = prepareForInsert(new Transaction());
         newTransaction.setCustomer(user);
@@ -136,7 +133,7 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         Transaction createdTransaction = transactionRepo.save(newTransaction);
 
         TransactionStatusHistory newStatusHistory = prepareForInsert(new TransactionStatusHistory());
-        newStatusHistory.setStatus(transactionStatus);
+        newStatusHistory.setStatus(status);
         newStatusHistory.setTransaction(createdTransaction);
         transactionStatusHistoryRepo.save(newStatusHistory);
 
