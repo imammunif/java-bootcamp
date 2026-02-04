@@ -24,18 +24,21 @@ public class UserController {
     }
 
     @GetMapping("/customers")
+    @PreAuthorize("hasAuthority('SA')")
     public ResponseEntity<List<UserResponseDto>> getAllUserCustomers() {
         List<UserResponseDto> res = userService.getAllUserCustomers();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("/gateways")
+    @PreAuthorize("hasAuthority('SA')")
     public ResponseEntity<List<UserGatewayResponseDto>> getAllUserGateways() {
         List<UserGatewayResponseDto> res = userService.getAllUserGateways();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyAuthority('SA', 'GA', 'CUST')")
     public ResponseEntity<UserResponseDto> getById(
             @PathVariable String id
     ) {
@@ -70,6 +73,7 @@ public class UserController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAnyAuthority('SA', 'CUST)")
     public ResponseEntity<UpdateResponseDto> update(
             @PathVariable String id,
             @RequestBody @Valid UpdateUserRequestDto data
@@ -79,6 +83,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('SA')")
     public ResponseEntity<DeleteResponseDto> delete(
             @PathVariable String id
     ) {

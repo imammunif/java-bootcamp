@@ -10,6 +10,7 @@ import com.dansmultipro.ops.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,12 +26,14 @@ public class ProductController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('SA', 'GA', 'CUST')")
     public ResponseEntity<List<ProductResponseDto>> getAll() {
         List<ProductResponseDto> res = productService.getAll();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyAuthority('SA', 'GA', 'CUST')")
     public ResponseEntity<ProductResponseDto> getById(
             @PathVariable String id
     ) {
@@ -39,6 +42,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('SA')")
     public ResponseEntity<CreateResponseDto> create(
             @RequestBody @Valid CreateProductRequestDto data
     ) {
@@ -47,6 +51,7 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAuthority('SA')")
     public ResponseEntity<UpdateResponseDto> update(
             @PathVariable String id,
             @RequestBody @Valid UpdateProductRequestDto data
@@ -56,6 +61,7 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('SA')")
     public ResponseEntity<DeleteResponseDto> delete(
             @PathVariable String id
     ) {
