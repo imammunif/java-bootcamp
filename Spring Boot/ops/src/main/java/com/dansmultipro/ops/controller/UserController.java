@@ -63,15 +63,6 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @GetMapping("/activate")
-    public ResponseEntity<String> activateUserCustomer(
-            @RequestParam String email,
-            @RequestParam String code
-    ) {
-        String res = userService.activateUserCustomer(email, code);
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
-
     @PutMapping("{id}")
     @PreAuthorize("hasAnyAuthority('SA', 'CUST)")
     public ResponseEntity<UpdateResponseDto> update(
