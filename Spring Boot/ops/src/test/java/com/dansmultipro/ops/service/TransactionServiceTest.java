@@ -147,6 +147,19 @@ public class TransactionServiceTest {
     }
 
     @Test
+    public void shouldReturnAll_whenExist() {
+        List<Transaction> transactionList = List.of(transaction1, transaction2);
+
+        Mockito.when(transactionRepo.findAll()).thenReturn(transactionList);
+
+        List<TransactionResponseDto> result = transactionService.getAll();
+
+        Assertions.assertEquals(transactionList.size(), result.size());
+        Assertions.assertEquals("TRX001", result.getFirst().getCode());
+        Mockito.verify(transactionRepo, Mockito.atLeast(1)).findAll();
+    }
+
+    @Test
     public void shouldReturnAllCustomerTransaction_whenExist() {
         List<Transaction> transactionList = List.of(transaction1, transaction2);
 
