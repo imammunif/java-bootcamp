@@ -67,18 +67,6 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
     }
 
     @Override
-    public TransactionResponseDto getById(String id) {
-        UUID validId = validateUUID(id);
-        Transaction transaction = transactionRepo.findById(validId).orElseThrow(
-                () -> new NotFoundException("Transaction not found")
-        );
-        return new TransactionResponseDto(
-                transaction.getId().toString(), transaction.getCode(), transaction.getTotalBill().toString(),
-                transaction.getAccountNumber(), transaction.getStatus().getName(), transaction.getCustomer().getName(),
-                transaction.getGateway().getName(), transaction.getProduct().getName());
-    }
-
-    @Override
     public List<TransactionResponseDto> getAllByCustomerId() {
         UUID customerId = principalService.getPrincipal().getId();
         userRepo.findById(customerId).orElseThrow(

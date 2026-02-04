@@ -177,8 +177,6 @@ public class UserServiceImpl extends BaseService implements UserService {
         newGatewayUser.setGateway(gateway);
         gatewayUserRepo.save(newGatewayUser);
 
-        //TODO SEND EMAIL CODE VALIDATION
-
         return new CreateResponseDto(createdUser.getId(), ResponseMessage.CREATED.getMessage());
     }
 

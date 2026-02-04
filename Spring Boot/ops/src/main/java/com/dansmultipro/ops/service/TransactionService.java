@@ -11,9 +11,6 @@ public interface TransactionService {
 
     List<TransactionResponseDto> getAll();
 
-    //CHECK NO USAGE
-    TransactionResponseDto getById(String id);
-
     List<TransactionResponseDto> getAllByCustomerId();
 
     List<TransactionResponseDto> getAllByGatewayId();
