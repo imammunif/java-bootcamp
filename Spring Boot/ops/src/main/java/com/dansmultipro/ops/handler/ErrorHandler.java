@@ -109,6 +109,14 @@ public class ErrorHandler {
         return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidPageException.class)
+    public ResponseEntity<ErrorResponseDto<String>> handleInvalidPageException(
+            InvalidPageException ex
+    ) {
+        var errors = ex.getMessage();
+        return new ResponseEntity<>(new ErrorResponseDto<>(errors), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(InvalidStatusException.class)
     public ResponseEntity<ErrorResponseDto<String>> handleInvalidStatusException(
             InvalidStatusException ex
