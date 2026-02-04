@@ -13,6 +13,6 @@ public interface GatewayUserRepo extends JpaRepository<GatewayUser, UUID> {
 
     Optional<GatewayUser> findByUserId(UUID userId);
 
-    List<GatewayUser> findByGatewayId(UUID gatewayId);
+    List<GatewayUser> findAllByUser_UserRole_Id(UUID roleId);
 
 }

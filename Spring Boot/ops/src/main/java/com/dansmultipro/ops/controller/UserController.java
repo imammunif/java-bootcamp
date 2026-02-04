@@ -3,10 +3,7 @@ package com.dansmultipro.ops.controller;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
-import com.dansmultipro.ops.dto.user.CreateUserCustomerRequestDto;
-import com.dansmultipro.ops.dto.user.CreateUserGatewayRequestDto;
-import com.dansmultipro.ops.dto.user.UpdateUserRequestDto;
-import com.dansmultipro.ops.dto.user.UserResponseDto;
+import com.dansmultipro.ops.dto.user.*;
 import com.dansmultipro.ops.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,9 +23,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getAll() {
-        List<UserResponseDto> res = userService.getAll();
+    @GetMapping("/customers")
+    public ResponseEntity<List<UserResponseDto>> getAllUserCustomers() {
+        List<UserResponseDto> res = userService.getAllUserCustomers();
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping("/gateways")
+    public ResponseEntity<List<UserGatewayResponseDto>> getAllUserGateways() {
+        List<UserGatewayResponseDto> res = userService.getAllUserGateways();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

@@ -6,10 +6,7 @@ import com.dansmultipro.ops.constant.RoleCode;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
-import com.dansmultipro.ops.dto.user.CreateUserCustomerRequestDto;
-import com.dansmultipro.ops.dto.user.CreateUserGatewayRequestDto;
-import com.dansmultipro.ops.dto.user.UpdateUserRequestDto;
-import com.dansmultipro.ops.dto.user.UserResponseDto;
+import com.dansmultipro.ops.dto.user.*;
 import com.dansmultipro.ops.exception.*;
 import com.dansmultipro.ops.model.Gateway;
 import com.dansmultipro.ops.model.GatewayUser;
@@ -78,13 +75,37 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public List<UserResponseDto> getAll() {
-        List<UserResponseDto> result = userRepo.findAll().stream()
-                .map(v -> new UserResponseDto(
-                        v.getId(), v.getName(), v.getEmail(), v.getUserRole().getName(),
-                        v.getActive().toString(), v.getVersion().toString()))
-                .toList();
-        return result;
+    public List<UserResponseDto> getAllUserCustomers() {
+        UserRole userRole = userRoleRepo.findByCode(RoleCode.CUSTOMER.getCode()).orElseThrow(
+                () -> new NotFoundException("Role not found")
+        );
+        List<User> userList = userRepo.findAllByUserRole_Id(userRole.getId());
+        List<UserResponseDto> userResponseDtoList = new ArrayList<>();
+        for (User v : userList) {
+            UserResponseDto dto = new UserResponseDto(
+                    v.getId(), v.getName(), v.getEmail(), v.getUserRole().getName(),
+                    v.getActive().toString(), v.getVersion().toString()
+            );
+            userResponseDtoList.add(dto);
+        }
+        return userResponseDtoList;
+    }
+
+    @Override
+    public List<UserGatewayResponseDto> getAllUserGateways() {
+        UserRole userRole = userRoleRepo.findByCode(RoleCode.GATEWAY.getCode()).orElseThrow(
+                () -> new NotFoundException("Role not found")
+        );
+        List<GatewayUser> userList = gatewayUserRepo.findAllByUser_UserRole_Id(userRole.getId());
+        List<UserGatewayResponseDto> userGatewayResponseDtoList = new ArrayList<>();
+        for (GatewayUser v : userList) {
+            UserGatewayResponseDto dto = new UserGatewayResponseDto(
+                    v.getId(), v.getUser().getName(), v.getUser().getEmail(), v.getUser().getUserRole().getName(),
+                    v.getGateway().getName(), v.getVersion().toString()
+            );
+            userGatewayResponseDtoList.add(dto);
+        }
+        return userGatewayResponseDtoList;
     }
 
     @Override
