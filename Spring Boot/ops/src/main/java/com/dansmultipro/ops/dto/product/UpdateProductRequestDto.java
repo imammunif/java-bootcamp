@@ -21,4 +21,12 @@ public class UpdateProductRequestDto {
         return version;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
 }
