@@ -59,20 +59,34 @@ public class TransactionStatusHistoryServiceImpl extends BaseService implements 
     }
 
     @Override
-    public List<TransactionStatusHistoryResponseDto> getAllByGatewayId() {
+    public PaginatedResponseDto<TransactionStatusHistoryResponseDto> getAllByGatewayId(Integer page, Integer size) {
         UUID userId = principalService.getPrincipal().getId();
         GatewayUser gatewayUser = gatewayUserRepo.findByUserId(userId).orElseThrow(
                 () -> new NotFoundException("Gateway user not found")
         );
+        if (page < 1) {
+            throw new InvalidPageException("Invalid requested page, minimum 1");
+        }
+        if (size < 5) {
+            throw new InvalidPageException("Invalid requested page size, minimum 5");
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<TransactionStatusHistory> historyPage = transactionStatusHistoryRepo.findAllByTransaction_GatewayId(gatewayUser.getGateway().getId(), pageable);
 
-        List<TransactionStatusHistory> historyList = transactionStatusHistoryRepo.findAllByTransaction_GatewayId(gatewayUser.getGateway().getId());
-        List<TransactionStatusHistoryResponseDto> historyResponseDtoList = new ArrayList<>();
+        List<TransactionStatusHistory> historyList = historyPage.getContent();
+        List<TransactionStatusHistoryResponseDto> responseDtoList = new ArrayList<>();
         for (TransactionStatusHistory v : historyList) {
             TransactionStatusHistoryResponseDto responseDto = new TransactionStatusHistoryResponseDto(
                     v.getId(), v.getStatus().getName(), v.getTransaction().getCode());
-            historyResponseDtoList.add(responseDto);
+            responseDtoList.add(responseDto);
         }
-        return historyResponseDtoList;
+
+        PaginatedResponseDto<TransactionStatusHistoryResponseDto> paginatedHistoryResponse = new PaginatedResponseDto<>(
+                responseDtoList,
+                historyPage.getTotalElements()
+        );
+
+        return paginatedHistoryResponse;
     }
 
 }

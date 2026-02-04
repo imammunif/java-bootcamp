@@ -27,7 +27,7 @@ public class TransactionStatusHistoryController {
     @PreAuthorize("hasAuthority('SA')")
     public ResponseEntity<PaginatedResponseDto<TransactionStatusHistoryResponseDto>> getAll(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
+            @RequestParam(defaultValue = "5") Integer size
     ) {
         PaginatedResponseDto<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAll(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
@@ -35,8 +35,11 @@ public class TransactionStatusHistoryController {
 
     @GetMapping("/gateways")
     @PreAuthorize("hasAuthority('GA')")
-    public ResponseEntity<List<TransactionStatusHistoryResponseDto>> getByGatewayId() {
-        List<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAllByGatewayId();
+    public ResponseEntity<PaginatedResponseDto<TransactionStatusHistoryResponseDto>> getByGatewayId(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "5") Integer size
+    ) {
+        PaginatedResponseDto<TransactionStatusHistoryResponseDto> res = transactionStatusHistoryService.getAllByGatewayId(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
