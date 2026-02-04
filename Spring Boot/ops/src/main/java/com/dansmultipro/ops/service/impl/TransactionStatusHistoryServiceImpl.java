@@ -58,6 +58,7 @@ public class TransactionStatusHistoryServiceImpl extends BaseService implements 
         return paginatedHistoryResponse;
     }
 
+    @Cacheable(value = "histories", key = "'page:'+#page+'size:'+#size")
     @Override
     public PaginatedResponseDto<TransactionStatusHistoryResponseDto> getAllByGatewayId(Integer page, Integer size) {
         UUID userId = principalService.getPrincipal().getId();
@@ -71,7 +72,7 @@ public class TransactionStatusHistoryServiceImpl extends BaseService implements 
             throw new InvalidPageException("Invalid requested page size, minimum 5");
         }
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<TransactionStatusHistory> historyPage = transactionStatusHistoryRepo.findAllByTransaction_GatewayId(gatewayUser.getGateway().getId(), pageable);
+        Page<TransactionStatusHistory> historyPage = transactionStatusHistoryRepo.findAllByTransaction_GatewayIdOrderByCreatedAtDesc(gatewayUser.getGateway().getId(), pageable);
 
         List<TransactionStatusHistory> historyList = historyPage.getContent();
         List<TransactionStatusHistoryResponseDto> responseDtoList = new ArrayList<>();

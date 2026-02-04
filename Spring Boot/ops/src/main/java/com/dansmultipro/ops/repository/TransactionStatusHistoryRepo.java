@@ -11,6 +11,6 @@ public interface TransactionStatusHistoryRepo extends JpaRepository<TransactionS
 
     Page<TransactionStatusHistory> findByOrderByCreatedAtDesc(Pageable pageable);
 
-    Page<TransactionStatusHistory> findAllByTransaction_GatewayId(UUID gatewayId, Pageable pageable);
+    Page<TransactionStatusHistory> findAllByTransaction_GatewayIdOrderByCreatedAtDesc(UUID gatewayId, Pageable pageable);
 
 }
