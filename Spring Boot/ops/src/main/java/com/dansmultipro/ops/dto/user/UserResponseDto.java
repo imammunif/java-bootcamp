@@ -11,6 +11,8 @@ public class UserResponseDto {
     private String isActive;
     private String version;
 
+    public UserResponseDto() {}
+
     public UserResponseDto(UUID id, String name, String email, String roleName, String isActive, String version) {
         this.id = id;
         this.name = name;
@@ -36,7 +38,7 @@ public class UserResponseDto {
         return roleName;
     }
 
-    public String getActive() {
+    public String getIsActive() {
         return isActive;
     }
 

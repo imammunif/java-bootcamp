@@ -20,6 +20,8 @@ import com.dansmultipro.ops.util.RandomGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -75,6 +77,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "'all'")
     public List<UserResponseDto> getAllUserCustomers() {
         UserRole userRole = userRoleRepo.findByCode(RoleCode.CUSTOMER.getCode()).orElseThrow(
                 () -> new NotFoundException("Role not found")
@@ -109,6 +112,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public UserResponseDto getById(String id) {
         UUID validId = validateUUID(id);
         User user = userRepo.findById(validId).orElseThrow(
@@ -119,6 +123,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
+    @CacheEvict(value = "users", allEntries = true)
     public CreateResponseDto createUserCustomer(CreateUserCustomerRequestDto data) {
         UserRole userRole = userRoleRepo.findByCode(RoleCode.CUSTOMER.getCode()).orElseThrow(
                 () -> new NotFoundException("Role not found")
