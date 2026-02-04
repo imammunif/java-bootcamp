@@ -7,6 +7,8 @@ public class PaginatedResponseDto<T> {
     private List<T> data;
     private Long total;
 
+    public PaginatedResponseDto() {}
+
     public PaginatedResponseDto(List<T> data, Long total) {
         this.data = data;
         this.total = total;

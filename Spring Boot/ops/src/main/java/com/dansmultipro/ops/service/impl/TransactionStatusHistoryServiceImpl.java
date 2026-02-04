@@ -9,6 +9,7 @@ import com.dansmultipro.ops.model.TransactionStatusHistory;
 import com.dansmultipro.ops.repository.GatewayUserRepo;
 import com.dansmultipro.ops.repository.TransactionStatusHistoryRepo;
 import com.dansmultipro.ops.service.TransactionStatusHistoryService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public class TransactionStatusHistoryServiceImpl extends BaseService implements 
         this.gatewayUserRepo = gatewayUserRepo;
     }
 
+    @Cacheable(value = "histories", key = "'page:'+#page+'size:'+#size")
     @Override
     public PaginatedResponseDto<TransactionStatusHistoryResponseDto> getAll(Integer page, Integer size) {
         if (page < 1) {
@@ -38,7 +40,7 @@ public class TransactionStatusHistoryServiceImpl extends BaseService implements 
             throw new InvalidPageException("Invalid requested page size, minimum 5");
         }
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<TransactionStatusHistory> historyPage = transactionStatusHistoryRepo.findAll(pageable);
+        Page<TransactionStatusHistory> historyPage = transactionStatusHistoryRepo.findByOrderByCreatedAtDesc(pageable);
 
         List<TransactionStatusHistory> historyList = historyPage.getContent();
         List<TransactionStatusHistoryResponseDto> responseDtoList = new ArrayList<>();

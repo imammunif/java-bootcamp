@@ -20,6 +20,7 @@ import com.dansmultipro.ops.util.RandomGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -102,6 +103,7 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         return transactionResponseDtoList;
     }
 
+    @CacheEvict(value = "histories", allEntries = true)
     @Transactional(rollbackOn = Exception.class)
     @Override
     public CreateResponseDto create(CreateTransactionRequestDto data) {
@@ -152,6 +154,7 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
         return new CreateResponseDto(createdTransaction.getId(), ResponseMessage.CREATED.getMessage());
     }
 
+    @CacheEvict(value = "histories", allEntries = true)
     @Transactional(rollbackOn = Exception.class)
     @Override
     public UpdateResponseDto update(String id, String action, Integer version) {

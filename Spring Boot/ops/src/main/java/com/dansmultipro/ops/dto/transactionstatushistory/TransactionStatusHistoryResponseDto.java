@@ -8,6 +8,8 @@ public class TransactionStatusHistoryResponseDto {
     private String statusName;
     private String transactionCode;
 
+    public TransactionStatusHistoryResponseDto() {}
+
     public TransactionStatusHistoryResponseDto(UUID id, String statusName, String ticketCode) {
         this.id = id;
         this.statusName = statusName;
