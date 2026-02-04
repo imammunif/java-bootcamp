@@ -38,4 +38,20 @@ public class CreateTransactionRequestDto {
         return productId;
     }
 
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public void setGatewayId(String gatewayId) {
+        this.gatewayId = gatewayId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
 }
