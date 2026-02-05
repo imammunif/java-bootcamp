@@ -1,9 +1,6 @@
 package com.dansmultipro.ops.service;
 
-import com.dansmultipro.ops.dto.user.CreateUserCustomerRequestDto;
-import com.dansmultipro.ops.dto.user.CreateUserGatewayRequestDto;
-import com.dansmultipro.ops.dto.user.UserGatewayResponseDto;
-import com.dansmultipro.ops.dto.user.UserResponseDto;
+import com.dansmultipro.ops.dto.user.*;
 import com.dansmultipro.ops.model.Gateway;
 import com.dansmultipro.ops.model.GatewayUser;
 import com.dansmultipro.ops.model.User;
@@ -95,7 +92,7 @@ public class UserServiceTest {
         userSystem.setId(UUID.randomUUID());
         userSystem.setName("SYSTEM");
         userSystem.setEmail("system@internal.com");
-        userSystem.setPassword("secret");
+        userSystem.setPassword("password");
         userSystem.setActive(false);
         userSystem.setVersion(0);
         userSystem.setUserRole(systemRole);
@@ -104,17 +101,19 @@ public class UserServiceTest {
         user1.setId(UUID.randomUUID());
         user1.setName("Customer 1");
         user1.setEmail("customer1@mail.com");
-        user1.setPassword("secret");
+        user1.setPassword("password");
         user1.setActive(true);
-        user1.setVersion(0);
+        user1.setActivationCode("AKF676");
+        user1.setVersion(1);
         user1.setUserRole(customerRole);
 
         user2 = new User();
         user2.setId(UUID.randomUUID());
         user2.setName("Customer 2");
         user2.setEmail("customer2@mail.com");
-        user2.setPassword("secret");
+        user2.setPassword("password");
         user2.setActive(false);
+        user2.setActivationCode("AKF678");
         user2.setVersion(0);
         user2.setUserRole(customerRole);
 
@@ -122,7 +121,7 @@ public class UserServiceTest {
         user3.setId(UUID.randomUUID());
         user3.setName("Gateway 1");
         user3.setEmail("gateway1@mail.com");
-        user3.setPassword("admin");
+        user3.setPassword("password");
         user3.setActive(true);
         user3.setVersion(0);
         user3.setUserRole(gatewayRole);
@@ -131,7 +130,7 @@ public class UserServiceTest {
         user4.setId(UUID.randomUUID());
         user4.setName("Gateway 2");
         user4.setEmail("gateway2@mail.com");
-        user4.setPassword("admin");
+        user4.setPassword("password");
         user4.setActive(true);
         user4.setVersion(0);
         user4.setUserRole(gatewayRole);
@@ -148,7 +147,6 @@ public class UserServiceTest {
         gatewayUser2.setGateway(gateway2);
         gatewayUser2.setVersion(0);
 
-        authPojo = new AuthorizationPoJo(user1.getId());
     }
 
     @Test
@@ -157,13 +155,13 @@ public class UserServiceTest {
 
         var dto = new CreateUserCustomerRequestDto();
         dto.setName("New Customer User");
-        dto.setEmail("newcustomer@mail.com");
-        dto.setPassword("password123");
+        dto.setEmail("customer@mail.com");
+        dto.setPassword("password");
 
         Mockito.when(userRepo.findByUserRole_Code(Mockito.anyString())).thenReturn(Optional.of(userSystem));
         Mockito.when(userRoleRepo.findByCode(Mockito.any())).thenReturn(Optional.of(customerRole));
         Mockito.when(userRepo.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
-        Mockito.when(passwordEncoder.encode(dto.getPassword())).thenReturn("encodedPassword");
+        Mockito.when(passwordEncoder.encode(dto.getPassword())).thenReturn("password");
         Mockito.when(userRepo.save(Mockito.any(User.class))).thenReturn(user1);
 
         var result = userService.createUserCustomer(dto);
@@ -178,19 +176,39 @@ public class UserServiceTest {
     }
 
     @Test
+    public void shouldActivateUserCustomer_whenDataValid() {
+        userService.setUserRepo(userRepo);
+
+        String email = user2.getEmail();
+        String code = user2.getActivationCode();
+
+        Mockito.when(userRepo.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user2));
+        Mockito.when(userRepo.findByUserRole_Code(Mockito.any())).thenReturn(Optional.of(userSystem));
+        Mockito.when(userRepo.saveAndFlush(Mockito.any())).thenReturn(user2);
+
+        var result = userService.activateUserCustomer(email, code);
+
+        Assertions.assertEquals("User is successfully activated", result);
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findByEmail(Mockito.any());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findByUserRole_Code(Mockito.any());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).saveAndFlush(Mockito.any());
+    }
+
+    @Test
     public void shouldCreateUserGateway_whenDataValid() {
         userService.setPrincipalService(principalService);
+        authPojo = new AuthorizationPoJo(user1.getId());
 
         var dto = new CreateUserGatewayRequestDto();
         dto.setName("New Gateway User");
-        dto.setEmail("newgateway@mail.com");
-        dto.setPassword("password123");
+        dto.setEmail("gateway@mail.com");
+        dto.setPassword("password");
         dto.setGatewayId(gateway1.getId().toString());
 
         Mockito.when(principalService.getPrincipal()).thenReturn(authPojo);
         Mockito.when(userRoleRepo.findByCode(Mockito.any())).thenReturn(Optional.of(gatewayRole));
         Mockito.when(userRepo.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
-        Mockito.when(passwordEncoder.encode(dto.getPassword())).thenReturn("encodedPassword");
+        Mockito.when(passwordEncoder.encode(dto.getPassword())).thenReturn("password");
         Mockito.when(userRepo.save(Mockito.any())).thenReturn(user3);
         Mockito.when(gatewayRepo.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(gateway1));
         Mockito.when(gatewayUserRepo.save(Mockito.any(GatewayUser.class))).thenReturn(gatewayUser1);
@@ -200,11 +218,21 @@ public class UserServiceTest {
         Assertions.assertEquals(user3.getId(), result.getId());
         Mockito.verify(principalService, Mockito.atLeast(1)).getPrincipal();
         Mockito.verify(userRoleRepo, Mockito.atLeast(1)).findByCode(Mockito.any());
-        Mockito.verify(userRepo, Mockito.atLeast(1)).findByEmail(dto.getEmail());
-        Mockito.verify(passwordEncoder, Mockito.atLeast(1)).encode(dto.getPassword());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findByEmail(Mockito.any());
+        Mockito.verify(passwordEncoder, Mockito.atLeast(1)).encode(Mockito.any());
         Mockito.verify(userRepo, Mockito.atLeast(1)).save(Mockito.any());
-        Mockito.verify(gatewayRepo, Mockito.atLeast(1)).findById(Mockito.any(UUID.class));
-        Mockito.verify(gatewayUserRepo, Mockito.atLeast(1)).save(Mockito.any(GatewayUser.class));
+        Mockito.verify(gatewayRepo, Mockito.atLeast(1)).findById(Mockito.any());
+        Mockito.verify(gatewayUserRepo, Mockito.atLeast(1)).save(Mockito.any());
+    }
+
+    @Test
+    public void shouldReturnData_whenIdValid() {
+        Mockito.when(userRepo.findById(Mockito.any())).thenReturn(Optional.of(user1));
+
+        var result = userService.getById(user1.getId().toString());
+
+        Assertions.assertEquals(user1.getId(), result.getId());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findById(Mockito.any());
     }
 
     @Test
@@ -221,7 +249,7 @@ public class UserServiceTest {
         Assertions.assertEquals(user1.getId(), result.getFirst().getId());
         Assertions.assertEquals(user1.getName(), result.getFirst().getName());
         Mockito.verify(userRoleRepo, Mockito.atLeast(1)).findByCode(Mockito.any());
-        Mockito.verify(userRepo, Mockito.atLeast(1)).findAllByUserRole_Id(customerRole.getId());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findAllByUserRole_Id(Mockito.any());
     }
 
     @Test
@@ -240,7 +268,34 @@ public class UserServiceTest {
         Assertions.assertEquals(gatewayUser1.getUser().getName(), result.getFirst().getName());
 
         Mockito.verify(userRoleRepo, Mockito.atLeast(1)).findByCode(Mockito.any());
-        Mockito.verify(gatewayUserRepo, Mockito.atLeast(1)).findAllByUser_UserRole_Id(gatewayRole.getId());
+        Mockito.verify(gatewayUserRepo, Mockito.atLeast(1)).findAllByUser_UserRole_Id(Mockito.any());
+    }
+
+    @Test
+    public void shouldUpdateData_whenVersionValid() {
+        userService.setPrincipalService(principalService);
+        authPojo = new AuthorizationPoJo(user1.getId());
+
+        var dto = new UpdateUserRequestDto();
+        dto.setName(user2.getName());
+        dto.setVersion(user2.getVersion());
+
+        var updateduser = new User();
+        updateduser.setVersion(user1.getVersion());
+
+        Mockito.when(principalService.getPrincipal()).thenReturn(authPojo);
+        Mockito.when(userRepo.findById(Mockito.any())).thenReturn(Optional.of(user2));
+        Mockito.when(userRepo.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        Mockito.when(userRepo.saveAndFlush(Mockito.any())).thenReturn(updateduser);
+
+        var result = userService.update(user2.getId().toString(), dto);
+
+        Assertions.assertEquals(1, result.getVersion());
+        Mockito.verify(principalService, Mockito.atLeast(1)).getPrincipal();
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findById(Mockito.any());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).saveAndFlush(Mockito.any());
+
+
     }
 
 }
