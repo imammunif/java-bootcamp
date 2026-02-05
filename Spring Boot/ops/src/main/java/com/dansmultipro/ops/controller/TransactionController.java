@@ -1,6 +1,7 @@
 package com.dansmultipro.ops.controller;
 
 import com.dansmultipro.ops.dto.CreateResponseDto;
+import com.dansmultipro.ops.dto.PaginatedResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
 import com.dansmultipro.ops.dto.transaction.CreateTransactionRequestDto;
 import com.dansmultipro.ops.dto.transaction.TransactionResponseDto;
@@ -25,22 +26,31 @@ public class TransactionController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('SA')")
-    public ResponseEntity<List<TransactionResponseDto>> getAllTransactions() {
-        List<TransactionResponseDto> res = transactionService.getAll();
+    public ResponseEntity<PaginatedResponseDto<TransactionResponseDto>> getAllTransactions(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<TransactionResponseDto> res = transactionService.getAll(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("/customers")
     @PreAuthorize("hasAuthority('CUST')")
-    public ResponseEntity<List<TransactionResponseDto>> getAllByCustomerId() {
-        List<TransactionResponseDto> res = transactionService.getAllByCustomerId();
+    public ResponseEntity<PaginatedResponseDto<TransactionResponseDto>> getAllByCustomerId(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<TransactionResponseDto> res = transactionService.getAllByCustomerId(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("/gateways")
     @PreAuthorize("hasAuthority('GA')")
-    public ResponseEntity<List<TransactionResponseDto>> getAllByGatewayId() {
-        List<TransactionResponseDto> res = transactionService.getAllByGatewayId();
+    public ResponseEntity<PaginatedResponseDto<TransactionResponseDto>> getAllByGatewayId(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<TransactionResponseDto> res = transactionService.getAllByGatewayId(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

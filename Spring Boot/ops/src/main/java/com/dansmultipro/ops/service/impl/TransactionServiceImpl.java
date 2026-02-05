@@ -4,9 +4,11 @@ import com.dansmultipro.ops.config.RabbitMQConfig;
 import com.dansmultipro.ops.constant.ResponseMessage;
 import com.dansmultipro.ops.constant.StatusCode;
 import com.dansmultipro.ops.dto.CreateResponseDto;
+import com.dansmultipro.ops.dto.PaginatedResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
 import com.dansmultipro.ops.dto.transaction.CreateTransactionRequestDto;
 import com.dansmultipro.ops.dto.transaction.TransactionResponseDto;
+import com.dansmultipro.ops.exception.InvalidPageException;
 import com.dansmultipro.ops.exception.InvalidStatusException;
 import com.dansmultipro.ops.exception.MissMatchException;
 import com.dansmultipro.ops.exception.NotFoundException;
@@ -21,6 +23,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -54,8 +59,17 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
     }
 
     @Override
-    public List<TransactionResponseDto> getAll() {
-        List<Transaction> transactionList = transactionRepo.findAll();
+    public PaginatedResponseDto<TransactionResponseDto> getAll(Integer page, Integer size) {
+        if (page < 1) {
+            throw new InvalidPageException("Invalid requested page, minimum 1");
+        }
+        if (size < 5) {
+            throw new InvalidPageException("Invalid requested page size, minimum 5");
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Transaction> transactionPage = transactionRepo.findAll(pageable);
+
+        List<Transaction> transactionList = transactionPage.getContent();
         List<TransactionResponseDto> transactionResponseDtoList = new ArrayList<>();
         for (Transaction v : transactionList) {
             TransactionResponseDto responseDto = new TransactionResponseDto(
@@ -64,16 +78,31 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
                     v.getGateway().getName(), v.getProduct().getName());
             transactionResponseDtoList.add(responseDto);
         }
-        return transactionResponseDtoList;
+
+        PaginatedResponseDto<TransactionResponseDto> paginatedTransactionResponse = new PaginatedResponseDto<>(
+                transactionResponseDtoList,
+                transactionPage.getTotalElements()
+        );
+
+        return paginatedTransactionResponse;
     }
 
     @Override
-    public List<TransactionResponseDto> getAllByCustomerId() {
+    public PaginatedResponseDto<TransactionResponseDto> getAllByCustomerId(Integer page, Integer size) {
         UUID customerId = principalService.getPrincipal().getId();
         userRepo.findById(customerId).orElseThrow(
                 () -> new NotFoundException("Customer not found")
         );
-        List<Transaction> transactionList = transactionRepo.findByCustomerId(customerId);
+        if (page < 1) {
+            throw new InvalidPageException("Invalid requested page, minimum 1");
+        }
+        if (size < 5) {
+            throw new InvalidPageException("Invalid requested page size, minimum 5");
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Transaction> transactionPage = transactionRepo.findByCustomerId(customerId, pageable);
+
+        List<Transaction> transactionList = transactionPage.getContent();
         List<TransactionResponseDto> transactionResponseDtoList = new ArrayList<>();
         for (Transaction v : transactionList) {
             TransactionResponseDto responseDto = new TransactionResponseDto(
@@ -82,16 +111,31 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
                     v.getGateway().getName(), v.getProduct().getName());
             transactionResponseDtoList.add(responseDto);
         }
-        return transactionResponseDtoList;
+
+        PaginatedResponseDto<TransactionResponseDto> paginatedTransactionResponse = new PaginatedResponseDto<>(
+                transactionResponseDtoList,
+                transactionPage.getTotalElements()
+        );
+
+        return paginatedTransactionResponse;
     }
 
     @Override
-    public List<TransactionResponseDto> getAllByGatewayId() {
+    public PaginatedResponseDto<TransactionResponseDto> getAllByGatewayId(Integer page, Integer size) {
         UUID userId = principalService.getPrincipal().getId();
         GatewayUser gatewayUser = gatewayUserRepo.findByUserId(userId).orElseThrow(
                 () -> new NotFoundException("Gateway user not found")
         );
-        List<Transaction> transactionList = transactionRepo.findByGatewayId(gatewayUser.getGateway().getId());
+        if (page < 1) {
+            throw new InvalidPageException("Invalid requested page, minimum 1");
+        }
+        if (size < 5) {
+            throw new InvalidPageException("Invalid requested page size, minimum 5");
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Transaction> transactionPage = transactionRepo.findByGatewayId(gatewayUser.getGateway().getId(), pageable);
+
+        List<Transaction> transactionList = transactionPage.getContent();
         List<TransactionResponseDto> transactionResponseDtoList = new ArrayList<>();
         for (Transaction v : transactionList) {
             TransactionResponseDto responseDto = new TransactionResponseDto(
@@ -100,7 +144,13 @@ public class TransactionServiceImpl extends BaseService implements TransactionSe
                     v.getGateway().getName(), v.getProduct().getName());
             transactionResponseDtoList.add(responseDto);
         }
-        return transactionResponseDtoList;
+
+        PaginatedResponseDto<TransactionResponseDto> paginatedTransactionResponse = new PaginatedResponseDto<>(
+                transactionResponseDtoList,
+                transactionPage.getTotalElements()
+        );
+
+        return paginatedTransactionResponse;
     }
 
     @CacheEvict(value = "histories", allEntries = true)

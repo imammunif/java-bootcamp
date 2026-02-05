@@ -1,16 +1,17 @@
 package com.dansmultipro.ops.repository;
 
 import com.dansmultipro.ops.model.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface TransactionRepo extends JpaRepository<Transaction, UUID> {
 
-    List<Transaction> findByCustomerId(UUID customerId);
+    Page<Transaction> findByCustomerId(UUID customerId, Pageable pageable);
 
-    List<Transaction> findByGatewayId(UUID gatewayId);
+    Page<Transaction> findByGatewayId(UUID gatewayId, Pageable pageable);
 
     Boolean existsByCustomerId(UUID id);
 

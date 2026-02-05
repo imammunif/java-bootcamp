@@ -2,6 +2,7 @@ package com.dansmultipro.ops.service;
 
 import com.dansmultipro.ops.dto.transaction.CreateTransactionRequestDto;
 import com.dansmultipro.ops.dto.transaction.TransactionResponseDto;
+import com.dansmultipro.ops.dto.PaginatedResponseDto;
 import com.dansmultipro.ops.model.*;
 import com.dansmultipro.ops.pojo.AuthorizationPoJo;
 import com.dansmultipro.ops.repository.*;
@@ -15,6 +16,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -162,49 +167,64 @@ public class TransactionServiceTest {
 
     @Test
     public void shouldReturnAll_whenExist() {
+        int page = 1;
+        int size = 10;
         List<Transaction> transactionList = List.of(transaction1, transaction2);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Transaction> transactionPage = new PageImpl<>(transactionList, pageable, transactionList.size());
 
-        Mockito.when(transactionRepo.findAll()).thenReturn(transactionList);
+        Mockito.when(transactionRepo.findAll(Mockito.any(Pageable.class))).thenReturn(transactionPage);
 
-        List<TransactionResponseDto> result = transactionService.getAll();
+        PaginatedResponseDto<TransactionResponseDto> result = transactionService.getAll(page, size);
 
-        Assertions.assertEquals(transactionList.size(), result.size());
-        Assertions.assertEquals("TRX001", result.getFirst().getCode());
-        Mockito.verify(transactionRepo, Mockito.atLeast(1)).findAll();
+        Assertions.assertEquals(2, result.getTotal());
+        Assertions.assertEquals(2, result.getData().size());
+        Assertions.assertEquals("TRX001", result.getData().getFirst().getCode());
+        Mockito.verify(transactionRepo, Mockito.atLeast(1)).findAll(Mockito.any(Pageable.class));
     }
 
     @Test
     public void shouldReturnAllCustomerTransaction_whenExist() {
+        int page = 1;
+        int size = 10;
         List<Transaction> transactionList = List.of(transaction1, transaction2);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Transaction> transactionPage = new PageImpl<>(transactionList, pageable, transactionList.size());
 
         Mockito.when(principalService.getPrincipal()).thenReturn(authPojo);
         Mockito.when(userRepo.findById(Mockito.any())).thenReturn(Optional.of(user1));
-        Mockito.when(transactionRepo.findByCustomerId(Mockito.any())).thenReturn(transactionList);
+        Mockito.when(transactionRepo.findByCustomerId(Mockito.any(UUID.class), Mockito.any(Pageable.class))).thenReturn(transactionPage);
 
-        List<TransactionResponseDto> result = transactionService.getAllByCustomerId();
+        PaginatedResponseDto<TransactionResponseDto> result = transactionService.getAllByCustomerId(page, size);
 
-        Assertions.assertEquals(transactionList.size(), result.size());
-        Assertions.assertEquals("TRX001", result.getFirst().getCode());
+        Assertions.assertEquals(2, result.getTotal());
+        Assertions.assertEquals(2, result.getData().size());
+        Assertions.assertEquals("TRX001", result.getData().getFirst().getCode());
         Mockito.verify(principalService, Mockito.atLeast(1)).getPrincipal();
         Mockito.verify(userRepo, Mockito.atLeast(1)).findById(Mockito.any());
-        Mockito.verify(transactionRepo, Mockito.atLeast(1)).findByCustomerId(authPojo.getId());
+        Mockito.verify(transactionRepo, Mockito.atLeast(1)).findByCustomerId(Mockito.eq(authPojo.getId()), Mockito.any(Pageable.class));
     }
 
     @Test
     public void shouldReturnAllGatewayTransaction_whenExist() {
+        int page = 1;
+        int size = 10;
         List<Transaction> transactionList = List.of(transaction1, transaction2);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Transaction> transactionPage = new PageImpl<>(transactionList, pageable, transactionList.size());
 
         Mockito.when(principalService.getPrincipal()).thenReturn(authPojo);
         Mockito.when(gatewayUserRepo.findByUserId(Mockito.any())).thenReturn(Optional.of(gatewayUser));
-        Mockito.when(transactionRepo.findByGatewayId(Mockito.any())).thenReturn(transactionList);
+        Mockito.when(transactionRepo.findByGatewayId(Mockito.any(UUID.class), Mockito.any(Pageable.class))).thenReturn(transactionPage);
 
-        List<TransactionResponseDto> result = transactionService.getAllByGatewayId();
+        PaginatedResponseDto<TransactionResponseDto> result = transactionService.getAllByGatewayId(page, size);
 
-        Assertions.assertEquals(transactionList.size(), result.size());
-        Assertions.assertEquals("TRX001", result.getFirst().getCode());
+        Assertions.assertEquals(2, result.getTotal());
+        Assertions.assertEquals(2, result.getData().size());
+        Assertions.assertEquals("TRX001", result.getData().getFirst().getCode());
         Mockito.verify(principalService, Mockito.atLeast(1)).getPrincipal();
         Mockito.verify(gatewayUserRepo, Mockito.atLeast(1)).findByUserId(Mockito.any());
-        Mockito.verify(transactionRepo, Mockito.atLeast(1)).findByGatewayId(gateway.getId());
+        Mockito.verify(transactionRepo, Mockito.atLeast(1)).findByGatewayId(Mockito.eq(gateway.getId()), Mockito.any(Pageable.class));
     }
 
     @Test
