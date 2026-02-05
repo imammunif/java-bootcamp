@@ -3,6 +3,7 @@ package com.dansmultipro.ops.service.impl;
 import com.dansmultipro.ops.config.RabbitMQConfig;
 import com.dansmultipro.ops.constant.ResponseMessage;
 import com.dansmultipro.ops.constant.RoleCode;
+import com.dansmultipro.ops.dto.CommonResponseDto;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
@@ -202,6 +203,24 @@ public class UserServiceImpl extends BaseService implements UserService {
         userRepo.saveAndFlush(updateUser);
 
         return "User is successfully activated";
+    }
+
+    @Override
+    public CommonResponseDto changePassword(ChangePasswordRequestDto data) {
+        UUID userId = principalService.getPrincipal().getId();
+        User user = userRepo.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found")
+        );
+        if (!passwordEncoder.matches(data.getOldPassword(), user.getPassword())) {
+            throw new MissMatchException("Wrong old password");
+        }
+
+        User userUpdate = prepareForUpdate(user);
+        String newPassword = passwordEncoder.encode(data.getNewPassword());
+        userUpdate.setPassword(newPassword);
+        User updatedUser = userRepo.saveAndFlush(user);
+
+        return new CommonResponseDto("Change password success");
     }
 
     @Transactional(rollbackOn = Exception.class)

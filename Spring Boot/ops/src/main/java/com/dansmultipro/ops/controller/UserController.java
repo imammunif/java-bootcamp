@@ -1,5 +1,6 @@
 package com.dansmultipro.ops.controller;
 
+import com.dansmultipro.ops.dto.CommonResponseDto;
 import com.dansmultipro.ops.dto.CreateResponseDto;
 import com.dansmultipro.ops.dto.DeleteResponseDto;
 import com.dansmultipro.ops.dto.UpdateResponseDto;
@@ -63,8 +64,17 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
+    @PatchMapping("/change-password")
+    @PreAuthorize("hasAnyAuthority('SA', 'GA', 'CUST')")
+    public ResponseEntity<CommonResponseDto> changePassword(
+            @RequestBody @Valid ChangePasswordRequestDto data
+    ) {
+        CommonResponseDto response = userService.changePassword(data);
+        return new  ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PutMapping("{id}")
-    @PreAuthorize("hasAnyAuthority('SA', 'CUST)")
+    @PreAuthorize("hasAnyAuthority('SA', 'CUST')")
     public ResponseEntity<UpdateResponseDto> update(
             @PathVariable String id,
             @RequestBody @Valid UpdateUserRequestDto data
