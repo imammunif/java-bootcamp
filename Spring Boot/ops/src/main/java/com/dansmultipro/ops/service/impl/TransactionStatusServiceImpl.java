@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TransactionStatusImpl extends BaseService implements TransactionStatusService {
+public class TransactionStatusServiceImpl extends BaseService implements TransactionStatusService {
 
     private final TransactionStatusRepo transactionStatusRepo;
 
-    public TransactionStatusImpl(TransactionStatusRepo transactionStatusRepo) {
+    public TransactionStatusServiceImpl(TransactionStatusRepo transactionStatusRepo) {
         this.transactionStatusRepo = transactionStatusRepo;
     }
 

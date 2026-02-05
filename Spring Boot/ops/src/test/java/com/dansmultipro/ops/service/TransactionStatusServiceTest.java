@@ -2,7 +2,7 @@ package com.dansmultipro.ops.service;
 
 import com.dansmultipro.ops.model.TransactionStatus;
 import com.dansmultipro.ops.repository.TransactionStatusRepo;
-import com.dansmultipro.ops.service.impl.TransactionStatusImpl;
+import com.dansmultipro.ops.service.impl.TransactionStatusServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
-public class TransactionStatusTest {
+public class TransactionStatusServiceTest {
 
     @Mock
     private TransactionStatusRepo transactionStatusRepo;
 
     @InjectMocks
-    private TransactionStatusImpl transactionStatus;
+    private TransactionStatusServiceImpl transactionStatus;
 
     @Test
     public void shouldReturnAllHistory_whenExist() {
