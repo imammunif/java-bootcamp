@@ -1,6 +1,6 @@
 package com.dansmultipro.ops.service;
 
-import com.dansmultipro.ops.dto.CreateResponseDto;
+import com.dansmultipro.ops.dto.user.CreateUserCustomerRequestDto;
 import com.dansmultipro.ops.dto.user.CreateUserGatewayRequestDto;
 import com.dansmultipro.ops.dto.user.UserGatewayResponseDto;
 import com.dansmultipro.ops.dto.user.UserResponseDto;
@@ -55,10 +55,12 @@ public class UserServiceTest {
     private AuthorizationPoJo authPojo;
     private Gateway gateway1;
     private Gateway gateway2;
+    private User userSystem;
     private User user1;
     private User user2;
     private User user3;
     private User user4;
+    private UserRole systemRole;
     private UserRole customerRole;
     private UserRole gatewayRole;
     private GatewayUser gatewayUser1;
@@ -66,7 +68,10 @@ public class UserServiceTest {
 
     @BeforeEach
     public void setup() {
-        userService.setPrincipalService(principalService);
+        systemRole = new UserRole();
+        systemRole.setId(UUID.randomUUID());
+        systemRole.setCode("SYS");
+        systemRole.setName("System");
 
         customerRole = new UserRole();
         customerRole.setId(UUID.randomUUID());
@@ -85,6 +90,15 @@ public class UserServiceTest {
         gateway2 = new Gateway();
         gateway2.setId(UUID.randomUUID());
         gateway2.setName("GATEWAY2");
+
+        userSystem = new User();
+        userSystem.setId(UUID.randomUUID());
+        userSystem.setName("SYSTEM");
+        userSystem.setEmail("system@internal.com");
+        userSystem.setPassword("secret");
+        userSystem.setActive(false);
+        userSystem.setVersion(0);
+        userSystem.setUserRole(systemRole);
 
         user1 = new User();
         user1.setId(UUID.randomUUID());
@@ -138,42 +152,57 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldCreated_whenDataValid() {
+    public void shouldCreateUserCustomer_whenDataValid() {
+        userService.setUserRepo(userRepo);
+
+        var dto = new CreateUserCustomerRequestDto();
+        dto.setName("New Customer User");
+        dto.setEmail("newcustomer@mail.com");
+        dto.setPassword("password123");
+
+        Mockito.when(userRepo.findByUserRole_Code(Mockito.anyString())).thenReturn(Optional.of(userSystem));
+        Mockito.when(userRoleRepo.findByCode(Mockito.any())).thenReturn(Optional.of(customerRole));
+        Mockito.when(userRepo.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        Mockito.when(passwordEncoder.encode(dto.getPassword())).thenReturn("encodedPassword");
+        Mockito.when(userRepo.save(Mockito.any(User.class))).thenReturn(user1);
+
+        var result = userService.createUserCustomer(dto);
+
+        Assertions.assertEquals(user1.getId(), result.getId());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findByUserRole_Code(Mockito.any());
+        Mockito.verify(userRoleRepo, Mockito.atLeast(1)).findByCode(Mockito.any());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findByEmail(dto.getEmail());
+        Mockito.verify(passwordEncoder, Mockito.atLeast(1)).encode(dto.getPassword());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).save(Mockito.any(User.class));
+        Mockito.verify(rabbitTemplate, Mockito.atLeast(1)).convertAndSend(Mockito.any(), Mockito.any(), Mockito.any(Object.class));
+    }
+
+    @Test
+    public void shouldCreateUserGateway_whenDataValid() {
+        userService.setPrincipalService(principalService);
+
         var dto = new CreateUserGatewayRequestDto();
         dto.setName("New Gateway User");
         dto.setEmail("newgateway@mail.com");
         dto.setPassword("password123");
         dto.setGatewayId(gateway1.getId().toString());
 
-        var newUser = new User();
-        newUser.setId(UUID.randomUUID());
-        newUser.setName(dto.getName());
-        newUser.setEmail(dto.getEmail());
-        newUser.setPassword("encodedPassword");
-        newUser.setActive(true);
-        newUser.setUserRole(gatewayRole);
-
-        var newGatewayUser = new GatewayUser();
-        newGatewayUser.setId(UUID.randomUUID());
-        newGatewayUser.setUser(newUser);
-        newGatewayUser.setGateway(gateway1);
-
         Mockito.when(principalService.getPrincipal()).thenReturn(authPojo);
         Mockito.when(userRoleRepo.findByCode(Mockito.any())).thenReturn(Optional.of(gatewayRole));
         Mockito.when(userRepo.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
         Mockito.when(passwordEncoder.encode(dto.getPassword())).thenReturn("encodedPassword");
-        Mockito.when(userRepo.save(Mockito.any(User.class))).thenReturn(newUser);
+        Mockito.when(userRepo.save(Mockito.any())).thenReturn(user3);
         Mockito.when(gatewayRepo.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(gateway1));
-        Mockito.when(gatewayUserRepo.save(Mockito.any(GatewayUser.class))).thenReturn(newGatewayUser);
+        Mockito.when(gatewayUserRepo.save(Mockito.any(GatewayUser.class))).thenReturn(gatewayUser1);
 
-        CreateResponseDto result = userService.createUserGateway(dto);
+        var result = userService.createUserGateway(dto);
 
-        Assertions.assertEquals(newUser.getId(), result.getId());
+        Assertions.assertEquals(user3.getId(), result.getId());
         Mockito.verify(principalService, Mockito.atLeast(1)).getPrincipal();
         Mockito.verify(userRoleRepo, Mockito.atLeast(1)).findByCode(Mockito.any());
         Mockito.verify(userRepo, Mockito.atLeast(1)).findByEmail(dto.getEmail());
         Mockito.verify(passwordEncoder, Mockito.atLeast(1)).encode(dto.getPassword());
-        Mockito.verify(userRepo, Mockito.atLeast(1)).save(Mockito.any(User.class));
+        Mockito.verify(userRepo, Mockito.atLeast(1)).save(Mockito.any());
         Mockito.verify(gatewayRepo, Mockito.atLeast(1)).findById(Mockito.any(UUID.class));
         Mockito.verify(gatewayUserRepo, Mockito.atLeast(1)).save(Mockito.any(GatewayUser.class));
     }
