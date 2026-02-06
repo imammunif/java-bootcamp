@@ -1,22 +1,17 @@
 package com.dansmultipro.ops.service;
 
-import com.dansmultipro.ops.dto.CommonResponseDto;
-import com.dansmultipro.ops.dto.CreateResponseDto;
-import com.dansmultipro.ops.dto.DeleteResponseDto;
-import com.dansmultipro.ops.dto.UpdateResponseDto;
+import com.dansmultipro.ops.dto.*;
 import com.dansmultipro.ops.dto.user.*;
 import com.dansmultipro.ops.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
     User findByEmail(String email);
 
-    List<UserResponseDto> getAllUserCustomers();
+    PaginatedResponseDto<UserResponseDto> getAllUserCustomers(Integer page, Integer size);
 
-    List<UserGatewayResponseDto> getAllUserGateways();
+    PaginatedResponseDto<UserGatewayResponseDto> getAllUserGateways(Integer page, Integer size);
 
     UserResponseDto getById(String id);
 

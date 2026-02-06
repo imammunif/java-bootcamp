@@ -1,9 +1,6 @@
 package com.dansmultipro.ops.controller;
 
-import com.dansmultipro.ops.dto.CommonResponseDto;
-import com.dansmultipro.ops.dto.CreateResponseDto;
-import com.dansmultipro.ops.dto.DeleteResponseDto;
-import com.dansmultipro.ops.dto.UpdateResponseDto;
+import com.dansmultipro.ops.dto.*;
 import com.dansmultipro.ops.dto.user.*;
 import com.dansmultipro.ops.service.UserService;
 import jakarta.validation.Valid;
@@ -11,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("users")
@@ -26,15 +21,21 @@ public class UserController {
 
     @GetMapping("/customers")
     @PreAuthorize("hasAuthority('SA')")
-    public ResponseEntity<List<UserResponseDto>> getAllUserCustomers() {
-        List<UserResponseDto> res = userService.getAllUserCustomers();
+    public ResponseEntity<PaginatedResponseDto<UserResponseDto>> getAllUserCustomers(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<UserResponseDto> res = userService.getAllUserCustomers(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("/gateways")
     @PreAuthorize("hasAuthority('SA')")
-    public ResponseEntity<List<UserGatewayResponseDto>> getAllUserGateways() {
-        List<UserGatewayResponseDto> res = userService.getAllUserGateways();
+    public ResponseEntity<PaginatedResponseDto<UserGatewayResponseDto>> getAllUserGateways(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PaginatedResponseDto<UserGatewayResponseDto> res = userService.getAllUserGateways(page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
@@ -70,7 +71,7 @@ public class UserController {
             @RequestBody @Valid ChangePasswordRequestDto data
     ) {
         CommonResponseDto response = userService.changePassword(data);
-        return new  ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("{id}")

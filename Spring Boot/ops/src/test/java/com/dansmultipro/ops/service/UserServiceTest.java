@@ -1,5 +1,6 @@
 package com.dansmultipro.ops.service;
 
+import com.dansmultipro.ops.dto.PaginatedResponseDto;
 import com.dansmultipro.ops.dto.user.*;
 import com.dansmultipro.ops.model.Gateway;
 import com.dansmultipro.ops.model.GatewayUser;
@@ -18,6 +19,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -237,38 +242,46 @@ public class UserServiceTest {
 
     @Test
     public void shouldReturnAllUserCustomer_whenExist() {
+        int page = 1;
+        int size = 10;
         List<User> customerList = List.of(user1, user2);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<User> userPage = new PageImpl<>(customerList, pageable, customerList.size());
 
         Mockito.when(userRoleRepo.findByCode(Mockito.any())).thenReturn(Optional.of(customerRole));
-        Mockito.when(userRepo.findAllByUserRole_Id(customerRole.getId())).thenReturn(customerList);
+        Mockito.when(userRepo.findAllByUserRole_Id(Mockito.any(UUID.class), Mockito.any(Pageable.class))).thenReturn(userPage);
 
-        List<UserResponseDto> result = userService.getAllUserCustomers();
+        PaginatedResponseDto<UserResponseDto> result = userService.getAllUserCustomers(page, size);
 
-        Assertions.assertEquals(customerList.size(), result.size());
-
-        Assertions.assertEquals(user1.getId(), result.getFirst().getId());
-        Assertions.assertEquals(user1.getName(), result.getFirst().getName());
+        Assertions.assertEquals(2, result.getTotal());
+        Assertions.assertEquals(2, result.getData().size());
+        Assertions.assertEquals(user1.getId(), result.getData().getFirst().getId());
+        Assertions.assertEquals(user1.getName(), result.getData().getFirst().getName());
         Mockito.verify(userRoleRepo, Mockito.atLeast(1)).findByCode(Mockito.any());
-        Mockito.verify(userRepo, Mockito.atLeast(1)).findAllByUserRole_Id(Mockito.any());
+        Mockito.verify(userRepo, Mockito.atLeast(1)).findAllByUserRole_Id(Mockito.eq(customerRole.getId()), Mockito.any(Pageable.class));
     }
 
     @Test
     public void shouldReturnAllUserGateway_whenExist() {
+        int page = 1;
+        int size = 10;
         List<GatewayUser> gatewayUserList = List.of(gatewayUser1, gatewayUser2);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<GatewayUser> gatewayUserPage = new PageImpl<>(gatewayUserList, pageable, gatewayUserList.size());
 
         Mockito.when(userRoleRepo.findByCode(Mockito.any())).thenReturn(Optional.of(gatewayRole));
-        Mockito.when(gatewayUserRepo.findAllByUser_UserRole_Id(gatewayRole.getId())).thenReturn(gatewayUserList);
+        Mockito.when(gatewayUserRepo.findAllByUser_UserRole_Id(Mockito.any(UUID.class), Mockito.any(Pageable.class))).thenReturn(gatewayUserPage);
 
-        List<UserGatewayResponseDto> result = userService.getAllUserGateways();
+        PaginatedResponseDto<UserGatewayResponseDto> result = userService.getAllUserGateways(page, size);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(gatewayUserList.size(), result.size());
-
-        Assertions.assertEquals(gatewayUser1.getId(), result.getFirst().getId());
-        Assertions.assertEquals(gatewayUser1.getUser().getName(), result.getFirst().getName());
+        Assertions.assertEquals(2, result.getTotal());
+        Assertions.assertEquals(2, result.getData().size());
+        Assertions.assertEquals(gatewayUser1.getId(), result.getData().getFirst().getId());
+        Assertions.assertEquals(gatewayUser1.getUser().getName(), result.getData().getFirst().getName());
 
         Mockito.verify(userRoleRepo, Mockito.atLeast(1)).findByCode(Mockito.any());
-        Mockito.verify(gatewayUserRepo, Mockito.atLeast(1)).findAllByUser_UserRole_Id(Mockito.any());
+        Mockito.verify(gatewayUserRepo, Mockito.atLeast(1)).findAllByUser_UserRole_Id(Mockito.eq(gatewayRole.getId()), Mockito.any(Pageable.class));
     }
 
     @Test

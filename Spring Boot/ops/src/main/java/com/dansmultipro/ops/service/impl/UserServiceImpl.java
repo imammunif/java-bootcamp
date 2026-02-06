@@ -3,10 +3,7 @@ package com.dansmultipro.ops.service.impl;
 import com.dansmultipro.ops.config.RabbitMQConfig;
 import com.dansmultipro.ops.constant.ResponseMessage;
 import com.dansmultipro.ops.constant.RoleCode;
-import com.dansmultipro.ops.dto.CommonResponseDto;
-import com.dansmultipro.ops.dto.CreateResponseDto;
-import com.dansmultipro.ops.dto.DeleteResponseDto;
-import com.dansmultipro.ops.dto.UpdateResponseDto;
+import com.dansmultipro.ops.dto.*;
 import com.dansmultipro.ops.dto.user.*;
 import com.dansmultipro.ops.exception.*;
 import com.dansmultipro.ops.model.Gateway;
@@ -23,6 +20,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -79,11 +79,22 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     @Cacheable(value = "users", key = "'all'")
-    public List<UserResponseDto> getAllUserCustomers() {
+    public PaginatedResponseDto<UserResponseDto> getAllUserCustomers(Integer page, Integer size) {
         UserRole userRole = userRoleRepo.findByCode(RoleCode.CUSTOMER.getCode()).orElseThrow(
                 () -> new NotFoundException("Role not found")
         );
-        List<User> userList = userRepo.findAllByUserRole_Id(userRole.getId());
+
+        if (page < 1) {
+            throw new InvalidPageException("Invalid requested page, minimum 1");
+        }
+        if (size < 5) {
+            throw new InvalidPageException("Invalid requested page size, minimum 5");
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<User> userPage = userRepo.findAllByUserRole_Id(userRole.getId(), pageable);
+
+        List<User> userList = userPage.getContent();
         List<UserResponseDto> userResponseDtoList = new ArrayList<>();
         for (User v : userList) {
             UserResponseDto dto = new UserResponseDto(
@@ -92,15 +103,32 @@ public class UserServiceImpl extends BaseService implements UserService {
             );
             userResponseDtoList.add(dto);
         }
-        return userResponseDtoList;
+
+        PaginatedResponseDto<UserResponseDto> paginatedUserResponse = new PaginatedResponseDto<>(
+                userResponseDtoList,
+                userPage.getTotalElements()
+        );
+
+        return paginatedUserResponse;
     }
 
     @Override
-    public List<UserGatewayResponseDto> getAllUserGateways() {
+    public PaginatedResponseDto<UserGatewayResponseDto> getAllUserGateways(Integer page, Integer size) {
         UserRole userRole = userRoleRepo.findByCode(RoleCode.GATEWAY.getCode()).orElseThrow(
                 () -> new NotFoundException("Role not found")
         );
-        List<GatewayUser> userList = gatewayUserRepo.findAllByUser_UserRole_Id(userRole.getId());
+
+        if (page < 1) {
+            throw new InvalidPageException("Invalid requested page, minimum 1");
+        }
+        if (size < 5) {
+            throw new InvalidPageException("Invalid requested page size, minimum 5");
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<GatewayUser> userPage = gatewayUserRepo.findAllByUser_UserRole_Id(userRole.getId(), pageable);
+
+        List<GatewayUser> userList = userPage.getContent();
         List<UserGatewayResponseDto> userGatewayResponseDtoList = new ArrayList<>();
         for (GatewayUser v : userList) {
             UserGatewayResponseDto dto = new UserGatewayResponseDto(
@@ -109,7 +137,13 @@ public class UserServiceImpl extends BaseService implements UserService {
             );
             userGatewayResponseDtoList.add(dto);
         }
-        return userGatewayResponseDtoList;
+
+        PaginatedResponseDto<UserGatewayResponseDto> paginatedUserResponse = new PaginatedResponseDto<>(
+                userGatewayResponseDtoList,
+                userPage.getTotalElements()
+        );
+
+        return paginatedUserResponse;
     }
 
     @Override
