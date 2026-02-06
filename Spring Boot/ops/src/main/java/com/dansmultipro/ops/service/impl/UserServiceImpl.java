@@ -218,7 +218,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         User userUpdate = prepareForUpdate(user);
         String newPassword = passwordEncoder.encode(data.getNewPassword());
         userUpdate.setPassword(newPassword);
-        User updatedUser = userRepo.saveAndFlush(user);
+        userRepo.saveAndFlush(user);
 
         return new CommonResponseDto("Change password success");
     }
