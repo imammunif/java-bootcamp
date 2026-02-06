@@ -7,13 +7,16 @@ public class TransactionStatusHistoryResponseDto {
     private UUID id;
     private String statusName;
     private String transactionCode;
+    private String createdAt;
 
-    public TransactionStatusHistoryResponseDto() {}
+    public TransactionStatusHistoryResponseDto() {
+    }
 
-    public TransactionStatusHistoryResponseDto(UUID id, String statusName, String ticketCode) {
+    public TransactionStatusHistoryResponseDto(UUID id, String statusName, String ticketCode, String createdAt) {
         this.id = id;
         this.statusName = statusName;
         this.transactionCode = ticketCode;
+        this.createdAt = createdAt;
     }
 
     public UUID getId() {
@@ -26,6 +29,10 @@ public class TransactionStatusHistoryResponseDto {
 
     public String getTransactionCode() {
         return transactionCode;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 
 }

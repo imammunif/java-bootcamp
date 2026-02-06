@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class TransactionStatusHistoryServiceImpl extends BaseService implements 
 
     private final TransactionStatusHistoryRepo transactionStatusHistoryRepo;
     private final GatewayUserRepo gatewayUserRepo;
+    private final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public TransactionStatusHistoryServiceImpl(TransactionStatusHistoryRepo transactionStatusHistoryRepo, GatewayUserRepo gatewayUserRepo) {
         this.transactionStatusHistoryRepo = transactionStatusHistoryRepo;
@@ -46,7 +48,7 @@ public class TransactionStatusHistoryServiceImpl extends BaseService implements 
         List<TransactionStatusHistoryResponseDto> responseDtoList = new ArrayList<>();
         for (TransactionStatusHistory v : historyList) {
             TransactionStatusHistoryResponseDto responseDto = new TransactionStatusHistoryResponseDto(
-                    v.getId(), v.getStatus().getName(), v.getTransaction().getCode());
+                    v.getId(), v.getStatus().getName(), v.getTransaction().getCode(), v.getCreatedAt().format(timeFormat));
             responseDtoList.add(responseDto);
         }
 
@@ -78,7 +80,7 @@ public class TransactionStatusHistoryServiceImpl extends BaseService implements 
         List<TransactionStatusHistoryResponseDto> responseDtoList = new ArrayList<>();
         for (TransactionStatusHistory v : historyList) {
             TransactionStatusHistoryResponseDto responseDto = new TransactionStatusHistoryResponseDto(
-                    v.getId(), v.getStatus().getName(), v.getTransaction().getCode());
+                    v.getId(), v.getStatus().getName(), v.getTransaction().getCode(), v.getCreatedAt().format(timeFormat));
             responseDtoList.add(responseDto);
         }
 
