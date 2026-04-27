@@ -1,27 +1,14 @@
 package com.dansmultipro.ops.dto.login;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class LoginResponseDto {
 
-    private String name;
+    private String fullName;
     private String roleCode;
     private String token;
-
-    public LoginResponseDto(String name, String roleCode, String token) {
-        this.name = name;
-        this.roleCode = roleCode;
-        this.token = token;
-    }
-
-    public String getFullName() {
-        return name;
-    }
-
-    public String getRoleCode() {
-        return roleCode;
-    }
-
-    public String getToken() {
-        return token;
-    }
 
 }

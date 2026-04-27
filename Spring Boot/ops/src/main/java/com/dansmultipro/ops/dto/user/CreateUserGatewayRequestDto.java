@@ -3,7 +3,11 @@ package com.dansmultipro.ops.dto.user;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CreateUserGatewayRequestDto {
 
     @NotBlank(message = "Name is required")
@@ -23,36 +27,4 @@ public class CreateUserGatewayRequestDto {
     @NotBlank(message = "Gateway is required")
     private String gatewayId;
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getGatewayId() {
-        return gatewayId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setGatewayId(String gatewayId) {
-        this.gatewayId = gatewayId;
-    }
-    
 }

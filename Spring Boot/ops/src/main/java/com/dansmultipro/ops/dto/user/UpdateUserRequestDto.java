@@ -4,7 +4,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UpdateUserRequestDto {
 
     @NotBlank(message = "Name is required")
@@ -18,29 +22,5 @@ public class UpdateUserRequestDto {
 
     @NotNull(message = "Version is required")
     private Integer version;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 
 }

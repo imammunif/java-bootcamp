@@ -1,15 +1,12 @@
 package com.dansmultipro.ops.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class ErrorResponseDto<T> {
 
     private final T message;
-
-    public ErrorResponseDto(T message) {
-        this.message = message;
-    }
-
-    public T getMessage() {
-        return message;
-    }
 
 }

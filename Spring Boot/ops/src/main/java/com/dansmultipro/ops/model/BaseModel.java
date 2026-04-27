@@ -4,10 +4,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Getter
+@Setter
 @MappedSuperclass
 public abstract class BaseModel {
 
@@ -30,53 +34,5 @@ public abstract class BaseModel {
 
     @Column
     private LocalDateTime updatedAt;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public UUID getCreatedBy() {
-        return createdBy;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public UUID getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public void setCreatedBy(UUID createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedBy(UUID updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
 }

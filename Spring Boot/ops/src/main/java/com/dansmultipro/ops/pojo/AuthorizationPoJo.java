@@ -1,17 +1,14 @@
 package com.dansmultipro.ops.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.util.UUID;
 
+@Getter
+@AllArgsConstructor
 public class AuthorizationPoJo {
 
     private UUID id;
-
-    public AuthorizationPoJo(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getId() {
-        return id;
-    }
 
 }

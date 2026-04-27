@@ -1,27 +1,18 @@
 package com.dansmultipro.ops.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MailPoJo {
 
     private String emailAddress;
     private String emailBody;
     private String username;
-
-    public MailPoJo(String emailAddress, String emailBody, String username) {
-        this.emailAddress = emailAddress;
-        this.emailBody = emailBody;
-        this.username = username;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public String getEmailBody() {
-        return emailBody;
-    }
-
-    public String getUsername() {
-        return username;
-    }
 
 }

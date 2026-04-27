@@ -1,7 +1,12 @@
 package com.dansmultipro.ops.dto.user;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.util.UUID;
 
+@Getter
+@AllArgsConstructor
 public class UserGatewayResponseDto {
 
     private UUID id;
@@ -10,38 +15,5 @@ public class UserGatewayResponseDto {
     private String roleName;
     private String gatewayName;
     private String version;
-
-    public UserGatewayResponseDto(UUID id, String name, String email, String roleName, String gatewayName, String version) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.roleName = roleName;
-        this.gatewayName = gatewayName;
-        this.version = version;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public String getGatewayName() {
-        return gatewayName;
-    }
-
-    public String getVersion() {
-        return version;
-    }
 
 }

@@ -1,9 +1,13 @@
 package com.dansmultipro.ops.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "t_transaction")
 public class Transaction extends BaseModel {
@@ -32,61 +36,5 @@ public class Transaction extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    public String getCode() {
-        return code;
-    }
-
-    public BigDecimal getTotalBill() {
-        return totalBill;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public TransactionStatus getStatus() {
-        return status;
-    }
-
-    public User getCustomer() {
-        return customer;
-    }
-
-    public Gateway getGateway() {
-        return gateway;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setTotalBill(BigDecimal totalBill) {
-        this.totalBill = totalBill;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public void setStatus(TransactionStatus status) {
-        this.status = status;
-    }
-
-    public void setCustomer(User customer) {
-        this.customer = customer;
-    }
-
-    public void setGateway(Gateway gateway) {
-        this.gateway = gateway;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 
 }
